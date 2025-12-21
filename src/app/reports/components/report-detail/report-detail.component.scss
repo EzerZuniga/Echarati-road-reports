@@ -1,0 +1,100 @@
+.report-detail-container {
+  .badge {
+    padding: 0.6em 1em;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: capitalize;
+  }
+  
+  .badge-warning {
+    background-color: #ffc107;
+    color: #212529;
+  }
+  
+  .badge-info {
+    background-color: #17a2b8;
+    color: white;
+  }
+  
+  .badge-success {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .badge-secondary {
+    background-color: #6c757d;
+    color: white;
+  }
+  
+  .card {
+    border: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    
+    .card-header {
+      background-color: #f8f9fa;
+      border-bottom: 1px solid #dee2e6;
+      padding: 1.25rem;
+      
+      h1, h5 {
+        margin: 0;
+        font-weight: 600;
+      }
+    }
+    
+    .card-body {
+      padding: 1.5rem;
+    }
+  }
+  
+  .btn.active {
+    background-color: #4a90e2;
+    color: white;
+    border-color: #4a90e2;
+  }
+  
+  .alert {
+    margin-bottom: 0.5rem;
+    padding: 0.75rem 1rem;
+    
+    strong {
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+  }
+  
+  .img-fluid {
+    max-height: 200px;
+    object-fit: cover;
+    width: 100%;
+  }
+  
+  .list-unstyled {
+    li {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #f0f0f0;
+      
+      &:last-child {
+        border-bottom: none;
+      }
+      
+      strong {
+        color: #495057;
+        min-width: 120px;
+        display: inline-block;
+      }
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .report-detail-container {
+    .card {
+      margin-bottom: 1rem;
+    }
+    
+    .btn {
+      margin-bottom: 0.5rem;
+    }
+  }
+}

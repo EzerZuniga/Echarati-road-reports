@@ -1,0 +1,201 @@
+<div class="report-list-container">
+  <div class="container">
+    <div class="row mb-4">
+      <div class="col-md-8">
+        <h1>Reportes Ciudadanos</h1>
+        <p class="text-muted">Visualiza y gestiona todos los reportes ciudadanos</p>
+      </div>
+      <div class="col-md-4 text-md-end">
+        <a routerLink="/reports/new" class="btn btn-success">
+          <span>➕</span> Nuevo Reporte
+        </a>
+      </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-3 mb-3">
+            <label class="form-label">Categoría</label>
+            <select 
+              class="form-control" 
+              [(ngModel)]="filter.category"
+              (change)="onFilterChange()"
+            >
+              <option [ngValue]="undefined">Todas las categorías</option>
+              @for (category of categories; track category) {
+                <option [value]="category">{{ category }}</option>
+              }
+            </select>
+          </div>
+          
+          <div class="col-md-3 mb-3">
+            <label class="form-label">Estado</label>
+            <select 
+              class="form-control" 
+              [(ngModel)]="filter.status"
+              (change)="onFilterChange()"
+            >
+              <option [ngValue]="undefined">Todos los estados</option>
+              @for (status of statuses; track status) {
+                <option [value]="status">{{ status }}</option>
+              }
+            </select>
+          </div>
+          
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Buscar</label>
+            <div class="input-group">
+              <input 
+                type="text" 
+                class="form-control" 
+                placeholder="Buscar en títulos, descripciones o ubicaciones..."
+                [(ngModel)]="searchTerm"
+                (input)="applySearchFilter()"
+              >
+              <button class="btn btn-outline-secondary" type="button" (click)="applySearchFilter()">
+                🔍
+              </button>
+            </div>
+          </div>
+          
+          <div class="col-md-2 mb-3 d-flex align-items-end">
+            <button class="btn btn-outline-secondary w-100" (click)="clearFilters()">
+              Limpiar Filtros
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    @if (loading) {
+      <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p class="mt-2">Cargando reportes...</p>
+      </div>
+    }
+
+    <!-- Error State -->
+    @if (error && !loading) {
+      <div class="alert alert-danger">
+        {{ error }}
+      </div>
+    }
+
+    <!-- Empty State -->
+    @if (!loading && !error && filteredReports.length === 0) {
+      <div class="card text-center py-5">
+        <div class="card-body">
+          <h5 class="card-title">No se encontraron reportes</h5>
+          <p class="card-text">No hay reportes que coincidan con los criterios de búsqueda.</p>
+          @if (searchTerm || filter.category || filter.status) {
+            <button class="btn btn-primary" (click)="clearFilters()">
+              Ver todos los reportes
+            </button>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Reports List -->
+    @if (!loading && !error && filteredReports.length > 0) {
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Categoría</th>
+              <th>Ubicación</th>
+              <th>Estado</th>
+              <th>Fecha</th>
+              <th>Reportado por</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (report of paginatedReports; track report.id) {
+              <tr>
+                <td>
+                  <strong>{{ report.title }}</strong>
+                  <div class="text-muted small">{{ report.description | slice:0:50 }}...</div>
+                </td>
+                <td>
+                  <span class="badge bg-light text-dark">
+                    {{ getCategoryIcon(report.category) }} {{ report.category }}
+                  </span>
+                </td>
+                <td>{{ report.location }}</td>
+                <td>
+                  <span class="badge" [ngClass]="getStatusBadgeClass(report.status)">
+                    {{ report.status }}
+                  </span>
+                </td>
+                <td>
+                  <div>{{ report.createdAt | date:'dd/MM/yyyy' }}</div>
+                  <div class="text-muted small">{{ report.createdAt | date:'HH:mm' }}</div>
+                </td>
+                <td>{{ report.userName }}</td>
+                <td>
+                  <div class="btn-group btn-group-sm">
+                    <a 
+                      [routerLink]="['/reports', report.id]" 
+                      class="btn btn-outline-primary"
+                    >
+                      👁️
+                    </a>
+                    <a 
+                      [routerLink]="['/reports', report.id, 'edit']" 
+                      class="btn btn-outline-secondary"
+                    >
+                      ✏️
+                    </a>
+                    <button 
+                      type="button" 
+                      class="btn btn-outline-danger"
+                      (click)="deleteReport(report.id!)"
+                    >
+                      🗑️
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Paginación -->
+      @if (totalPages > 1) {
+        <nav aria-label="Paginación de reportes">
+          <ul class="pagination justify-content-center">
+            <li class="page-item" [class.disabled]="currentPage === 1">
+              <button class="page-link" (click)="prevPage()">Anterior</button>
+            </li>
+            
+            @for (page of [].constructor(totalPages); track page; let i = $index) {
+              <li class="page-item" [class.active]="currentPage === i + 1">
+                <button class="page-link" (click)="currentPage = i + 1">
+                  {{ i + 1 }}
+                </button>
+              </li>
+            }
+            
+            <li class="page-item" [class.disabled]="currentPage === totalPages">
+              <button class="page-link" (click)="nextPage()">Siguiente</button>
+            </li>
+          </ul>
+        </nav>
+      }
+
+      <!-- Información de paginación -->
+      <div class="text-center text-muted mt-3">
+        Mostrando {{ paginatedReports.length }} de {{ filteredReports.length }} reportes
+        (Página {{ currentPage }} de {{ totalPages }})
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,227 @@
+<div class="report-form-container">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="mb-0">
+              @if (isEditMode) {
+                ✏️ Editar Reporte
+              } @else {
+                📋 Crear Nuevo Reporte
+              }
+            </h3>
+          </div>
+          
+          <div class="card-body">
+            @if (loading && !submitted) {
+              <div class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Cargando...</span>
+                </div>
+                <p class="mt-2">
+                  @if (isEditMode) {
+                    Cargando reporte...
+                  } @else {
+                    Preparando formulario...
+                  }
+                </p>
+              </div>
+            } @else {
+              <form [formGroup]="reportForm" (ngSubmit)="onSubmit()">
+                
+                <!-- Título -->
+                <div class="form-group mb-4">
+                  <label for="title" class="form-label">Título *</label>
+                  <input
+                    type="text"
+                    id="title"
+                    formControlName="title"
+                    class="form-control"
+                    [class.is-invalid]="submitted && f['title'].errors"
+                    placeholder="Ej: Bache en avenida principal"
+                  >
+                  @if (submitted && f['title'].errors) {
+                    <div class="invalid-feedback d-block">
+                      @if (f['title'].errors['required']) {
+                        <div>El título es requerido</div>
+                      }
+                      @if (f['title'].errors['minlength']) {
+                        <div>El título debe tener al menos 5 caracteres</div>
+                      }
+                      @if (f['title'].errors['maxlength']) {
+                        <div>El título no puede exceder 100 caracteres</div>
+                      }
+                    </div>
+                  }
+                </div>
+
+                <!-- Descripción -->
+                <div class="form-group mb-4">
+                  <label for="description" class="form-label">Descripción *</label>
+                  <textarea
+                    id="description"
+                    formControlName="description"
+                    class="form-control"
+                    [class.is-invalid]="submitted && f['description'].errors"
+                    rows="4"
+                    placeholder="Describe detalladamente el problema..."
+                  ></textarea>
+                  @if (submitted && f['description'].errors) {
+                    <div class="invalid-feedback d-block">
+                      @if (f['description'].errors['required']) {
+                        <div>La descripción es requerida</div>
+                      }
+                      @if (f['description'].errors['minlength']) {
+                        <div>La descripción debe tener al menos 10 caracteres</div>
+                      }
+                      @if (f['description'].errors['maxlength']) {
+                        <div>La descripción no puede exceder 500 caracteres</div>
+                      }
+                    </div>
+                  }
+                  <div class="form-text text-end">
+                    {{ f['description'].value?.length || 0 }}/500 caracteres
+                  </div>
+                </div>
+
+                <div class="row">
+                  <!-- Categoría -->
+                  <div class="col-md-6 mb-4">
+                    <label for="category" class="form-label">Categoría *</label>
+                    <div class="input-group">
+                      <span class="input-group-text">
+                        {{ getCategoryIcon(f['category'].value) }}
+                      </span>
+                      <select
+                        id="category"
+                        formControlName="category"
+                        class="form-control"
+                        [class.is-invalid]="submitted && f['category'].errors"
+                      >
+                        @for (category of categories; track category) {
+                          <option [value]="category">{{ category }}</option>
+                        }
+                      </select>
+                    </div>
+                    @if (submitted && f['category'].errors) {
+                      <div class="invalid-feedback d-block">
+                        <div>La categoría es requerida</div>
+                      </div>
+                    }
+                  </div>
+
+                  <!-- Estado (solo en edición) -->
+                  @if (isEditMode) {
+                    <div class="col-md-6 mb-4">
+                      <label for="status" class="form-label">Estado *</label>
+                      <select
+                        id="status"
+                        formControlName="status"
+                        class="form-control"
+                        [class.is-invalid]="submitted && f['status'].errors"
+                      >
+                        @for (status of statuses; track status) {
+                          <option [value]="status">{{ status }}</option>
+                        }
+                      </select>
+                      @if (submitted && f['status'].errors) {
+                        <div class="invalid-feedback d-block">
+                          <div>El estado es requerido</div>
+                        </div>
+                      }
+                    </div>
+                  }
+                </div>
+
+                <!-- Ubicación -->
+                <div class="form-group mb-4">
+                  <label for="location" class="form-label">Ubicación *</label>
+                  <input
+                    type="text"
+                    id="location"
+                    formControlName="location"
+                    class="form-control"
+                    [class.is-invalid]="submitted && f['location'].errors"
+                    placeholder="Ej: Avenida Principal 123, Ciudad"
+                  >
+                  @if (submitted && f['location'].errors) {
+                    <div class="invalid-feedback d-block">
+                      @if (f['location'].errors['required']) {
+                        <div>La ubicación es requerida</div>
+                      }
+                      @if (f['location'].errors['minlength']) {
+                        <div>La ubicación debe tener al menos 5 caracteres</div>
+                      }
+                    </div>
+                  }
+                </div>
+
+                <!-- Coordenadas (opcionales) -->
+                <div class="row mb-4">
+                  <div class="col-md-6">
+                    <label for="latitude" class="form-label">Latitud</label>
+                    <input
+                      type="number"
+                      id="latitude"
+                      formControlName="latitude"
+                      class="form-control"
+                      step="any"
+                      placeholder="Ej: 40.7128"
+                    >
+                  </div>
+                  <div class="col-md-6">
+                    <label for="longitude" class="form-label">Longitud</label>
+                    <input
+                      type="number"
+                      id="longitude"
+                      formControlName="longitude"
+                      class="form-control"
+                      step="any"
+                      placeholder="Ej: -74.0060"
+                    >
+                  </div>
+                  <div class="col-12">
+                    <small class="text-muted">Las coordenadas son opcionales y se utilizan para ubicación precisa en mapas.</small>
+                  </div>
+                </div>
+
+                <!-- Error Message -->
+                @if (error) {
+                  <div class="alert alert-danger">
+                    {{ error }}
+                  </div>
+                }
+
+                <!-- Botones -->
+                <div class="form-group mt-4 pt-3 border-top">
+                  <div class="d-flex justify-content-between">
+                    <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">
+                      Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary" [disabled]="loading">
+                      @if (loading) {
+                        <span class="spinner-border spinner-border-sm mr-2"></span>
+                        @if (isEditMode) {
+                          Actualizando...
+                        } @else {
+                          Creando...
+                        }
+                      } @else {
+                        @if (isEditMode) {
+                          Actualizar Reporte
+                        } @else {
+                          Crear Reporte
+                        }
+                      }
+                    </button>
+                  </div>
+                </div>
+              </form>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

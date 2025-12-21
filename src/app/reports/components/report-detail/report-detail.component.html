@@ -1,0 +1,180 @@
+<div class="report-detail-container">
+  <div class="container">
+    <!-- Botón de volver -->
+    <div class="mb-4">
+      <button type="button" class="btn btn-outline-secondary" (click)="router.navigate(['/reports'])">
+        ← Volver a la lista
+      </button>
+    </div>
+
+    @if (loading) {
+      <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p class="mt-2">Cargando reporte...</p>
+      </div>
+    }
+
+    @if (error && !loading) {
+      <div class="alert alert-danger">
+        {{ error }}
+      </div>
+    }
+
+    @if (report && !loading) {
+      <div class="row">
+        <!-- Información principal -->
+        <div class="col-lg-8">
+          <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h1 class="h4 mb-0">{{ report.title }}</h1>
+              <span class="badge" [ngClass]="getStatusBadgeClass(report.status)">
+                {{ report.status }}
+              </span>
+            </div>
+            <div class="card-body">
+              <div class="mb-4">
+                <h5 class="text-muted mb-3">Descripción</h5>
+                <p class="lead">{{ report.description }}</p>
+              </div>
+
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <h5 class="text-muted mb-3">Información del Reporte</h5>
+                  <ul class="list-unstyled">
+                    <li class="mb-2">
+                      <strong>Categoría:</strong>
+                      <span class="ms-2">
+                        {{ getCategoryIcon(report.category) }}
+                        {{ report.category }}
+                      </span>
+                    </li>
+                    <li class="mb-2">
+                      <strong>Ubicación:</strong>
+                      <span class="ms-2">{{ report.location }}</span>
+                    </li>
+                    @if (report.latitude && report.longitude) {
+                      <li class="mb-2">
+                        <strong>Coordenadas:</strong>
+                        <span class="ms-2">{{ report.latitude }}, {{ report.longitude }}</span>
+                      </li>
+                    }
+                  </ul>
+                </div>
+                <div class="col-md-6">
+                  <h5 class="text-muted mb-3">Metadatos</h5>
+                  <ul class="list-unstyled">
+                    <li class="mb-2">
+                      <strong>Creado:</strong>
+                      <span class="ms-2">{{ getFormattedDate(report.createdAt) }}</span>
+                    </li>
+                    <li class="mb-2">
+                      <strong>Actualizado:</strong>
+                      <span class="ms-2">{{ getFormattedDate(report.updatedAt) }}</span>
+                    </li>
+                    <li class="mb-2">
+                      <strong>Reportado por:</strong>
+                      <span class="ms-2">{{ report.userName }}</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sección de fotos (si existen) -->
+          @if (report.photos && report.photos.length > 0) {
+            <div class="card mb-4">
+              <div class="card-header">
+                <h5 class="mb-0">Fotos del Reporte</h5>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  @for (photo of report.photos; track $index) {
+                    <div class="col-md-4 mb-3">
+                      <img [src]="photo" alt="Foto del reporte" class="img-fluid rounded">
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Panel lateral -->
+        <div class="col-lg-4">
+          <!-- Cambiar estado -->
+          <div class="card mb-4">
+            <div class="card-header">
+              <h5 class="mb-0">Cambiar Estado</h5>
+            </div>
+            <div class="card-body">
+              <div class="d-grid gap-2">
+                @for (status of statusOptions; track status) {
+                  <button 
+                    type="button" 
+                    class="btn btn-outline-secondary"
+                    [class.active]="status === report.status"
+                    (click)="updateStatus(status)"
+                    [disabled]="loading"
+                  >
+                    @if (loading && status === report.status) {
+                      <span class="spinner-border spinner-border-sm me-2"></span>
+                    }
+                    {{ status }}
+                  </button>
+                }
+              </div>
+            </div>
+          </div>
+
+          <!-- Acciones -->
+          <div class="card mb-4">
+            <div class="card-header">
+              <h5 class="mb-0">Acciones</h5>
+            </div>
+            <div class="card-body">
+              <div class="d-grid gap-2">
+                <a 
+                  [routerLink]="['/reports', report.id, 'edit']" 
+                  class="btn btn-primary"
+                >
+                  ✏️ Editar Reporte
+                </a>
+                <button 
+                  type="button" 
+                  class="btn btn-outline-danger"
+                  (click)="deleteReport()"
+                >
+                  🗑️ Eliminar Reporte
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Información de estado -->
+          <div class="card">
+            <div class="card-header">
+              <h5 class="mb-0">Información del Estado</h5>
+            </div>
+            <div class="card-body">
+              <div class="alert alert-info">
+                <strong>PENDIENTE:</strong> Reporte recibido, en espera de revisión.
+              </div>
+              <div class="alert alert-primary">
+                <strong>EN PROGRESO:</strong> El equipo está trabajando en la solución.
+              </div>
+              <div class="alert alert-success">
+                <strong>RESUELTO:</strong> El problema ha sido solucionado.
+              </div>
+              <div class="alert alert-secondary">
+                <strong>CERRADO:</strong> Reporte finalizado.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

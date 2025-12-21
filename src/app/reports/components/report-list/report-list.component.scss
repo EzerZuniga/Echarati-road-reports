@@ -1,0 +1,94 @@
+.report-list-container {
+  .badge {
+    padding: 0.5em 0.8em;
+    font-weight: 500;
+    text-transform: capitalize;
+  }
+  
+  .badge-warning {
+    background-color: #ffc107;
+    color: #212529;
+  }
+  
+  .badge-info {
+    background-color: #17a2b8;
+    color: white;
+  }
+  
+  .badge-success {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .badge-secondary {
+    background-color: #6c757d;
+    color: white;
+  }
+  
+  .table {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    
+    th {
+      background-color: #f8f9fa;
+      border-bottom: 2px solid #dee2e6;
+      font-weight: 600;
+      color: #495057;
+      padding: 1rem;
+    }
+    
+    td {
+      padding: 1rem;
+      vertical-align: middle;
+      border-bottom: 1px solid #dee2e6;
+    }
+    
+    tr:hover {
+      background-color: #f8f9fa;
+    }
+  }
+  
+  .btn-group-sm .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+  }
+  
+  .pagination {
+    margin-top: 2rem;
+    
+    .page-item.active .page-link {
+      background-color: #4a90e2;
+      border-color: #4a90e2;
+    }
+    
+    .page-link {
+      color: #4a90e2;
+      
+      &:hover {
+        color: #357ae8;
+        background-color: #e9ecef;
+        border-color: #dee2e6;
+      }
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .report-list-container {
+    .table-responsive {
+      border: none;
+    }
+    
+    .btn-group {
+      flex-direction: column;
+      
+      .btn {
+        margin-bottom: 0.25rem;
+        width: 100%;
+      }
+    }
+  }
+}

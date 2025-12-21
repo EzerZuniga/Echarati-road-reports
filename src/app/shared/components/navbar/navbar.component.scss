@@ -1,0 +1,75 @@
+.navbar {
+  padding: 1rem 0;
+  border-bottom: 1px solid #e9ecef;
+  
+  .navbar-brand {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: #4a90e2;
+    display: flex;
+    align-items: center;
+    
+    .brand-icon {
+      font-size: 1.5rem;
+      margin-right: 0.5rem;
+    }
+    
+    .brand-text {
+      @media (max-width: 576px) {
+        display: none;
+      }
+    }
+  }
+  
+  .nav-link {
+    font-weight: 500;
+    color: #495057;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      color: #4a90e2;
+      background-color: rgba(74, 144, 226, 0.1);
+    }
+    
+    &.active {
+      color: #4a90e2;
+      background-color: rgba(74, 144, 226, 0.1);
+    }
+  }
+  
+  .user-avatar {
+    width: 32px;
+    height: 32px;
+    background-color: #f8f9fa;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+  }
+  
+  .user-name {
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+  
+  .dropdown-menu {
+    border: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem 0;
+    
+    .dropdown-item {
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      
+      &:hover {
+        background-color: #f8f9fa;
+        color: #4a90e2;
+      }
+    }
+  }
+}

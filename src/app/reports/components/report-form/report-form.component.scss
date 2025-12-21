@@ -1,0 +1,73 @@
+.report-form-container {
+  .card {
+    border: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    
+    .card-header {
+      background-color: #f8f9fa;
+      border-bottom: 1px solid #dee2e6;
+      padding: 1.5rem;
+      
+      h3 {
+        margin: 0;
+        font-weight: 600;
+      }
+    }
+    
+    .card-body {
+      padding: 2rem;
+    }
+  }
+  
+  .input-group-text {
+    background-color: #f8f9fa;
+    border-right: none;
+    min-width: 3rem;
+    justify-content: center;
+    font-size: 1.2rem;
+  }
+  
+  .form-control {
+    border-left: none;
+    
+    &:focus {
+      border-color: #ced4da;
+      box-shadow: none;
+      
+      & + .input-group-text {
+        border-color: #4a90e2;
+      }
+    }
+  }
+  
+  .invalid-feedback {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+  }
+  
+  .form-text {
+    font-size: 0.875rem;
+    color: #6c757d;
+  }
+  
+  .spinner-border {
+    margin-right: 0.5rem;
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .report-form-container {
+    .card {
+      margin: 0 -1rem;
+      border-radius: 0;
+      box-shadow: none;
+      border: 1px solid #dee2e6;
+      
+      .card-body {
+        padding: 1.5rem;
+      }
+    }
+  }
+}

@@ -1,0 +1,82 @@
+<div class="login-container">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="text-center">Iniciar Sesión</h3>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            
+            <div class="form-group">
+              <label for="username" class="form-label">Usuario</label>
+              <input
+                type="text"
+                id="username"
+                formControlName="username"
+                class="form-control"
+                [class.is-invalid]="submitted && f['username'].errors"
+                placeholder="Ingrese su usuario"
+              >
+              @if (submitted && f['username'].errors) {
+                <div class="invalid-feedback d-block">
+                  @if (f['username'].errors['required']) {
+                    <div>Usuario es requerido</div>
+                  }
+                  @if (f['username'].errors['minlength']) {
+                    <div>Usuario debe tener al menos 3 caracteres</div>
+                  }
+                </div>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="password" class="form-label">Contraseña</label>
+              <input
+                type="password"
+                id="password"
+                formControlName="password"
+                class="form-control"
+                [class.is-invalid]="submitted && f['password'].errors"
+                placeholder="Ingrese su contraseña"
+              >
+              @if (submitted && f['password'].errors) {
+                <div class="invalid-feedback d-block">
+                  @if (f['password'].errors['required']) {
+                    <div>Contraseña es requerida</div>
+                  }
+                  @if (f['password'].errors['minlength']) {
+                    <div>Contraseña debe tener al menos 6 caracteres</div>
+                  }
+                </div>
+              }
+            </div>
+
+            @if (error) {
+              <div class="alert alert-danger mt-3">
+                {{ error }}
+              </div>
+            }
+
+            <div class="form-group mt-4">
+              <button type="submit" class="btn btn-primary w-100" [disabled]="loading">
+                @if (loading) {
+                  <span class="spinner-border spinner-border-sm mr-2"></span>
+                  Iniciando sesión...
+                } @else {
+                  Iniciar Sesión
+                }
+              </button>
+            </div>
+
+            <div class="text-center mt-3">
+              <p class="mb-0">
+                <small>Usuario demo: admin / password123</small>
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

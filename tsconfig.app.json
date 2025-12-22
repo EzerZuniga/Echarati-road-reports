@@ -2,8 +2,20 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": []
+    "types": [],
+    "allowJs": false
   },
-  "files": ["src/main.ts"],
-  "include": ["src/**/*.d.ts"]
+  "files": [
+    "src/main.ts",
+    "src/polyfills.ts"
+  ],
+  "include": [
+    "src/**/*.d.ts",
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "src/test.ts",
+    "src/**/*.spec.ts",
+    "node_modules"
+  ]
 }

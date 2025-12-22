@@ -28,7 +28,7 @@
   
   .card {
     border: none;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow-sm);
     
     .card-header {
       background-color: #f8f9fa;
@@ -51,6 +51,8 @@
     color: white;
     border-color: #4a90e2;
   }
+
+  .btn { &:focus-visible { outline: 3px solid rgba(74,144,226,0.14); outline-offset: 2px; } }
   
   .alert {
     margin-bottom: 0.5rem;

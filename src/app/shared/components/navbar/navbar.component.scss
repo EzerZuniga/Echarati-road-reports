@@ -44,12 +44,12 @@
     color: var(--muted-700);
     padding: 0.45rem 0.85rem;
     border-radius: 6px;
-    transition: background-color var(--transition), color var(--transition);
 
     &:hover {
       color: var(--brand-500);
       background-color: rgba(74,144,226,0.06);
     }
+    &:focus-visible { outline: 3px solid rgba(74,144,226,0.14); outline-offset: 2px; }
 
     &.active {
       color: var(--brand-500);
@@ -92,6 +92,12 @@
         background-color: rgba(16,24,40,0.02);
         color: var(--brand-500);
       }
+      &:focus-visible { outline: 3px solid rgba(74,144,226,0.14); outline-offset: 2px; }
     }
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 768px) {
+    .nav-links { gap: 0.5rem; }
   }
 }

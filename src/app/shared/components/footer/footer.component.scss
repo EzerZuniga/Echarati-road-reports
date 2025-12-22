@@ -5,7 +5,7 @@
 
   .container {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
     align-items: start;
   }
@@ -55,13 +55,12 @@
     a {
       color: var(--muted-500);
       text-decoration: none;
-      transition: color var(--transition);
       display: inline-flex;
       align-items: center;
 
-      &:hover {
-        color: var(--brand-500);
-      }
+      &:hover, &:focus-visible { color: var(--brand-500); outline: none; }
+
+      &:focus-visible { outline: 3px solid rgba(74,144,226,0.14); outline-offset: 2px; }
 
       span { margin-right: 0.5rem; }
     }

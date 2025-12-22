@@ -1,7 +1,7 @@
 .report-form-container {
   .card {
     border: none;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-md);
     
     .card-header {
       background-color: #f8f9fa;
@@ -27,18 +27,10 @@
     font-size: 1.2rem;
   }
   
-  .form-control {
-    border-left: none;
-    
-    &:focus {
-      border-color: #ced4da;
-      box-shadow: none;
-      
-      & + .input-group-text {
-        border-color: #4a90e2;
-      }
-    }
-  }
+  .form-control { border-left: none; }
+
+  /* focus behavior handled globally in styles.scss; add specific sibling border-color */
+  .form-control:focus + .input-group-text { border-color: var(--brand-500); }
   
   .invalid-feedback {
     color: #dc3545;

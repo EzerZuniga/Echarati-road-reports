@@ -29,7 +29,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" routerLink="/reports/new" routerLinkActive="active" (click)="closeMenu()">
+            <a class="cta-report" routerLink="/reports/new" routerLinkActive="" (click)="closeMenu()" title="Nuevo reporte">
                 Nuevo Reporte
             </a>
           </li>
@@ -38,11 +38,11 @@
         <!-- User Menu -->
         <div class="navbar-nav ms-auto">
           <div class="nav-item dropdown">
-            <a 
+            <button 
               class="nav-link dropdown-toggle d-flex align-items-center" 
-              href="#" 
+              type="button"
               id="userDropdown" 
-              role="button"
+              data-bs-toggle="dropdown"
               aria-haspopup="true"
               aria-expanded="false"
             >
@@ -52,7 +52,7 @@
               <span class="user-name">
                 {{ currentUser?.name || 'Usuario' }}
               </span>
-            </a>
+            </button>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
               <li>
                 <a class="dropdown-item" href="#" (click)="closeMenu()">
@@ -76,11 +76,12 @@
       </ng-container>
 
       <ng-template #guest>
-        <!-- Login Button -->
+        <!-- Login Button (open modal) -->
         <div class="navbar-nav ms-auto">
-          <a class="nav-link" routerLink="/auth/login" (click)="closeMenu()">
-             Iniciar Sesión
-          </a>
+          <button class="nav-link btn-plain" (click)="openLoginModal(); closeMenu()" aria-haspopup="dialog" aria-controls="loginModal">
+            Iniciar Sesión
+          </button>
+          <app-login-modal *ngIf="showLoginModal" (close)="closeLoginModal()" id="loginModal"></app-login-modal>
         </div>
       </ng-template>
     </div>

@@ -1,0 +1,42 @@
+<div class="lm-overlay" role="dialog" aria-modal="true">
+  <div class="lm-backdrop" (click)="onCloseRequest()" aria-hidden="true"></div>
+  <div class="lm-panel" role="document">
+    <button class="lm-close" aria-label="Cerrar" (click)="onCloseRequest()">✕</button>
+
+    <div class="login-modal-inner">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="card">
+          <div class="card-header"><h3 class="text-center">Iniciar Sesión</h3></div>
+          <div class="card-body">
+            <div class="form-group">
+              <label for="lm-username">Usuario</label>
+              <input id="lm-username" type="text" formControlName="username" class="form-control" [class.is-invalid]="submitted && f['username'].errors" autocomplete="username">
+              <div *ngIf="submitted && f['username'].errors" class="invalid-feedback d-block">
+                <div *ngIf="f['username'].errors?.['required']">Usuario es requerido</div>
+                <div *ngIf="f['username'].errors?.['minlength']">Usuario debe tener al menos 3 caracteres</div>
+              </div>
+            </div>
+
+            <div class="form-group mt-3">
+              <label for="lm-password">Contraseña</label>
+              <input id="lm-password" type="password" formControlName="password" class="form-control" [class.is-invalid]="submitted && f['password'].errors" autocomplete="current-password">
+              <div *ngIf="submitted && f['password'].errors" class="invalid-feedback d-block">
+                <div *ngIf="f['password'].errors?.['required']">Contraseña es requerida</div>
+                <div *ngIf="f['password'].errors?.['minlength']">Contraseña debe tener al menos 6 caracteres</div>
+              </div>
+            </div>
+
+            <div *ngIf="error" class="alert alert-danger mt-3">{{ error }}</div>
+
+            <div class="form-group mt-4">
+              <button type="submit" class="btn btn-primary w-100" [disabled]="loading">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2" aria-hidden="true"></span>
+                Iniciar Sesión
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

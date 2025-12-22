@@ -1,0 +1,40 @@
+.lm-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20000;
+}
+
+.lm-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(8,10,15,0.48);
+}
+
+.lm-panel {
+  position: relative;
+  z-index: 20001;
+  width: 95%;
+  max-width: 520px;
+  margin: 1rem;
+  background: var(--surface, #fff);
+  border-radius: 10px;
+  box-shadow: 0 20px 40px rgba(2,6,23,0.12);
+  padding: 0.5rem;
+}
+
+.lm-close {
+  position: absolute;
+  right: 0.5rem;
+  top: 0.5rem;
+  background: transparent;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lm-panel { transition: none !important; }
+}

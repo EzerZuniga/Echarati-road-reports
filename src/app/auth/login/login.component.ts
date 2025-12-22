@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
@@ -9,6 +9,7 @@ import { AuthService } from '../../core/services/auth.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+  @Output() loggedIn = new EventEmitter<void>();
   loginForm: FormGroup;
   loading = false;
   submitted = false;
@@ -51,6 +52,8 @@ export class LoginComponent implements OnInit {
       this.f['password'].value
     ).subscribe({
       next: () => {
+        // Emit event for embedded usages (modals)
+        try { this.loggedIn.emit(); } catch {}
         this.router.navigate([this.returnUrl]);
       },
       error: (error) => {

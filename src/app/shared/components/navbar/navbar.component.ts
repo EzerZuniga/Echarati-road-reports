@@ -13,6 +13,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   private userSubscription!: Subscription;
   private routerSubscription?: Subscription;
   menuOpen = false;
+  showLoginModal = false;
 
   constructor(
     private authService: AuthService,
@@ -59,6 +60,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   closeMenu(): void {
     this.menuOpen = false;
+  }
+
+  openLoginModal(): void {
+    this.showLoginModal = true;
+  }
+
+  closeLoginModal(): void {
+    this.showLoginModal = false;
   }
 
   @HostListener('document:click', ['$event'])

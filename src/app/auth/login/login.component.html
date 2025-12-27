@@ -18,8 +18,8 @@
                 placeholder="Ingrese su usuario"
               />
               <div *ngIf="submitted && f['username'].errors" class="invalid-feedback d-block">
-                <div *ngIf="f['username'].errors?.['required']">Usuario es requerido</div>
-                <div *ngIf="f['username'].errors?.['minlength']">
+                <div *ngIf="hasError('username', 'required')">Usuario es requerido</div>
+                <div *ngIf="hasError('username', 'minlength')">
                   Usuario debe tener al menos 3 caracteres
                 </div>
               </div>
@@ -36,8 +36,8 @@
                 placeholder="Ingrese su contraseña"
               />
               <div *ngIf="submitted && f['password'].errors" class="invalid-feedback d-block">
-                <div *ngIf="f['password'].errors?.['required']">Contraseña es requerida</div>
-                <div *ngIf="f['password'].errors?.['minlength']">
+                <div *ngIf="hasError('password', 'required')">Contraseña es requerida</div>
+                <div *ngIf="hasError('password', 'minlength')">
                   Contraseña debe tener al menos 6 caracteres
                 </div>
               </div>

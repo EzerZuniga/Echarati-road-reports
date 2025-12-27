@@ -38,6 +38,17 @@ export class LoginComponent implements OnInit {
     return this.loginForm.controls;
   }
 
+  // Helper para chequear errores de un control evitando accesos problemáticos en plantillas
+  hasError(controlName: string, errorKey: string): boolean {
+    const control = this.loginForm.get(controlName);
+    if (!control || !control.errors) {
+      return false;
+    }
+    // Usar acceso por índice en TS para claves dinámicas sin usar `any`
+    const errors = control.errors as Record<string, unknown> | null;
+    return !!(errors && errors[errorKey] !== undefined && errors[errorKey] !== null);
+  }
+
   onSubmit(): void {
     this.submitted = true;
     this.error = '';

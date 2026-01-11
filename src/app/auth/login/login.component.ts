@@ -15,6 +15,33 @@ export class LoginComponent implements OnInit {
   submitted = false;
   error = '';
   returnUrl = '';
+  readonly highlights: ReadonlyArray<{
+    icon: string;
+    title: string;
+    description: string;
+  }> = [
+    {
+      icon: 'heroShieldCheckSolid',
+      title: 'Canal seguro y transparente',
+      description: 'Tus reportes viajan cifrados y solo los ven los equipos autorizados.',
+    },
+    {
+      icon: 'heroDocumentMagnifyingGlassSolid',
+      title: 'Seguimiento claro',
+      description: 'Consulta el estado de cada incidencia con información actualizada.',
+    },
+    {
+      icon: 'heroCheckBadgeSolid',
+      title: 'Respuestas verificadas',
+      description: 'Cada solución pasa por validación municipal antes de notificarse.',
+    },
+  ];
+
+  readonly stats: ReadonlyArray<{ value: string; label: string }> = [
+    { value: '180+', label: 'Reportes atendidos en el último año' },
+    { value: '12', label: 'Equipos municipales coordinados' },
+    { value: '24/7', label: 'Recepción de incidencias' },
+  ];
 
   constructor(
     private formBuilder: FormBuilder,

@@ -21,6 +21,8 @@
     "@angular/platform-browser": "^17.0.0",
     "@angular/platform-browser-dynamic": "^17.0.0",
     "@angular/router": "^17.0.0",
+    "@ng-icons/core": "^26.5.0",
+    "@ng-icons/heroicons": "^26.5.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.0"
@@ -30,20 +32,20 @@
     "@angular/cli": "^17.0.0",
     "@angular/compiler-cli": "^17.0.0",
     "@types/jasmine": "~5.1.0",
+    "@typescript-eslint/eslint-plugin": "^6.8.0",
+    "@typescript-eslint/parser": "^6.8.0",
+    "eslint": "^8.50.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.5.4",
+    "husky": "^8.0.3",
     "jasmine-core": "~5.1.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.2.0",
-    "eslint": "^8.50.0",
+    "lint-staged": "^13.2.0",
     "prettier": "^3.7.4",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-prettier": "^5.5.4",
-    "@typescript-eslint/parser": "^6.8.0",
-    "@typescript-eslint/eslint-plugin": "^6.8.0",
-    "husky": "^8.0.3",
-    "lint-staged": "^13.2.0"
+    "typescript": "~5.2.0"
   },
   "husky": {
     "hooks": {

@@ -1,109 +1,127 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
-  <div class="container">
-    <!-- Logo/Brand -->
-    <a class="navbar-brand" routerLink="/">
-      <span class="brand-icon"> </span>
-      <span class="brand-text">Reportes Ciudadanos</span>
+<nav class="app-navbar" aria-label="Barra de navegación principal">
+  <div class="app-navbar__container">
+    <a class="app-navbar__brand" routerLink="/" (click)="closeMenu()">
+      <img
+        class="app-navbar__brand-logo"
+        src="assets/logos/logo.jpg"
+        alt="Municipalidad Distrital de Echarati"
+        width="320"
+        height="96"
+      />
+      <span class="app-navbar__brand-copy">
+        <span class="app-navbar__brand-name">Reportes Echarati</span>
+        <span class="app-navbar__brand-tagline">Atención ciudadana municipal</span>
+      </span>
     </a>
 
-    <!-- Mobile Toggle Button -->
     <button
-      class="menu-toggle"
+      class="app-navbar__toggle"
       type="button"
       (click)="toggleMenu()"
       [attr.aria-expanded]="menuOpen"
-      aria-controls="mobileNav"
-      aria-label="Abrir menú"
+      aria-controls="appNavbarContent"
+      aria-label="Mostrar u ocultar menú"
     >
-      <span class="navbar-toggler-icon" aria-hidden="true"></span>
+      <span class="app-navbar__toggle-icon" aria-hidden="true"></span>
     </button>
 
-    <!-- Navbar Content -->
-    <div class="navbar-collapse" id="mobileNav" [class.open]="menuOpen">
-      <!-- Navigation Links -->
-      <ng-container *ngIf="isLoggedIn(); else guest">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item">
-            <a
-              class="nav-link"
-              routerLink="/reports"
-              routerLinkActive="active"
-              (click)="closeMenu()"
-            >
-              Mis Reportes
-            </a>
-          </li>
-          <li class="nav-item">
-            <a
-              class="cta-report"
-              routerLink="/reports/new"
-              routerLinkActive=""
-              (click)="closeMenu()"
-              title="Nuevo reporte"
-            >
-              Nuevo Reporte
-            </a>
-          </li>
-        </ul>
-
-        <!-- User Menu -->
-        <div class="navbar-nav ms-auto">
-          <div class="nav-item dropdown">
-            <button
-              class="nav-link dropdown-toggle d-flex align-items-center"
-              type="button"
-              id="userDropdown"
-              data-bs-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              <div class="user-avatar me-2">
-                <span></span>
-              </div>
-              <span class="user-name">
-                {{ currentUser?.name || 'Usuario' }}
-              </span>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-              <li>
-                <a class="dropdown-item" href="#" (click)="closeMenu()">
-                  <span class="me-2"></span> Mi Perfil
-                </a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="#" (click)="closeMenu()">
-                  <span class="me-2"></span> Configuración
-                </a>
-              </li>
-              <li><hr class="dropdown-divider" /></li>
-              <li>
-                <button class="dropdown-item" (click)="logout()">
-                  <span class="me-2"></span> Cerrar Sesión
-                </button>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </ng-container>
-
-      <ng-template #guest>
-        <!-- Login Button (open modal) -->
-        <div class="navbar-nav ms-auto">
-          <button
-            class="nav-link btn-plain"
-            (click)="openLoginModal(); closeMenu()"
-            aria-haspopup="dialog"
-            aria-controls="loginModal"
+    <div class="app-navbar__content" [class.is-open]="menuOpen" id="appNavbarContent">
+      <ul class="app-navbar__links" role="menubar">
+        <li *ngFor="let link of primaryLinks" role="none">
+          <a
+            class="app-navbar__link"
+            [routerLink]="link.path"
+            [fragment]="link.fragment"
+            routerLinkActive="is-active"
+            [routerLinkActiveOptions]="{ exact: link.exact !== false }"
+            (click)="closeMenu()"
+            role="menuitem"
           >
-            Iniciar Sesión
-          </button>
-          <app-login-modal
-            *ngIf="showLoginModal"
-            (close)="closeLoginModal()"
-            id="loginModal"
-          ></app-login-modal>
-        </div>
-      </ng-template>
+            <span class="app-navbar__link-label">{{ link.label }}</span>
+            <span class="app-navbar__link-caret" aria-hidden="true"></span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="app-navbar__actions">
+        <button class="app-navbar__search" type="button" aria-label="Buscar en reportes">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path
+              d="M15.25 14h-.74l-.26-.25a5.5 5.5 0 10-.75.75l.25.26v.74l4.25 4.24a.75.75 0 101.06-1.06L15.25 14zM10.5 14a3.5 3.5 0 110-7 3.5 3.5 0 010 7z"
+            />
+          </svg>
+        </button>
+
+        <ng-container *ngIf="isLoggedIn(); else guestActions">
+          <div class="app-navbar__profile">
+            <button
+              class="app-navbar__profile-trigger"
+              type="button"
+              (click)="toggleProfileMenu()"
+              [attr.aria-expanded]="profileMenuOpen"
+              aria-haspopup="menu"
+              aria-controls="profileMenu"
+            >
+              <span class="app-navbar__avatar" aria-hidden="true">{{ userInitials }}</span>
+              <span class="app-navbar__profile-copy">
+                <span class="app-navbar__profile-name">{{ userLabel }}</span>
+                <span class="app-navbar__profile-meta" *ngIf="currentUser?.email">
+                  {{ currentUser?.email }}
+                </span>
+              </span>
+              <span class="app-navbar__chevron" aria-hidden="true"></span>
+            </button>
+
+            <div class="app-navbar__dropdown" *ngIf="profileMenuOpen" id="profileMenu" role="menu">
+              <button
+                class="app-navbar__dropdown-item"
+                type="button"
+                role="menuitem"
+                (click)="closeMenu()"
+              >
+                Mi perfil
+              </button>
+              <button
+                class="app-navbar__dropdown-item"
+                type="button"
+                role="menuitem"
+                (click)="closeMenu()"
+              >
+                Configuración
+              </button>
+              <hr class="app-navbar__dropdown-divider" />
+              <button
+                class="app-navbar__dropdown-item is-danger"
+                type="button"
+                role="menuitem"
+                (click)="logout()"
+              >
+                Cerrar sesión
+              </button>
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #guestActions>
+          <div class="app-navbar__guest">
+            <a
+              class="app-navbar__help"
+              href="mailto:soporte&#64;echarati.gob.pe?subject=Solicitud de acceso"
+            >
+              Soporte
+            </a>
+            <button class="app-navbar__login" type="button" (click)="openLoginModal(); closeMenu()">
+              Acceso
+            </button>
+          </div>
+        </ng-template>
+      </div>
+
+      <app-login-modal
+        *ngIf="showLoginModal"
+        (close)="closeLoginModal()"
+        [returnUrl]="loginReturnUrl"
+        id="loginModal"
+      ></app-login-modal>
     </div>
   </div>
 </nav>

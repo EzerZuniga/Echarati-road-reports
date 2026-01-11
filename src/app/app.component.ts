@@ -1,4 +1,4 @@
-import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   Router,
   Event,
@@ -19,8 +19,6 @@ export class AppComponent implements OnInit, OnDestroy {
   loading = false;
   private routerSub?: Subscription;
 
-  @HostBinding('class') hostClass = '';
-
   constructor(private router: Router) {}
 
   ngOnInit(): void {
@@ -37,10 +35,6 @@ export class AppComponent implements OnInit, OnDestroy {
         timer(120).subscribe(() => this.setLoading(false));
       }
     });
-
-    // Apply saved theme preference if any
-    const theme = localStorage.getItem('theme');
-    this.applyTheme(theme === 'dark' ? 'dark' : 'light');
   }
 
   ngOnDestroy(): void {
@@ -49,22 +43,5 @@ export class AppComponent implements OnInit, OnDestroy {
 
   setLoading(value: boolean) {
     this.loading = value;
-  }
-
-  toggleTheme() {
-    const next = this.hostClass === 'theme-dark' ? 'theme-light' : 'theme-dark';
-    this.applyTheme(next === 'theme-dark' ? 'dark' : 'light');
-  }
-
-  private applyTheme(mode: 'dark' | 'light') {
-    if (mode === 'dark') {
-      this.hostClass = 'theme-dark';
-      document.documentElement.setAttribute('data-theme', 'dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      this.hostClass = 'theme-light';
-      document.documentElement.removeAttribute('data-theme');
-      localStorage.setItem('theme', 'light');
-    }
   }
 }

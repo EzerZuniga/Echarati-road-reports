@@ -20,10 +20,12 @@ export class AuthGuard {
       return true;
     }
 
-    // Redirigir a login si no está autenticado
-    this.router.navigate(['/auth/login'], {
-      queryParams: { returnUrl: state.url },
+    // Generar URL que muestra el modal de acceso sin enviar al módulo auth
+    return this.router.createUrlTree(['/'], {
+      queryParams: {
+        auth: 'login',
+        returnUrl: state.url,
+      },
     });
-    return false;
   }
 }

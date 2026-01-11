@@ -3,6 +3,7 @@
   flex-direction: column;
   min-height: 100vh;
   background: linear-gradient(180deg, rgba(245, 246, 248, 0.6), transparent 40%);
+  padding-top: 96px;
 }
 
 .main-content {
@@ -75,6 +76,12 @@
   }
 }
 
+@media (max-width: 960px) {
+  .app-container {
+    padding-top: 88px;
+  }
+}
+
 @media (min-width: 1200px) {
   .main-content {
     padding: 4rem 2rem;
@@ -82,39 +89,4 @@
 }
 
 /* Botón de alternar tema (accesible, visible) */
-.theme-toggle {
-  position: fixed;
-  top: 0.75rem;
-  right: 1rem;
-  background: rgba(255, 255, 255, 0.95);
-  color: var(--text, #222);
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  padding: 0.38rem 0.6rem;
-  border-radius: 8px;
-  z-index: 10000;
-  cursor: pointer;
-  font-size: 1rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
-}
-
-.theme-toggle[aria-pressed='true'] {
-  background: var(--brand-800, #0a58ca);
-  color: #fff;
-  border-color: transparent;
-}
-
-.theme-toggle:focus-visible {
-  outline: 3px solid var(--brand-500, #0d6efd);
-  outline-offset: 3px;
-}
-
-@media (max-width: 600px) {
-  .theme-toggle {
-    top: 0.5rem;
-    right: 0.5rem;
-    padding: 0.3rem 0.45rem;
-  }
-}
+/* Theme toggle removed from UI */

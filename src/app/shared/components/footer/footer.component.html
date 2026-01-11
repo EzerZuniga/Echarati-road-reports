@@ -1,47 +1,70 @@
 <footer class="footer" role="contentinfo">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-6">
-        <div class="footer-brand">
-          <span class="footer-icon" aria-hidden="true"></span>
-          <span class="footer-text">Reportes Ciudadanos</span>
-        </div>
+  <div class="footer-container">
+    <div class="footer-grid">
+      <section class="footer-pane footer-pane--brand" aria-labelledby="footer-about-title">
+        <h2 id="footer-about-title" class="footer-heading">Reportes Ciudadanos</h2>
+        <p class="footer-tagline">Atención municipal ágil y transparente para toda la comunidad.</p>
         <p class="footer-description">
-          Plataforma para reportar y gestionar problemas en la comunidad. Juntos construimos una
-          ciudad mejor.
+          Gestiona incidentes viales, alumbrado, limpieza pública y emergencias desde una única
+          plataforma conectada con la Municipalidad Distrital de Echarati.
         </p>
-      </div>
+      </section>
 
-      <div class="col-md-3" aria-labelledby="quick-links-title">
-        <h5 id="quick-links-title">Enlaces Rápidos</h5>
-        <ul class="footer-links" role="list">
-          <li role="listitem"><a routerLink="/reports" (click)="(null)">Mis Reportes</a></li>
-          <li role="listitem"><a routerLink="/reports/new" (click)="(null)">Nuevo Reporte</a></li>
-          <li role="listitem"><a href="mailto:contacto@example.com">Contacto</a></li>
-          <li role="listitem"><a href="#/help">Ayuda</a></li>
+      <section class="footer-pane" aria-labelledby="footer-services-title">
+        <h3 id="footer-services-title" class="footer-subheading">Servicios disponibles</h3>
+        <ul class="footer-list" role="list">
+          <li role="listitem">Reportes de vías y transporte</li>
+          <li role="listitem">Seguimiento del estado de incidentes</li>
+          <li role="listitem">Alertas comunitarias en tiempo real</li>
+          <li role="listitem">Canal directo con cuadrillas municipales</li>
         </ul>
-      </div>
+      </section>
 
-      <div class="col-md-3" aria-labelledby="legal-links-title">
-        <h5 id="legal-links-title">Legal</h5>
+      <nav class="footer-pane" aria-labelledby="quick-links-title">
+        <h3 id="quick-links-title" class="footer-subheading">Enlaces rápidos</h3>
         <ul class="footer-links" role="list">
-          <li role="listitem"><a href="#/terms">Términos de Uso</a></li>
-          <li role="listitem"><a href="#/privacy">Política de Privacidad</a></li>
-          <li role="listitem"><a href="#/legal">Aviso Legal</a></li>
+          <li role="listitem"><a routerLink="/reports" (click)="(null)">Mis reportes</a></li>
+          <li role="listitem"><a routerLink="/reports/new" (click)="(null)">Nuevo reporte</a></li>
+          <li role="listitem"><a href="#/help">Centro de ayuda</a></li>
+          <li role="listitem">
+            <a href="mailto:contacto&#64;reportesciudadanos.pe">Contacto soporte</a>
+          </li>
         </ul>
-      </div>
+      </nav>
+
+      <section class="footer-pane" aria-labelledby="footer-contact-title">
+        <h3 id="footer-contact-title" class="footer-subheading">Contáctanos</h3>
+        <ul class="footer-contact-list" role="list">
+          <li role="listitem">
+            <span class="footer-contact-label">Correo</span>
+            <a href="mailto:soporte&#64;reportesciudadanos.pe">soporte&#64;reportesciudadanos.pe</a>
+          </li>
+          <li role="listitem">
+            <span class="footer-contact-label">Teléfono</span>
+            <a href="tel:+5167465000">+51 67 465 000</a>
+          </li>
+          <li role="listitem">
+            <span class="footer-contact-label">Dirección</span>
+            <span>Av. Municipal S/N, Echarati, Cusco</span>
+          </li>
+          <li role="listitem">
+            <span class="footer-contact-label">Horario</span>
+            <span>Lunes a viernes 08:00 - 17:30</span>
+          </li>
+        </ul>
+      </section>
     </div>
 
     <div class="footer-bottom">
-      <div class="row">
-        <div class="col-md-6">
-          <p class="copyright">
-            &copy; {{ currentYear }} Reportes Ciudadanos. Todos los derechos reservados.
-          </p>
-        </div>
-        <div class="col-md-6 text-md-end">
-          <p class="version">Versión 1.0.0</p>
-        </div>
+      <p class="footer-copy">
+        &copy; {{ currentYear }} Reportes Ciudadanos. Municipalidad Distrital de Echarati.
+      </p>
+      <div class="footer-bottom-links">
+        <a href="#/legal">Aviso legal</a>
+        <span aria-hidden="true">·</span>
+        <a href="#/privacy">Privacidad</a>
+        <span aria-hidden="true">·</span>
+        <span class="footer-version">Versión 1.0.0</span>
       </div>
     </div>
   </div>

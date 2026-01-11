@@ -7,16 +7,6 @@
 
   <!-- Navbar será cargado desde shared/components/navbar -->
   <app-navbar></app-navbar>
-  <button
-    class="theme-toggle"
-    (click)="toggleTheme()"
-    [attr.aria-pressed]="hostClass === 'theme-dark'"
-    aria-label="Alternar tema"
-    title="Alternar tema"
-  >
-    <span class="sr-only">Alternar tema</span>
-    <span aria-hidden="true">🌓</span>
-  </button>
 
   <main id="main-content" class="main-content" tabindex="-1">
     <router-outlet></router-outlet>

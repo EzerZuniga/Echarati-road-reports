@@ -21,16 +21,26 @@ export class AuthService {
   private readonly TOKEN_KEY = 'auth_token';
   private readonly USER_KEY = 'auth_user';
   private currentUserSubject = new BehaviorSubject<User | null>(null);
+  private storage: Storage;
 
   constructor() {
+    this.storage = this.resolveStorage();
     this.loadStoredUser();
   }
 
   private loadStoredUser(): void {
-    const userJson = localStorage.getItem(this.USER_KEY);
-    if (userJson) {
-      const user = JSON.parse(userJson);
-      this.currentUserSubject.next(user);
+    const token = this.storage.getItem(this.TOKEN_KEY);
+    const userJson = this.storage.getItem(this.USER_KEY);
+
+    if (token && userJson) {
+      try {
+        const user = JSON.parse(userJson) as User;
+        this.currentUserSubject.next(user);
+      } catch {
+        this.clearStoredSession();
+      }
+    } else {
+      this.clearStoredSession();
     }
   }
 
@@ -57,13 +67,12 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem(this.TOKEN_KEY);
-    localStorage.removeItem(this.USER_KEY);
+    this.clearStoredSession();
     this.currentUserSubject.next(null);
   }
 
   isAuthenticated(): boolean {
-    return !!localStorage.getItem(this.TOKEN_KEY);
+    return !!this.storage.getItem(this.TOKEN_KEY);
   }
 
   getCurrentUser(): User | null {
@@ -75,12 +84,31 @@ export class AuthService {
   }
 
   private setSession(authResult: AuthResponse): void {
-    localStorage.setItem(this.TOKEN_KEY, authResult.token);
-    localStorage.setItem(this.USER_KEY, JSON.stringify(authResult.user));
+    this.storage.setItem(this.TOKEN_KEY, authResult.token);
+    this.storage.setItem(this.USER_KEY, JSON.stringify(authResult.user));
     this.currentUserSubject.next(authResult.user);
   }
 
   getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
+    return this.storage.getItem(this.TOKEN_KEY);
+  }
+
+  private resolveStorage(): Storage {
+    if (typeof window !== 'undefined' && window.sessionStorage) {
+      return window.sessionStorage;
+    }
+    return {
+      getItem: () => null,
+      setItem: () => undefined,
+      removeItem: () => undefined,
+      clear: () => undefined,
+      key: () => null,
+      length: 0,
+    } as Storage;
+  }
+
+  private clearStoredSession(): void {
+    this.storage.removeItem(this.TOKEN_KEY);
+    this.storage.removeItem(this.USER_KEY);
   }
 }

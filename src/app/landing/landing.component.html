@@ -1,0 +1,74 @@
+<section class="landing" aria-labelledby="landingTitle">
+  <div class="landing__hero">
+    <div class="landing__hero-copy">
+      <span class="landing__label" aria-hidden="true">Municipalidad Distrital de Echarati</span>
+      <h1 id="landingTitle">Reporte Ciudadano</h1>
+      <p class="landing__lead">
+        Una plataforma colaborativa donde comunidad y municipio trabajan juntos para resolver
+        incidencias urbanas con responsabilidad social y trazabilidad total.
+      </p>
+      <div class="landing__cta">
+        <a class="landing__action-primary" routerLink="/auth/login">
+          Iniciar sesión
+          <ng-icon name="heroSparklesSolid" size="18" aria-hidden="true"></ng-icon>
+        </a>
+        <a class="landing__action-secondary" routerLink="/auth/login" fragment="registro">
+          Solicitar acceso
+        </a>
+      </div>
+      <dl class="landing__metrics" aria-label="Indicadores del último año">
+        <div class="landing__metrics-item" *ngFor="let metric of metrics">
+          <dt>{{ metric.value }}</dt>
+          <dd>{{ metric.label }}</dd>
+        </div>
+      </dl>
+    </div>
+    <aside class="landing__card" aria-labelledby="landingHighlights">
+      <h2 id="landingHighlights">¿Por qué el sistema importa?</h2>
+      <ul class="landing__highlights">
+        <li *ngFor="let item of highlights">
+          <div class="landing__highlights-icon" aria-hidden="true">
+            <ng-icon [name]="item.icon" size="22"></ng-icon>
+          </div>
+          <div>
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.description }}</p>
+          </div>
+        </li>
+      </ul>
+    </aside>
+  </div>
+
+  <section class="landing__workflow" aria-labelledby="landingWorkflow">
+    <div class="landing__workflow-intro">
+      <h2 id="landingWorkflow">Cómo funciona</h2>
+      <p>
+        El ciclo completo queda registrado: desde el reporte inicial hasta la publicación del
+        resultado. Cada etapa cuenta con responsables, evidencias y comunicación clara con la
+        ciudadanía.
+      </p>
+    </div>
+    <ol class="landing__steps">
+      <li *ngFor="let step of steps">
+        <h3>{{ step.title }}</h3>
+        <p>{{ step.detail }}</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="landing__bottom" aria-labelledby="landingBottomCta">
+    <div class="landing__bottom-card">
+      <div>
+        <h2 id="landingBottomCta">Conecta la voz ciudadana con equipos listos para actuar</h2>
+        <p>
+          Coordina intervenciones, prioriza recursos y comparte avances verificables. Todo en un
+          entorno seguro y diseñado para los vecinos de Echarati.
+        </p>
+      </div>
+      <a class="landing__action-primary" routerLink="/auth/login">
+        Entrar al panel
+        <ng-icon name="heroChartBarSquareSolid" size="18" aria-hidden="true"></ng-icon>
+      </a>
+    </div>
+  </section>
+</section>

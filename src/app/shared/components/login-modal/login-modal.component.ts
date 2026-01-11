@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { Router } from '@angular/router';
@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 })
 export class LoginModalComponent {
   @Output() close = new EventEmitter<void>();
+  @Input() returnUrl = '/reports';
   loginForm: FormGroup;
   loading = false;
   submitted = false;
@@ -55,7 +56,8 @@ export class LoginModalComponent {
     this.authService.login(this.f['username'].value, this.f['password'].value).subscribe({
       next: () => {
         this.close.emit();
-        this.router.navigate(['/reports']);
+        const target = this.returnUrl && this.returnUrl.trim() ? this.returnUrl : '/reports';
+        this.router.navigateByUrl(target);
       },
       error: () => {
         this.error = 'Usuario o contraseña incorrectos';

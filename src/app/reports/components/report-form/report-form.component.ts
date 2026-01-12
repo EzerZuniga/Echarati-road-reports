@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ReportService } from '../../services/report.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ReportFacadeService } from '../../services/report-facade.service';
 import { Report, ReportCategory, ReportStatus } from '../../models/report.model';
 
 @Component({
@@ -20,9 +21,12 @@ export class ReportFormComponent implements OnInit {
   categories = Object.values(ReportCategory);
   statuses = Object.values(ReportStatus);
 
+  private readonly facade = inject(ReportFacadeService);
+  private readonly destroyRef = inject(DestroyRef);
+  readonly isOnline$ = this.facade.isOnline$;
+
   constructor(
     private formBuilder: FormBuilder,
-    private reportService: ReportService,
     private router: Router,
     private route: ActivatedRoute
   ) {
@@ -38,7 +42,7 @@ export class ReportFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe((params) => {
+    this.route.params.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       if (params['id']) {
         this.isEditMode = true;
         this.reportId = +params['id'];
@@ -51,7 +55,7 @@ export class ReportFormComponent implements OnInit {
     if (!this.reportId) return;
 
     this.loading = true;
-    this.reportService.getReport(this.reportId).subscribe({
+    this.facade.getReport(this.reportId).subscribe({
       next: (report) => {
         this.reportForm.patchValue(report);
         this.loading = false;
@@ -80,7 +84,7 @@ export class ReportFormComponent implements OnInit {
     const reportData: Report = this.reportForm.value;
 
     if (this.isEditMode && this.reportId) {
-      this.reportService.updateReport(this.reportId, reportData).subscribe({
+      this.facade.updateReport(this.reportId, reportData).subscribe({
         next: () => {
           this.router.navigate(['/reports', this.reportId]);
         },
@@ -91,9 +95,13 @@ export class ReportFormComponent implements OnInit {
         },
       });
     } else {
-      this.reportService.createReport(reportData).subscribe({
+      this.facade.createReport(reportData).subscribe({
         next: (report) => {
-          this.router.navigate(['/reports', report.id]);
+          if (report.id) {
+            this.router.navigate(['/reports', report.id]);
+          } else {
+            this.router.navigate(['/reports']);
+          }
         },
         error: (err) => {
           this.error = 'Error al crear el reporte';
@@ -114,12 +122,12 @@ export class ReportFormComponent implements OnInit {
 
   getCategoryIcon(category: ReportCategory): string {
     const icons: Record<ReportCategory, string> = {
-      [ReportCategory.INFRASTRUCTURE]: '',
-      [ReportCategory.SECURITY]: '',
-      [ReportCategory.ENVIRONMENT]: '',
-      [ReportCategory.TRANSPORT]: '',
-      [ReportCategory.OTHER]: '',
+      [ReportCategory.INFRASTRUCTURE]: '🛠️',
+      [ReportCategory.SECURITY]: '🚨',
+      [ReportCategory.ENVIRONMENT]: '🌿',
+      [ReportCategory.TRANSPORT]: '🚧',
+      [ReportCategory.OTHER]: '📌',
     };
-    return icons[category] || '';
+    return icons[category] || '📌';
   }
 }

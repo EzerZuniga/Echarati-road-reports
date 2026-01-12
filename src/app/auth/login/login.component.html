@@ -9,7 +9,7 @@
     </p>
 
     <ul class="auth-highlights" aria-label="Beneficios principales">
-      <li class="auth-highlights__item" *ngFor="let highlight of highlights">
+      <li class="auth-highlights__item" *ngFor="let highlight of highlights" role="listitem">
         <div class="auth-highlights__icon" aria-hidden="true">
           <ng-icon [name]="highlight.icon" size="24"></ng-icon>
         </div>
@@ -21,7 +21,12 @@
     </ul>
 
     <div class="auth-stats" aria-label="Resultados recientes">
-      <div class="auth-stats__item" *ngFor="let stat of stats">
+      <div
+        class="auth-stats__item"
+        *ngFor="let stat of stats"
+        role="group"
+        [attr.aria-label]="stat.label"
+      >
         <span class="auth-stats__value">{{ stat.value }}</span>
         <span class="auth-stats__label">{{ stat.label }}</span>
       </div>
@@ -42,7 +47,9 @@
 
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
         <div class="form-group">
-          <label for="username" class="form-label">Usuario</label>
+          <label for="username" class="form-label"
+            >Usuario<span class="visually-hidden"> requerido</span></label
+          >
           <div class="form-control-wrapper">
             <span class="form-control-icon" aria-hidden="true">
               <ng-icon name="heroUserSolid" size="18"></ng-icon>
@@ -67,7 +74,9 @@
 
         <div class="form-group">
           <div class="form-label-group">
-            <label for="password" class="form-label">Contraseña</label>
+            <label for="password" class="form-label"
+              >Contraseña<span class="visually-hidden"> requerida</span></label
+            >
             <a class="form-label-link" href="mailto:soporte@echarati.gob.pe"
               >¿Olvidaste tu acceso?</a
             >

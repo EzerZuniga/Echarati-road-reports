@@ -9,7 +9,7 @@
   "parserOptions": {
     "ecmaVersion": 2022,
     "sourceType": "module",
-    "project": "tsconfig.json"
+    "project": "tsconfig.eslint.json"
   },
   "plugins": ["@typescript-eslint", "prettier"],
   "extends": [
@@ -20,5 +20,16 @@
   "rules": {
     "prettier/prettier": "error",
     "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }]
-  }
+  },
+  "overrides": [
+    {
+      "files": ["scripts/**/*.{mjs,cjs,js}"],
+      "parserOptions": {
+        "project": null
+      },
+      "rules": {
+        "@typescript-eslint/no-var-requires": "off"
+      }
+    }
+  ]
 }

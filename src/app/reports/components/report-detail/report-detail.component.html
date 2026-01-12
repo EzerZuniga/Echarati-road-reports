@@ -1,13 +1,14 @@
 <div class="report-detail-container">
   <div class="container">
     <!-- Botón de volver -->
-    <div class="mb-4">
+    <div class="mb-4" aria-label="Volver al listado de reportes">
       <button
         type="button"
         class="btn btn-outline-secondary"
         (click)="router.navigate(['/reports'])"
       >
-        ← Volver a la lista
+        <span aria-hidden="true">←</span>
+        <span class="ms-2">Volver a la lista</span>
       </button>
     </div>
 
@@ -30,12 +31,19 @@
       <div class="row">
         <!-- Información principal -->
         <div class="col-lg-8">
-          <div class="card mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
+          <div class="card mb-4" aria-labelledby="reportMetadataHeading">
+            <div
+              class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2"
+            >
               <h1 class="h4 mb-0">{{ report.title }}</h1>
-              <span class="badge" [ngClass]="getStatusBadgeClass(report.status)">
-                {{ report.status }}
-              </span>
+              <div class="d-flex align-items-center gap-2">
+                <span class="badge" [ngClass]="getStatusBadgeClass(report.status)">
+                  {{ report.status }}
+                </span>
+                @if (isOfflineReport(report)) {
+                  <span class="badge badge-offline" role="status">Sincronización pendiente</span>
+                }
+              </div>
             </div>
             <div class="card-body">
               <div class="mb-4">
@@ -43,15 +51,16 @@
                 <p class="lead">{{ report.description }}</p>
               </div>
 
-              <div class="row mb-4">
+              <div class="row mb-4" aria-labelledby="reportMetadataHeading">
                 <div class="col-md-6">
+                  <h2 id="reportMetadataHeading" class="visually-hidden">Metadatos del reporte</h2>
                   <h5 class="text-muted mb-3">Información del Reporte</h5>
                   <ul class="list-unstyled">
                     <li class="mb-2">
                       <strong>Categoría:</strong>
                       <span class="ms-2">
                         {{ getCategoryIcon(report.category) }}
-                        {{ report.category }}
+                        {{ getCategoryLabel(report.category) }}
                       </span>
                     </li>
                     <li class="mb-2">
@@ -111,9 +120,9 @@
           <!-- Cambiar estado -->
           <div class="card mb-4">
             <div class="card-header">
-              <h5 class="mb-0">Cambiar Estado</h5>
+              <h5 class="mb-0" id="statusActionsHeading">Cambiar Estado</h5>
             </div>
-            <div class="card-body">
+            <div class="card-body" role="group" [attr.aria-labelledby]="'statusActionsHeading'">
               <div class="d-grid gap-2">
                 @for (status of statusOptions; track status) {
                   <button

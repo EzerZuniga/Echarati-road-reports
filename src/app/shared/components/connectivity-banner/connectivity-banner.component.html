@@ -1,0 +1,17 @@
+@if ((online$ | async) === false) {
+  <section class="connectivity-banner" role="status" aria-live="polite">
+    <div class="container banner-content">
+      <div class="banner-text">
+        <strong>Modo sin conexión:</strong>
+        <span>
+          Tus cambios se guardarán localmente y se sincronizarán automáticamente cuando la conexión
+          regrese.
+        </span>
+      </div>
+      <div class="banner-actions">
+        <span class="indicator" aria-hidden="true"></span>
+        <span>Esperando conexión estable…</span>
+      </div>
+    </div>
+  </section>
+}

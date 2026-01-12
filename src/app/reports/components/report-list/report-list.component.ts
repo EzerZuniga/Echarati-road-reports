@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { ReportService } from '../../services/report.service';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ReportFacadeService } from '../../services/report-facade.service';
 import { Report, ReportCategory, ReportStatus, ReportFilter } from '../../models/report.model';
 
 @Component({
@@ -26,29 +27,33 @@ export class ReportListComponent implements OnInit {
   // Búsqueda
   searchTerm = '';
 
-  constructor(private reportService: ReportService) {}
+  private readonly facade = inject(ReportFacadeService);
+  private readonly destroyRef = inject(DestroyRef);
+  readonly isOnline$ = this.facade.isOnline$;
 
   ngOnInit(): void {
+    this.facade.reports$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((reports) => {
+      this.reports = reports;
+      this.applySearchFilter();
+    });
+
+    this.facade.loading$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((value) => (this.loading = value));
+
+    this.facade.error$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((message) => (this.error = message));
+
+    this.categories = this.facade.getCategories();
+    this.statuses = this.facade.getStatuses();
+
     this.loadReports();
   }
 
   loadReports(): void {
-    this.loading = true;
-    this.error = '';
-
-    this.reportService.getReports(this.filter).subscribe({
-      next: (reports) => {
-        this.reports = reports;
-        this.applySearchFilter();
-        this.updatePagination();
-        this.loading = false;
-      },
-      error: (err) => {
-        this.error = 'Error al cargar los reportes';
-        this.loading = false;
-        console.error(err);
-      },
-    });
+    this.facade.loadReports(this.filter);
+    this.updatePagination();
   }
 
   applySearchFilter(): void {
@@ -91,10 +96,7 @@ export class ReportListComponent implements OnInit {
 
   deleteReport(id: number): void {
     if (confirm('¿Está seguro de que desea eliminar este reporte?')) {
-      this.reportService.deleteReport(id).subscribe({
-        next: () => {
-          this.loadReports();
-        },
+      this.facade.deleteReport(id).subscribe({
         error: (err) => {
           this.error = 'Error al eliminar el reporte';
           console.error(err);
@@ -115,13 +117,37 @@ export class ReportListComponent implements OnInit {
 
   getCategoryIcon(category: ReportCategory): string {
     const icons: Record<ReportCategory, string> = {
-      [ReportCategory.INFRASTRUCTURE]: '',
-      [ReportCategory.SECURITY]: '',
-      [ReportCategory.ENVIRONMENT]: '',
-      [ReportCategory.TRANSPORT]: '',
-      [ReportCategory.OTHER]: '',
+      [ReportCategory.INFRASTRUCTURE]: '🛠️',
+      [ReportCategory.SECURITY]: '🚨',
+      [ReportCategory.ENVIRONMENT]: '🌿',
+      [ReportCategory.TRANSPORT]: '🚧',
+      [ReportCategory.OTHER]: '📌',
     };
-    return icons[category] || '';
+    return icons[category] || '📌';
+  }
+
+  getCategoryLabel(category: ReportCategory): string {
+    const labels: Record<ReportCategory, string> = {
+      [ReportCategory.INFRASTRUCTURE]: 'Infraestructura vial',
+      [ReportCategory.SECURITY]: 'Seguridad vial',
+      [ReportCategory.ENVIRONMENT]: 'Evento ambiental',
+      [ReportCategory.TRANSPORT]: 'Transporte y tránsito',
+      [ReportCategory.OTHER]: 'Otro',
+    };
+    return labels[category] || 'Otro';
+  }
+
+  getPendingActionLabel(action?: string): string {
+    const map: Record<string, string> = {
+      create: 'Pendiente por enviar',
+      update: 'Actualización pendiente',
+      delete: 'Eliminación pendiente',
+    };
+    return action ? (map[action] ?? 'Pendiente') : '';
+  }
+
+  isOfflineReport(report: Report): boolean {
+    return !!report.isOfflineEntry;
   }
 
   prevPage(): void {

@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ReportService } from '../../services/report.service';
-import { Report, ReportStatus } from '../../models/report.model';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ReportFacadeService } from '../../services/report-facade.service';
+import { Report, ReportCategory, ReportStatus } from '../../models/report.model';
 
 @Component({
   selector: 'app-report-detail',
@@ -15,14 +16,23 @@ export class ReportDetailComponent implements OnInit {
 
   statusOptions = Object.values(ReportStatus);
 
+  private readonly facade = inject(ReportFacadeService);
+  private readonly destroyRef = inject(DestroyRef);
+
   constructor(
     private route: ActivatedRoute,
-    public router: Router,
-    private reportService: ReportService
+    public router: Router
   ) {}
 
   ngOnInit(): void {
     this.loadReport();
+    this.facade.reports$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((reports) => {
+      if (!this.report?.id) return;
+      const updated = reports.find((item) => item.id === this.report?.id);
+      if (updated) {
+        this.report = updated;
+      }
+    });
   }
 
   loadReport(): void {
@@ -35,7 +45,7 @@ export class ReportDetailComponent implements OnInit {
     }
 
     this.loading = true;
-    this.reportService.getReport(+id).subscribe({
+    this.facade.getReport(+id).subscribe({
       next: (report) => {
         this.report = report;
         this.loading = false;
@@ -52,7 +62,7 @@ export class ReportDetailComponent implements OnInit {
     if (!this.report || !this.report.id) return;
 
     this.loading = true;
-    this.reportService.updateReport(this.report.id, { status: newStatus }).subscribe({
+    this.facade.updateReport(this.report.id, { status: newStatus }).subscribe({
       next: (updatedReport) => {
         this.report = updatedReport;
         this.loading = false;
@@ -71,7 +81,7 @@ export class ReportDetailComponent implements OnInit {
     if (
       confirm('¿Está seguro de que desea eliminar este reporte? Esta acción no se puede deshacer.')
     ) {
-      this.reportService.deleteReport(this.report.id).subscribe({
+      this.facade.deleteReport(this.report.id).subscribe({
         next: () => {
           this.router.navigate(['/reports']);
         },
@@ -93,15 +103,30 @@ export class ReportDetailComponent implements OnInit {
     return classes[status] || 'badge-secondary';
   }
 
-  getCategoryIcon(category: string): string {
-    const icons: Record<string, string> = {
-      INFRASTRUCTURE: '',
-      SECURITY: '',
-      ENVIRONMENT: '',
-      TRANSPORT: '',
-      OTHER: '',
+  getCategoryIcon(category: ReportCategory): string {
+    const icons: Record<ReportCategory, string> = {
+      [ReportCategory.INFRASTRUCTURE]: '🛠️',
+      [ReportCategory.SECURITY]: '🚨',
+      [ReportCategory.ENVIRONMENT]: '🌿',
+      [ReportCategory.TRANSPORT]: '🚧',
+      [ReportCategory.OTHER]: '📌',
     };
-    return icons[category] || '';
+    return icons[category] || '📌';
+  }
+
+  getCategoryLabel(category: ReportCategory): string {
+    const labels: Record<ReportCategory, string> = {
+      [ReportCategory.INFRASTRUCTURE]: 'Infraestructura vial',
+      [ReportCategory.SECURITY]: 'Seguridad vial',
+      [ReportCategory.ENVIRONMENT]: 'Evento ambiental',
+      [ReportCategory.TRANSPORT]: 'Transporte y tránsito',
+      [ReportCategory.OTHER]: 'Otro',
+    };
+    return labels[category] || 'Otro';
+  }
+
+  isOfflineReport(report?: Report): boolean {
+    return !!report?.isOfflineEntry;
   }
 
   getFormattedDate(date?: Date): string {

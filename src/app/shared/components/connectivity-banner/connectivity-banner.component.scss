@@ -1,0 +1,59 @@
+.connectivity-banner {
+  width: 100%;
+  background: #1f2937;
+  color: #f9fafb;
+  padding: 0.75rem 0;
+  border-bottom: 3px solid #f97316;
+}
+
+.banner-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.banner-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  strong {
+    font-weight: 700;
+  }
+}
+
+.banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.indicator {
+  width: 0.85rem;
+  height: 0.85rem;
+  border-radius: 999px;
+  background-color: #f97316;
+  position: relative;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.6);
+    opacity: 0.6;
+  }
+}
+
+@media (max-width: 768px) {
+  .banner-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

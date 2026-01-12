@@ -1,4 +1,4 @@
-# Citizen Reports – Plataforma de Gestión de Incidencias Municipales
+# ECHARATI ROAD REPORTS
 
 ![Angular](https://img.shields.io/badge/Angular-17-DD0031?style=for-the-badge&logo=angular&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.2-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
@@ -17,9 +17,10 @@ Aplicación web construida con Angular 17 que permite a la ciudadanía reportar 
 4. [Scripts disponibles](#scripts-disponibles)
 5. [Configuración de entornos](#configuración-de-entornos)
 6. [Estructura del proyecto](#estructura-del-proyecto)
-7. [Calidad y pruebas](#calidad-y-pruebas)
-8. [Guía de contribución](#guía-de-contribución)
-9. [Licencia](#licencia)
+7. [Modo sin conexión y PWA](#modo-sin-conexión-y-pwa)
+8. [Calidad y pruebas](#calidad-y-pruebas)
+9. [Guía de contribución](#guía-de-contribución)
+10. [Licencia](#licencia)
 
 ---
 
@@ -30,16 +31,18 @@ Aplicación web construida con Angular 17 que permite a la ciudadanía reportar 
 - **Experiencia de usuario accesible**: componentes reutilizables, soporte responsive, validaciones de formularios en vivo y patrones de foco visibles.
 - **Análisis y priorización**: filtros por categoría y estado, búsqueda contextual y listado paginado para grandes volúmenes de reportes.
 - **Integración operativa**: arquitectura modular lista para enlazar servicios REST, mensajería o dashboards analíticos.
+- **Resiliencia sin conexión**: PWA habilitada con caché local, cola de sincronización y avisos visuales cuando la red no está disponible.
 
 ## Arquitectura y stack
 
-| Capa            | Tecnologías                      | Descripción                                                          |
-| --------------- | -------------------------------- | -------------------------------------------------------------------- |
-| Frontend        | Angular 17, TypeScript 5.2, RxJS | Componentes modulares, lazy loading por dominios y tipado fuerte.    |
-| Estilos         | SCSS, CSS Variables              | Diseño adaptable con estilos globales y aislamiento por componentes. |
-| Infraestructura | Angular CLI, npm o yarn          | Scripts de construcción, pruebas y linting listos para CI/CD.        |
+| Capa            | Tecnologías                                      | Descripción                                                          |
+| --------------- | ------------------------------------------------ | -------------------------------------------------------------------- |
+| Frontend        | Angular 17, TypeScript 5.2, RxJS                 | Componentes modulares, lazy loading por dominios y tipado fuerte.    |
+| Estilos         | SCSS, CSS Variables                              | Diseño adaptable con estilos globales y aislamiento por componentes. |
+| Offline / PWA   | Angular Service Worker, caché local basada en ID | Cacheo de shell, cola diferida y soporte sin conexión.               |
+| Infraestructura | Angular CLI, npm o yarn                          | Scripts de construcción, pruebas y linting listos para CI/CD.        |
 
-> La aplicación sigue patrones de arquitectura limpia: `core` para servicios base, `shared` para componentes reutilizables y módulos de dominio (`auth`, `reports`, `landing`).
+> La aplicación sigue patrones de arquitectura limpia: `core` concentra servicios base y observabilidad, `shared` expone UI reutilizable y cada dominio (`auth`, `landing`, `reports`) se carga de forma diferida. El módulo `reports` ahora se divide en `components`, `data-access` (API, caché, cola offline), `models` y `services` (fachada reactiva).
 
 ## Comenzar
 
@@ -95,10 +98,14 @@ Echarati-road-reports/
 ├── src/
 │   ├── app/
 │   │   ├── auth/               # Módulo de autenticación y login
-│   │   ├── core/               # Guards, interceptores, servicios base
+│   │   ├── core/               # Guards, interceptores, servicios base (auth, network)
 │   │   ├── landing/            # Página pública de bienvenida
-│   │   ├── reports/            # Gestión de reportes ciudadanos
-│   │   └── shared/             # Componentes reutilizables (navbar, footer, etc.)
+│   │   ├── reports/
+│   │   │   ├── components/     # Listado, formulario y detalle de reportes
+│   │   │   ├── data-access/    # API REST, caché local, cola offline
+│   │   │   ├── models/         # Tipos compartidos
+│   │   │   └── services/       # Fachada reactiva para la UI
+│   │   └── shared/             # Componentes reutilizables (navbar, footer, banner conectividad)
 │   ├── assets/                 # Recursos estáticos
 │   ├── environments/           # Configuración por entorno
 │   └── styles.scss             # Estilos globales
@@ -110,6 +117,22 @@ Echarati-road-reports/
 └── README.md                   # Este documento
 ```
 
+## Modo sin conexión y PWA
+
+La aplicación incluye soporte PWA (`@angular/pwa`) y cola de sincronización para mantener operativa la atención de incidencias aun sin conectividad.
+
+- **Service Worker**: cachea el shell de la app, los estilos y assets críticos en la primera carga (producción).
+- **Capa de datos híbrida**: `ReportDataService` decide entre la API (`ReportApiService`) y la caché local (`ReportCacheService`), y mantiene una cola persistente en `localStorage`.
+- **Sincronización diferida**: cuando el dispositivo recupera conexión, la cola se reintenta automáticamente. Los reportes se limpian de la bandera `isOfflineEntry` tras confirmación del backend.
+- **Feedback visual**: un banner global y badges en lista/formulario/detalle avisan que la sesión está offline.
+
+Cómo probarlo:
+
+1. Ejecuta `npm run build -- --configuration production` y sirve `dist/citizen-reports-angular` con un servidor estático (`npx http-server dist/citizen-reports-angular`).
+2. Abre DevTools > Application > Service Workers y activa _Offline_.
+3. Crea o edita reportes; verás mensajes de "Sincronización pendiente".
+4. Desactiva _Offline_; la cola enviará los cambios y el badge desaparecerá.
+
 ## Calidad y pruebas
 
 - **Formato y linting**: ejecuta `npm run lint` antes de enviar cambios. Configura hooks de Git (por ejemplo, Husky) si el equipo lo requiere.
@@ -118,6 +141,7 @@ Echarati-road-reports/
   - Mantén componentes presentacionales puros; encapsula lógica de negocio en servicios.
   - Implementa detección de cambios `OnPush` donde sea viable para optimizar rendimiento.
   - Asegura accesibilidad revisando etiquetas ARIA y flujo de tabulación.
+  - Simula escenarios offline desde DevTools para validar la cola de sincronización y mensajes.
 
 ## Guía de contribución
 

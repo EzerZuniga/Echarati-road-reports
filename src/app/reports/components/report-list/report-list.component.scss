@@ -25,6 +25,16 @@
     color: white;
   }
 
+  .badge-offline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.4rem;
+    background-color: #fff0c2;
+    color: #6c5700;
+    border: 1px solid #f5d98b;
+  }
+
   .table {
     background: white;
     border-radius: 8px;
@@ -48,6 +58,10 @@
     /* Hover visual for rows kept but without transition/transform */
     tr:hover {
       background-color: #f8f9fa;
+    }
+
+    tr.offline-row {
+      background-color: #fdf7e3;
     }
 
     /* Make interactive elements keyboard accessible */

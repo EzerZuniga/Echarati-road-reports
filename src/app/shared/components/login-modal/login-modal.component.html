@@ -1,4 +1,4 @@
-<div class="lm-overlay" role="dialog" aria-modal="true">
+<div class="lm-overlay" role="dialog" aria-modal="true" aria-labelledby="loginModalTitle">
   <div class="lm-backdrop" (click)="onCloseRequest()" aria-hidden="true"></div>
   <div class="lm-panel" role="document">
     <button class="lm-close" aria-label="Cerrar" (click)="onCloseRequest()">✕</button>
@@ -6,10 +6,14 @@
     <div class="login-modal-inner">
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <div class="card">
-          <div class="card-header"><h3 class="text-center">Iniciar Sesión</h3></div>
+          <div class="card-header">
+            <h3 class="text-center" id="loginModalTitle">Iniciar sesión</h3>
+          </div>
           <div class="card-body">
             <div class="form-group">
-              <label for="lm-username">Usuario</label>
+              <label for="lm-username"
+                >Usuario<span class="visually-hidden"> requerido</span></label
+              >
               <input
                 id="lm-username"
                 type="text"
@@ -27,7 +31,9 @@
             </div>
 
             <div class="form-group mt-3">
-              <label for="lm-password">Contraseña</label>
+              <label for="lm-password"
+                >Contraseña<span class="visually-hidden"> requerida</span></label
+              >
               <input
                 id="lm-password"
                 type="password"

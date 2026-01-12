@@ -4,4 +4,4 @@ Scripts y utilidades para mantenimiento: generación de fixtures, migraciones, u
 
 Ejemplos:
 
-- `scripts/seed-sample.js` crea fixtures de ejemplo
+- `scripts/seed-sample.mjs` crea fixtures de ejemplo

@@ -27,6 +27,8 @@ export interface Report {
   userId?: number;
   userName?: string;
   photos?: string[];
+  isOfflineEntry?: boolean;
+  pendingAction?: QueuedReportActionType;
 }
 
 export interface ReportFilter {
@@ -35,4 +37,14 @@ export interface ReportFilter {
   startDate?: Date;
   endDate?: Date;
   location?: string;
+}
+
+export type QueuedReportActionType = 'create' | 'update' | 'delete';
+
+export interface QueuedReportOperation {
+  id: string;
+  type: QueuedReportActionType;
+  payload: Partial<Report>;
+  targetId?: number;
+  createdAt: string;
 }

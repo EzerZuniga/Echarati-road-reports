@@ -2,11 +2,14 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
 
+export type UserRole = 'CITIZEN' | 'ADMIN';
+
 export interface User {
   id: number;
   username: string;
   email: string;
   name: string;
+  role: UserRole;
 }
 
 export interface AuthResponse {
@@ -45,12 +48,16 @@ export class AuthService {
   }
 
   login(username: string, _password: string): Observable<AuthResponse> {
-    // Simulación de login - en producción aquí harías una petición HTTP real
+    // Simulación de login con Roles
+    // Si el usuario es 'admin', le damos rol de ADMIN, sino CITIZEN
+    const isAdmin = username.toLowerCase().includes('admin');
+
     const mockUser: User = {
       id: 1,
       username: username,
-      email: `${username}@example.com`,
-      name: 'Usuario Demo',
+      email: `${username}@echarati.gob.pe`,
+      name: isAdmin ? 'Administrador Municipal' : 'Ciudadano Echarati',
+      role: isAdmin ? 'ADMIN' : 'CITIZEN',
     };
 
     const mockResponse: AuthResponse = {

@@ -1,114 +1,95 @@
+@import '../../../../styles.scss';
+
 .report-detail-container {
+  padding-bottom: 3rem;
+
+  .card-header {
+    background-color: $gray-50;
+    border-bottom: 1px solid $gray-200;
+    padding: 1.5rem;
+  }
+  
   .badge {
-    padding: 0.6em 1em;
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-transform: capitalize;
+     // Inherits global badge styles but we can ensure specificity here if needed
+     font-size: 0.85rem;
+     padding: 0.4em 0.8em;
   }
 
+  // We can trust global badge classes, but overrides below:
   .badge-warning {
-    background-color: #ffc107;
-    color: #212529;
+    @extend .badge;
+    background-color: #fffbeb;
+    color: #b45309;
+    border: 1px solid #fcd34d;
   }
 
   .badge-info {
-    background-color: #17a2b8;
-    color: white;
+    @extend .badge;
+    background-color: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
   }
 
   .badge-success {
-    background-color: #28a745;
-    color: white;
+    @extend .badge;
+    background-color: #ecfdf5;
+    color: #047857;
+    border: 1px solid #6ee7b7;
   }
 
   .badge-secondary {
-    background-color: #6c757d;
-    color: white;
+    @extend .badge;
+    background-color: #f3f4f6;
+    color: #374151;
+    border: 1px solid #e5e7eb;
   }
-
+  
   .badge-offline {
-    background-color: #fff0c2;
-    color: #6c5700;
-    border: 1px solid #f5d98b;
+     @extend .badge;
+     background-color: $gray-100;
+     color: $gray-600;
+     border: 1px dashed $gray-400;
   }
-
-  .card {
-    border: none;
-    box-shadow: var(--shadow-sm);
-
-    .card-header {
-      background-color: #f8f9fa;
-      border-bottom: 1px solid #dee2e6;
-      padding: 1.25rem;
-
-      h1,
-      h5 {
-        margin: 0;
-        font-weight: 600;
-      }
-    }
-
-    .card-body {
-      padding: 1.5rem;
-    }
-  }
-
-  .btn.active {
-    background-color: #4a90e2;
-    color: white;
-    border-color: #4a90e2;
-  }
-
-  .btn {
-    &:focus-visible {
-      outline: 3px solid rgba(74, 144, 226, 0.14);
-      outline-offset: 2px;
-    }
-  }
-
-  .alert {
-    margin-bottom: 0.5rem;
-    padding: 0.75rem 1rem;
-
-    strong {
-      display: block;
-      margin-bottom: 0.25rem;
-    }
-  }
-
+  
   .img-fluid {
-    max-height: 200px;
-    object-fit: cover;
+    border-radius: $radius;
+    border: 1px solid $gray-200;
+    max-height: 300px;
     width: 100%;
+    object-fit: cover;
+    background-color: $gray-50;
   }
 
   .list-unstyled {
+    padding-left: 0;
+    list-style: none;
+    
     li {
-      padding: 0.5rem 0;
-      border-bottom: 1px solid #f0f0f0;
-
+      padding: 0.75rem 0;
+      border-bottom: 1px solid $gray-100;
+      display: flex;
+      flex-wrap: wrap;
+      
       &:last-child {
         border-bottom: none;
       }
-
+      
       strong {
-        color: #495057;
-        min-width: 120px;
-        display: inline-block;
+        color: $gray-900;
+        font-weight: 600;
+        width: 140px;
+        flex-shrink: 0;
+      }
+      
+      span {
+        color: $gray-700;
+        flex: 1;
       }
     }
   }
-}
-
-// Responsive
-@media (max-width: 768px) {
-  .report-detail-container {
-    .card {
-      margin-bottom: 1rem;
-    }
-
-    .btn {
-      margin-bottom: 0.5rem;
-    }
+  
+  // Custom spacing for buttons
+  .gap-2 {
+     gap: 0.75rem !important;
   }
 }

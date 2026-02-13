@@ -1,5 +1,13 @@
-import { Component, DestroyRef, OnInit, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ReportFacadeService } from '../../services/report-facade.service';
 import { Report, ReportCategory, ReportStatus, ReportFilter } from '../../models/report.model';
 
@@ -7,104 +15,113 @@ import { Report, ReportCategory, ReportStatus, ReportFilter } from '../../models
   selector: 'app-report-list',
   templateUrl: './report-list.component.html',
   styleUrls: ['./report-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReportListComponent implements OnInit {
-  reports: Report[] = [];
-  filteredReports: Report[] = [];
-  loading = true;
-  error = '';
-
-  // Filtros
-  filter: ReportFilter = {};
-  categories = Object.values(ReportCategory);
-  statuses = Object.values(ReportStatus);
-
-  // Paginación
-  currentPage = 1;
-  itemsPerPage = 10;
-  totalPages = 1;
-
-  // Búsqueda
-  searchTerm = '';
-
   private readonly facade = inject(ReportFacadeService);
   private readonly destroyRef = inject(DestroyRef);
-  readonly isOnline$ = this.facade.isOnline$;
+
+  // Facade Signals
+  readonly reports = toSignal(this.facade.reports$, { initialValue: [] as Report[] });
+  readonly loading = toSignal(this.facade.loading$, { initialValue: true });
+  readonly error = toSignal(this.facade.error$, { initialValue: '' });
+  readonly isOnline = toSignal(this.facade.isOnline$, { initialValue: true });
+
+  // Local State Signals
+  readonly searchTerm = signal('');
+  readonly categoryFilter = signal<ReportCategory | undefined>(undefined);
+  readonly statusFilter = signal<ReportStatus | undefined>(undefined);
+  readonly currentPage = signal(1);
+  readonly itemsPerPage = 10;
+
+  // Computed State
+  readonly filteredReports = computed(() => {
+    const reports = this.reports();
+    const term = this.searchTerm().toLowerCase();
+
+    // Server-side filtered by category/status via loadReports,
+    // but client-side filtered by search term
+    if (!term) return reports;
+
+    return reports.filter(
+      (report) =>
+        report.title.toLowerCase().includes(term) ||
+        report.description.toLowerCase().includes(term) ||
+        report.location.toLowerCase().includes(term)
+    );
+  });
+
+  readonly totalPages = computed(() =>
+    Math.ceil(this.filteredReports().length / this.itemsPerPage)
+  );
+
+  readonly paginatedReports = computed(() => {
+    const reports = this.filteredReports();
+    const page = this.currentPage();
+    const start = (page - 1) * this.itemsPerPage;
+    return reports.slice(start, start + this.itemsPerPage);
+  });
+
+  // Reference data
+  readonly categories = this.facade.getCategories();
+  readonly statuses = this.facade.getStatuses();
 
   ngOnInit(): void {
-    this.facade.reports$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((reports) => {
-      this.reports = reports;
-      this.applySearchFilter();
-    });
-
-    this.facade.loading$
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((value) => (this.loading = value));
-
-    this.facade.error$
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((message) => (this.error = message));
-
-    this.categories = this.facade.getCategories();
-    this.statuses = this.facade.getStatuses();
-
+    // Initial load
     this.loadReports();
   }
 
   loadReports(): void {
-    this.facade.loadReports(this.filter);
-    this.updatePagination();
+    // Construct filter object from signals for the facade
+    const filter: ReportFilter = {
+      category: this.categoryFilter(),
+      status: this.statusFilter(),
+    };
+    this.facade.loadReports(filter);
+    this.currentPage.set(1); // Reset to first page on reload/re-filter
   }
 
-  applySearchFilter(): void {
-    if (!this.searchTerm.trim()) {
-      this.filteredReports = [...this.reports];
-    } else {
-      const term = this.searchTerm.toLowerCase();
-      this.filteredReports = this.reports.filter(
-        (report) =>
-          report.title.toLowerCase().includes(term) ||
-          report.description.toLowerCase().includes(term) ||
-          report.location.toLowerCase().includes(term)
-      );
-    }
-    this.currentPage = 1;
-    this.updatePagination();
-  }
-
-  updatePagination(): void {
-    this.totalPages = Math.ceil(this.filteredReports.length / this.itemsPerPage);
-    if (this.currentPage > this.totalPages && this.totalPages > 0) {
-      this.currentPage = this.totalPages;
-    }
-  }
-
-  get paginatedReports(): Report[] {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.filteredReports.slice(startIndex, startIndex + this.itemsPerPage);
-  }
-
+  // Event Handlers
   onFilterChange(): void {
     this.loadReports();
   }
 
+  onSearchChange(term: string): void {
+    this.searchTerm.set(term);
+    this.currentPage.set(1);
+  }
+
   clearFilters(): void {
-    this.filter = {};
-    this.searchTerm = '';
+    this.categoryFilter.set(undefined);
+    this.statusFilter.set(undefined);
+    this.searchTerm.set('');
     this.loadReports();
+  }
+
+  prevPage(): void {
+    if (this.currentPage() > 1) {
+      this.currentPage.update((p) => p - 1);
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage() < this.totalPages()) {
+      this.currentPage.update((p) => p + 1);
+    }
   }
 
   deleteReport(id: number): void {
     if (confirm('¿Está seguro de que desea eliminar este reporte?')) {
       this.facade.deleteReport(id).subscribe({
         error: (err) => {
-          this.error = 'Error al eliminar el reporte';
+          // Ideally handle error via a toast service or facade error subject
           console.error(err);
         },
       });
     }
   }
 
+  // Helpers for UI
   getStatusBadgeClass(status: ReportStatus): string {
     const classes: Record<ReportStatus, string> = {
       [ReportStatus.PENDING]: 'badge-warning',
@@ -148,17 +165,5 @@ export class ReportListComponent implements OnInit {
 
   isOfflineReport(report: Report): boolean {
     return !!report.isOfflineEntry;
-  }
-
-  prevPage(): void {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-    }
-  }
-
-  nextPage(): void {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
-    }
   }
 }

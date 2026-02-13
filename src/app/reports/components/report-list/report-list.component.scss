@@ -1,118 +1,69 @@
+@import '../../../../styles.scss';
+
 .report-list-container {
-  .badge {
-    padding: 0.5em 0.8em;
-    font-weight: 500;
-    text-transform: capitalize;
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+
+  .table {
+    // Inherits global .table styles but we can add specific tweaks here
+    th {
+      white-space: nowrap;
+    }
   }
 
+  // Extend global badge classes if needed, or rely on global styles.
+  // We added .badge-offline to globals, so we can remove it here or keep tweaks.
+  // The Component HTML uses standard badge classes now ideally, 
+  // but let's map them just in case existing logic relies on them.
+
   .badge-warning {
-    background-color: #ffc107;
-    color: #212529;
+    @extend .badge;
+    background-color: #fffbeb;
+    color: #b45309;
+    border: 1px solid #fcd34d;
   }
 
   .badge-info {
-    background-color: #17a2b8;
-    color: white;
+    @extend .badge;
+    background-color: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
   }
 
   .badge-success {
-    background-color: #28a745;
-    color: white;
+    @extend .badge;
+    background-color: #ecfdf5;
+    color: #047857;
+    border: 1px solid #6ee7b7;
   }
 
   .badge-secondary {
-    background-color: #6c757d;
-    color: white;
+    @extend .badge;
+    background-color: #f3f4f6;
+    color: #374151;
+    border: 1px solid #e5e7eb;
   }
-
+  
   .badge-offline {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    margin-top: 0.4rem;
-    background-color: #fff0c2;
-    color: #6c5700;
-    border: 1px solid #f5d98b;
+     // Already in global, but ensuring specificity
+     @extend .badge;
   }
 
-  .table {
-    background: white;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
-
-    th {
-      background-color: #f8f9fa;
-      border-bottom: 2px solid #dee2e6;
-      font-weight: 600;
-      color: #495057;
-      padding: 1rem;
-    }
-
-    td {
-      padding: 1rem;
-      vertical-align: middle;
-      border-bottom: 1px solid #dee2e6;
-    }
-
-    /* Hover visual for rows kept but without transition/transform */
-    tr:hover {
-      background-color: #f8f9fa;
-    }
-
-    tr.offline-row {
-      background-color: #fdf7e3;
-    }
-
-    /* Make interactive elements keyboard accessible */
-    a,
-    button {
-      &:focus-visible {
-        outline: 3px solid rgba(74, 144, 226, 0.14);
-        outline-offset: 2px;
-      }
-    }
+  .offline-row {
+     background-color: #fffbeb !important; // yellow-50
+     
+     td {
+       border-bottom-color: #fcd34d;
+     }
   }
 
-  .btn-group-sm .btn {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.875rem;
-  }
-
-  .pagination {
-    margin-top: 2rem;
-
-    .page-item.active .page-link {
-      background-color: #4a90e2;
-      border-color: #4a90e2;
-    }
-
-    .page-link {
-      color: #4a90e2;
-    }
-    .page-link:hover,
-    .page-link:focus-visible {
-      color: #357ae8;
-      background-color: #e9ecef;
-      border-color: #dee2e6;
-    }
-  }
-}
-
-// Responsive
-@media (max-width: 768px) {
-  .report-list-container {
-    .table-responsive {
-      border: none;
-    }
-
-    .btn-group {
-      flex-direction: column;
-
-      .btn {
-        margin-bottom: 0.25rem;
-        width: 100%;
-      }
+  .btn-group {
+    box-shadow: $shadow-sm;
+    border-radius: $radius;
+    
+    .btn {
+      padding: 0.35rem 0.75rem;
+      font-size: 0.8rem;
     }
   }
 }

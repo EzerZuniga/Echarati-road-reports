@@ -35,20 +35,6 @@
   height: 0.85rem;
   border-radius: 999px;
   background-color: #f97316;
-  position: relative;
-  animation: pulse 1.4s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(0.6);
-    opacity: 0.6;
-  }
 }
 
 @media (max-width: 768px) {

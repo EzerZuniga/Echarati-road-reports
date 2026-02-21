@@ -1,57 +1,18 @@
-@import '../../../../styles.scss';
+@use '../../../../variables' as *;
 
 .report-list-container {
   padding-top: 2rem;
   padding-bottom: 4rem;
 
   .table {
-    // Inherits global .table styles but we can add specific tweaks here
     th {
       white-space: nowrap;
     }
   }
 
-  // Extend global badge classes if needed, or rely on global styles.
-  // We added .badge-offline to globals, so we can remove it here or keep tweaks.
-  // The Component HTML uses standard badge classes now ideally, 
-  // but let's map them just in case existing logic relies on them.
-
-  .badge-warning {
-    @extend .badge;
-    background-color: #fffbeb;
-    color: #b45309;
-    border: 1px solid #fcd34d;
-  }
-
-  .badge-info {
-    @extend .badge;
-    background-color: #eff6ff;
-    color: #1d4ed8;
-    border: 1px solid #bfdbfe;
-  }
-
-  .badge-success {
-    @extend .badge;
-    background-color: #ecfdf5;
-    color: #047857;
-    border: 1px solid #6ee7b7;
-  }
-
-  .badge-secondary {
-    @extend .badge;
-    background-color: #f3f4f6;
-    color: #374151;
-    border: 1px solid #e5e7eb;
-  }
-  
-  .badge-offline {
-     // Already in global, but ensuring specificity
-     @extend .badge;
-  }
-
   .offline-row {
-     background-color: #fffbeb !important; // yellow-50
-     
+     background-color: #fffbeb !important;
+
      td {
        border-bottom-color: #fcd34d;
      }
@@ -60,10 +21,11 @@
   .btn-group {
     box-shadow: $shadow-sm;
     border-radius: $radius;
-    
+
     .btn {
       padding: 0.35rem 0.75rem;
       font-size: 0.8rem;
     }
   }
 }
+

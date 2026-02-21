@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  DestroyRef,
   OnInit,
   computed,
   inject,
@@ -10,6 +9,13 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ReportFacadeService } from '../../services/report-facade.service';
 import { Report, ReportCategory, ReportStatus, ReportFilter } from '../../models/report.model';
+import {
+  getStatusBadgeClass,
+  getCategoryIcon,
+  getCategoryLabel,
+  getPendingActionLabel,
+  isOfflineReport,
+} from '../../utils/report-ui.helpers';
 
 @Component({
   selector: 'app-report-list',
@@ -19,7 +25,6 @@ import { Report, ReportCategory, ReportStatus, ReportFilter } from '../../models
 })
 export class ReportListComponent implements OnInit {
   private readonly facade = inject(ReportFacadeService);
-  private readonly destroyRef = inject(DestroyRef);
 
   // Facade Signals
   readonly reports = toSignal(this.facade.reports$, { initialValue: [] as Report[] });
@@ -39,8 +44,6 @@ export class ReportListComponent implements OnInit {
     const reports = this.reports();
     const term = this.searchTerm().toLowerCase();
 
-    // Server-side filtered by category/status via loadReports,
-    // but client-side filtered by search term
     if (!term) return reports;
 
     return reports.filter(
@@ -66,22 +69,26 @@ export class ReportListComponent implements OnInit {
   readonly categories = this.facade.getCategories();
   readonly statuses = this.facade.getStatuses();
 
+  // Delegate UI helpers to shared utilities
+  readonly getStatusBadgeClass = getStatusBadgeClass;
+  readonly getCategoryIcon = getCategoryIcon;
+  readonly getCategoryLabel = getCategoryLabel;
+  readonly getPendingActionLabel = getPendingActionLabel;
+  readonly isOfflineReport = isOfflineReport;
+
   ngOnInit(): void {
-    // Initial load
     this.loadReports();
   }
 
   loadReports(): void {
-    // Construct filter object from signals for the facade
     const filter: ReportFilter = {
       category: this.categoryFilter(),
       status: this.statusFilter(),
     };
     this.facade.loadReports(filter);
-    this.currentPage.set(1); // Reset to first page on reload/re-filter
+    this.currentPage.set(1);
   }
 
-  // Event Handlers
   onFilterChange(): void {
     this.loadReports();
   }
@@ -114,56 +121,10 @@ export class ReportListComponent implements OnInit {
     if (confirm('¿Está seguro de que desea eliminar este reporte?')) {
       this.facade.deleteReport(id).subscribe({
         error: (err) => {
-          // Ideally handle error via a toast service or facade error subject
           console.error(err);
         },
       });
     }
   }
-
-  // Helpers for UI
-  getStatusBadgeClass(status: ReportStatus): string {
-    const classes: Record<ReportStatus, string> = {
-      [ReportStatus.PENDING]: 'badge-warning',
-      [ReportStatus.IN_PROGRESS]: 'badge-info',
-      [ReportStatus.RESOLVED]: 'badge-success',
-      [ReportStatus.CLOSED]: 'badge-secondary',
-    };
-    return classes[status] || 'badge-secondary';
-  }
-
-  getCategoryIcon(category: ReportCategory): string {
-    const icons: Record<ReportCategory, string> = {
-      [ReportCategory.INFRASTRUCTURE]: '🛠️',
-      [ReportCategory.SECURITY]: '🚨',
-      [ReportCategory.ENVIRONMENT]: '🌿',
-      [ReportCategory.TRANSPORT]: '🚧',
-      [ReportCategory.OTHER]: '📌',
-    };
-    return icons[category] || '📌';
-  }
-
-  getCategoryLabel(category: ReportCategory): string {
-    const labels: Record<ReportCategory, string> = {
-      [ReportCategory.INFRASTRUCTURE]: 'Infraestructura vial',
-      [ReportCategory.SECURITY]: 'Seguridad vial',
-      [ReportCategory.ENVIRONMENT]: 'Evento ambiental',
-      [ReportCategory.TRANSPORT]: 'Transporte y tránsito',
-      [ReportCategory.OTHER]: 'Otro',
-    };
-    return labels[category] || 'Otro';
-  }
-
-  getPendingActionLabel(action?: string): string {
-    const map: Record<string, string> = {
-      create: 'Pendiente por enviar',
-      update: 'Actualización pendiente',
-      delete: 'Eliminación pendiente',
-    };
-    return action ? (map[action] ?? 'Pendiente') : '';
-  }
-
-  isOfflineReport(report: Report): boolean {
-    return !!report.isOfflineEntry;
-  }
 }
+

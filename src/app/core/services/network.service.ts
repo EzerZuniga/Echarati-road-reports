@@ -1,6 +1,6 @@
 import { Injectable, NgZone, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable, fromEvent, merge, Subscription } from 'rxjs';
-import { distinctUntilChanged, mapTo, startWith } from 'rxjs/operators';
+import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class NetworkService implements OnDestroy {
@@ -13,8 +13,8 @@ export class NetworkService implements OnDestroy {
       return;
     }
 
-    const offline$ = fromEvent(window, 'offline').pipe(mapTo(false));
-    const online$ = fromEvent(window, 'online').pipe(mapTo(true));
+    const offline$ = fromEvent(window, 'offline').pipe(map(() => false));
+    const online$ = fromEvent(window, 'online').pipe(map(() => true));
 
     this.subscription = merge(online$, offline$)
       .pipe(startWith(this.getNavigatorStatus()), distinctUntilChanged())

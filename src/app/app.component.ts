@@ -1,4 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import {
   Router,
   Event,
@@ -7,41 +13,50 @@ import {
   NavigationError,
   NavigationStart,
 } from '@angular/router';
-import { Subscription, timer } from 'rxjs';
+import { Subject, timer } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'Reportes Ciudadanos';
   loading = false;
-  private routerSub?: Subscription;
+  private readonly destroy$ = new Subject<void>();
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-    // Detect navigation events to show a top progress indicator
-    this.routerSub = this.router.events.subscribe((event: Event) => {
-      if (event instanceof NavigationStart) {
-        this.setLoading(true);
-      } else if (
-        event instanceof NavigationEnd ||
-        event instanceof NavigationCancel ||
-        event instanceof NavigationError
-      ) {
-        // Slight delay to avoid flicker on fast navigations
-        timer(120).subscribe(() => this.setLoading(false));
-      }
-    });
+    this.router.events
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((event: Event) => {
+        if (event instanceof NavigationStart) {
+          this.setLoading(true);
+        } else if (
+          event instanceof NavigationEnd ||
+          event instanceof NavigationCancel ||
+          event instanceof NavigationError
+        ) {
+          timer(120)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(() => this.setLoading(false));
+        }
+      });
   }
 
   ngOnDestroy(): void {
-    this.routerSub?.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
-  setLoading(value: boolean) {
+  private setLoading(value: boolean): void {
     this.loading = value;
+    this.cdr.markForCheck();
   }
 }

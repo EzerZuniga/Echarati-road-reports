@@ -1,0 +1,46 @@
+// =========================================
+//  DESIGN SYSTEM VARIABLES
+//  Municipalidad Distrital de Echarati
+// =========================================
+
+// --- Color Palette ---
+// Primary: Deep Navy/Royal Blue (Trust, Authority)
+$primary-900: #0a2540;
+$primary-800: #153e6a;
+$primary-700: #1d5288;
+$primary-500: #0056b3;
+$primary-50: #eff6ff;
+
+// Accents (Gold/Ochre for official tone)
+$accent-500: #d97706;
+$accent-400: #f59e0b;
+
+// Neutrals (Slate)
+$gray-50: #f9fafb;
+$gray-100: #f3f4f6;
+$gray-200: #e5e7eb;
+$gray-300: #d1d5db;
+$gray-400: #9ca3af;
+$gray-500: #6b7280;
+$gray-600: #4b5563;
+$gray-700: #374151;
+$gray-800: #1f2937;
+$gray-900: #111827;
+$white: #ffffff;
+
+// Semantic Colors
+$success: #10b981;
+$warning: #f59e0b;
+$danger: #ef4444;
+$info: #3b82f6;
+
+// --- Components ---
+$radius-sm: 4px;
+$radius: 6px;
+$radius-lg: 12px;
+
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+$font-sans: 'Roboto', system-ui, -apple-system, sans-serif;

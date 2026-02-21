@@ -1,14 +1,23 @@
-import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnInit,
+  inject,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReportFacadeService } from '../../services/report-facade.service';
 import { Report, ReportCategory, ReportStatus } from '../../models/report.model';
+import { getCategoryIcon } from '../../utils/report-ui.helpers';
 
 @Component({
   selector: 'app-report-form',
   templateUrl: './report-form.component.html',
   styleUrls: ['./report-form.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReportFormComponent implements OnInit {
   reportForm: FormGroup;
@@ -23,7 +32,11 @@ export class ReportFormComponent implements OnInit {
 
   private readonly facade = inject(ReportFacadeService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly cdr = inject(ChangeDetectorRef);
   readonly isOnline$ = this.facade.isOnline$;
+
+  // Delegate UI helper to shared utility
+  readonly getCategoryIcon = getCategoryIcon;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -59,11 +72,13 @@ export class ReportFormComponent implements OnInit {
       next: (report) => {
         this.reportForm.patchValue(report);
         this.loading = false;
+        this.cdr.markForCheck();
       },
       error: (err) => {
         this.error = 'Error al cargar el reporte';
         this.loading = false;
         console.error(err);
+        this.cdr.markForCheck();
       },
     });
   }
@@ -92,6 +107,7 @@ export class ReportFormComponent implements OnInit {
           this.error = 'Error al actualizar el reporte';
           this.loading = false;
           console.error(err);
+          this.cdr.markForCheck();
         },
       });
     } else {
@@ -107,6 +123,7 @@ export class ReportFormComponent implements OnInit {
           this.error = 'Error al crear el reporte';
           this.loading = false;
           console.error(err);
+          this.cdr.markForCheck();
         },
       });
     }
@@ -119,15 +136,5 @@ export class ReportFormComponent implements OnInit {
       this.router.navigate(['/reports']);
     }
   }
-
-  getCategoryIcon(category: ReportCategory): string {
-    const icons: Record<ReportCategory, string> = {
-      [ReportCategory.INFRASTRUCTURE]: '🛠️',
-      [ReportCategory.SECURITY]: '🚨',
-      [ReportCategory.ENVIRONMENT]: '🌿',
-      [ReportCategory.TRANSPORT]: '🚧',
-      [ReportCategory.OTHER]: '📌',
-    };
-    return icons[category] || '📌';
-  }
 }
+

@@ -33,6 +33,8 @@ async function bootstrap(): Promise<void> {
       typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
     console.info(`App bootstrapped in ${Math.round(t1 - t0)} ms`);
   } catch (err) {
+    // Log only — no DOM overlay here because GlobalErrorHandler
+    // already covers error display in dev mode post-bootstrap.
     console.error('Bootstrap failed:', err);
   }
 

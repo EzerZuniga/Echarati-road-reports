@@ -58,10 +58,8 @@
     font-size: 0.85rem;
     color: $gray-600;
     text-decoration: none;
-    transition: all 0.2s ease;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    position: relative; // For potentially other effects, but keeping it clean for now
 
     &:hover {
       color: $primary-500; // Bright professional blue
@@ -106,7 +104,6 @@
         border-color: $primary-500;
         color: $primary-500;
         background: $gray-50;
-        transform: translateY(-2px);
         text-decoration: none; // Fix for global override
      }
 
@@ -141,7 +138,6 @@
     border-radius: 50%;
     cursor: pointer;
     position: relative;
-    transition: all 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -215,12 +211,6 @@
     gap: 0.75rem;
     background: transparent;
     border: 1px solid transparent;
-    padding: 0.25rem;
-    padding-right: 0.5rem;
-    border-radius: 999px;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-align: left;
 
     &:hover {
       background-color: $gray-50;
@@ -290,7 +280,6 @@
     box-shadow: $shadow-lg;
     min-width: 240px;
     overflow: hidden;
-    animation: slideDown 0.2s ease-out;
     padding: 0.5rem 0;
 
     &--right {
@@ -418,11 +407,6 @@
       align-items: stretch;
       justify-content: flex-start;
       padding: 1rem;
-      transform: translateX(100%);
-      transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
-      border-top: 1px solid $gray-200;
-      overflow-y: auto;
-      
       &.is-open {
          transform: translateX(0);
          box-shadow: -4px 0 10px rgba(0,0,0,0.05);
@@ -517,7 +501,3 @@
   }
 }
 
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-8px); }
-  to { opacity: 1; transform: translateY(0); }
-}

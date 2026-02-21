@@ -1,13 +1,27 @@
-import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnInit,
+  inject,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReportFacadeService } from '../../services/report-facade.service';
 import { Report, ReportCategory, ReportStatus } from '../../models/report.model';
+import {
+  getStatusBadgeClass,
+  getCategoryIcon,
+  getCategoryLabel,
+  isOfflineReport,
+} from '../../utils/report-ui.helpers';
 
 @Component({
   selector: 'app-report-detail',
   templateUrl: './report-detail.component.html',
   styleUrls: ['./report-detail.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReportDetailComponent implements OnInit {
   report?: Report;
@@ -18,6 +32,13 @@ export class ReportDetailComponent implements OnInit {
 
   private readonly facade = inject(ReportFacadeService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly cdr = inject(ChangeDetectorRef);
+
+  // Delegate UI helpers to shared utilities
+  readonly getStatusBadgeClass = getStatusBadgeClass;
+  readonly getCategoryIcon = getCategoryIcon;
+  readonly getCategoryLabel = getCategoryLabel;
+  readonly isOfflineReport = isOfflineReport;
 
   constructor(
     private route: ActivatedRoute,
@@ -31,6 +52,7 @@ export class ReportDetailComponent implements OnInit {
       const updated = reports.find((item) => item.id === this.report?.id);
       if (updated) {
         this.report = updated;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -49,11 +71,13 @@ export class ReportDetailComponent implements OnInit {
       next: (report) => {
         this.report = report;
         this.loading = false;
+        this.cdr.markForCheck();
       },
       error: (err) => {
         this.error = 'Error al cargar el reporte';
         this.loading = false;
         console.error(err);
+        this.cdr.markForCheck();
       },
     });
   }
@@ -66,11 +90,13 @@ export class ReportDetailComponent implements OnInit {
       next: (updatedReport) => {
         this.report = updatedReport;
         this.loading = false;
+        this.cdr.markForCheck();
       },
       error: (err) => {
         this.error = 'Error al actualizar el estado';
         this.loading = false;
         console.error(err);
+        this.cdr.markForCheck();
       },
     });
   }
@@ -93,42 +119,6 @@ export class ReportDetailComponent implements OnInit {
     }
   }
 
-  getStatusBadgeClass(status: ReportStatus): string {
-    const classes: Record<ReportStatus, string> = {
-      [ReportStatus.PENDING]: 'badge-warning',
-      [ReportStatus.IN_PROGRESS]: 'badge-info',
-      [ReportStatus.RESOLVED]: 'badge-success',
-      [ReportStatus.CLOSED]: 'badge-secondary',
-    };
-    return classes[status] || 'badge-secondary';
-  }
-
-  getCategoryIcon(category: ReportCategory): string {
-    const icons: Record<ReportCategory, string> = {
-      [ReportCategory.INFRASTRUCTURE]: '🛠️',
-      [ReportCategory.SECURITY]: '🚨',
-      [ReportCategory.ENVIRONMENT]: '🌿',
-      [ReportCategory.TRANSPORT]: '🚧',
-      [ReportCategory.OTHER]: '📌',
-    };
-    return icons[category] || '📌';
-  }
-
-  getCategoryLabel(category: ReportCategory): string {
-    const labels: Record<ReportCategory, string> = {
-      [ReportCategory.INFRASTRUCTURE]: 'Infraestructura vial',
-      [ReportCategory.SECURITY]: 'Seguridad vial',
-      [ReportCategory.ENVIRONMENT]: 'Evento ambiental',
-      [ReportCategory.TRANSPORT]: 'Transporte y tránsito',
-      [ReportCategory.OTHER]: 'Otro',
-    };
-    return labels[category] || 'Otro';
-  }
-
-  isOfflineReport(report?: Report): boolean {
-    return !!report?.isOfflineEntry;
-  }
-
   getFormattedDate(date?: Date): string {
     if (!date) return 'N/A';
     return new Date(date).toLocaleDateString('es-ES', {
@@ -140,3 +130,4 @@ export class ReportDetailComponent implements OnInit {
     });
   }
 }
+

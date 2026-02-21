@@ -1,4 +1,4 @@
-@import '../../../../styles.scss';
+@use '../../../../variables' as *;
 
 .report-detail-container {
   padding-bottom: 3rem;
@@ -8,49 +8,18 @@
     border-bottom: 1px solid $gray-200;
     padding: 1.5rem;
   }
-  
+
   .badge {
-     // Inherits global badge styles but we can ensure specificity here if needed
      font-size: 0.85rem;
      padding: 0.4em 0.8em;
   }
 
-  // We can trust global badge classes, but overrides below:
-  .badge-warning {
-    @extend .badge;
-    background-color: #fffbeb;
-    color: #b45309;
-    border: 1px solid #fcd34d;
-  }
-
-  .badge-info {
-    @extend .badge;
-    background-color: #eff6ff;
-    color: #1d4ed8;
-    border: 1px solid #bfdbfe;
-  }
-
-  .badge-success {
-    @extend .badge;
-    background-color: #ecfdf5;
-    color: #047857;
-    border: 1px solid #6ee7b7;
-  }
-
-  .badge-secondary {
-    @extend .badge;
-    background-color: #f3f4f6;
-    color: #374151;
-    border: 1px solid #e5e7eb;
-  }
-  
   .badge-offline {
-     @extend .badge;
      background-color: $gray-100;
      color: $gray-600;
      border: 1px dashed $gray-400;
   }
-  
+
   .img-fluid {
     border-radius: $radius;
     border: 1px solid $gray-200;
@@ -63,33 +32,33 @@
   .list-unstyled {
     padding-left: 0;
     list-style: none;
-    
+
     li {
       padding: 0.75rem 0;
       border-bottom: 1px solid $gray-100;
       display: flex;
       flex-wrap: wrap;
-      
+
       &:last-child {
         border-bottom: none;
       }
-      
+
       strong {
         color: $gray-900;
         font-weight: 600;
         width: 140px;
         flex-shrink: 0;
       }
-      
+
       span {
         color: $gray-700;
         flex: 1;
       }
     }
   }
-  
-  // Custom spacing for buttons
+
   .gap-2 {
      gap: 0.75rem !important;
   }
 }
+

@@ -20,4 +20,3 @@ import { ReportCategoryLabelPipe } from './pipes/report-category-label.pipe';
   imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterModule, ReportsRoutingModule],
 })
 export class ReportsModule {}
-

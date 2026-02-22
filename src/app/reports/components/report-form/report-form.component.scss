@@ -23,7 +23,7 @@
 
   .card-body {
     padding: 2rem;
-    
+
     @media (max-width: 768px) {
       padding: 1.25rem;
     }
@@ -36,10 +36,10 @@
     min-width: 3rem;
     justify-content: center;
   }
-  
+
   // Sibling selector for focus state
   .form-control:focus + .input-group-text {
-    border-color: $primary-500; 
+    border-color: $primary-500;
     color: $primary-500;
   }
 
@@ -48,7 +48,7 @@
     font-size: 0.8rem;
     margin-top: 0.35rem;
   }
-  
+
   .form-text {
     font-size: 0.8rem;
     color: $gray-500;

@@ -22,6 +22,7 @@ import { ConnectivityBannerComponent } from './components/connectivity-banner/co
     ReactiveFormsModule,
     NavbarComponent,
     FooterComponent,
+    LoginModalComponent,
     ConnectivityBannerComponent,
   ],
 })

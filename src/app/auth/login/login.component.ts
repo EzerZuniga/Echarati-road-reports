@@ -90,13 +90,7 @@ export class LoginComponent implements OnInit {
 
     this.authService.login(this.f['username'].value, this.f['password'].value).subscribe({
       next: () => {
-        // Emit event for embedded usages (modals)
-        try {
-          this.loggedIn.emit();
-        } catch (e) {
-          // noop
-          void e;
-        }
+        this.loggedIn.emit();
         this.router.navigate([this.returnUrl]);
       },
       error: (_err) => {

@@ -127,4 +127,3 @@ export class ReportListComponent implements OnInit {
     }
   }
 }
-

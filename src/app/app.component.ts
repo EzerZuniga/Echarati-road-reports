@@ -33,21 +33,19 @@ export class AppComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.router.events
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((event: Event) => {
-        if (event instanceof NavigationStart) {
-          this.setLoading(true);
-        } else if (
-          event instanceof NavigationEnd ||
-          event instanceof NavigationCancel ||
-          event instanceof NavigationError
-        ) {
-          timer(120)
-            .pipe(takeUntil(this.destroy$))
-            .subscribe(() => this.setLoading(false));
-        }
-      });
+    this.router.events.pipe(takeUntil(this.destroy$)).subscribe((event: Event) => {
+      if (event instanceof NavigationStart) {
+        this.setLoading(true);
+      } else if (
+        event instanceof NavigationEnd ||
+        event instanceof NavigationCancel ||
+        event instanceof NavigationError
+      ) {
+        timer(120)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe(() => this.setLoading(false));
+      }
+    });
   }
 
   ngOnDestroy(): void {

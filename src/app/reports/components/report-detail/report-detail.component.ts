@@ -9,7 +9,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReportFacadeService } from '../../services/report-facade.service';
-import { Report, ReportCategory, ReportStatus } from '../../models/report.model';
+import { Report, ReportStatus } from '../../models/report.model';
 import {
   getStatusBadgeClass,
   getCategoryIcon,
@@ -42,7 +42,7 @@ export class ReportDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    public router: Router
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -130,4 +130,3 @@ export class ReportDetailComponent implements OnInit {
     });
   }
 }
-

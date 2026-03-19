@@ -6,5 +6,11 @@
 
 .main-content {
   flex: 1;
-  padding: 2rem 0;
+  padding: var(--spacing-xl) 0;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: var(--spacing-md) 0;
+  }
 }

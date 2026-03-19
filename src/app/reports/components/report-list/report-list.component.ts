@@ -1,50 +1,71 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { ReportService } from '../../services/report.service';
 import { Report, ReportCategory, ReportStatus, ReportFilter } from '../../models/report.model';
+import { getCategoryIconClass, getCategoryLabel, getStatusBadgeClass, getStatusLabel } from '../../utils/report-utils';
 
 @Component({
   selector: 'app-report-list',
   templateUrl: './report-list.component.html',
   styleUrls: ['./report-list.component.scss']
 })
-export class ReportListComponent implements OnInit {
+export class ReportListComponent implements OnInit, OnDestroy {
   reports: Report[] = [];
   filteredReports: Report[] = [];
   loading = true;
   error = '';
-  
+
   // Filtros
   filter: ReportFilter = {};
   categories = Object.values(ReportCategory);
   statuses = Object.values(ReportStatus);
-  
+
   // Paginación
   currentPage = 1;
   itemsPerPage = 10;
   totalPages = 1;
-  
+
   // Búsqueda
   searchTerm = '';
 
-  constructor(private reportService: ReportService) {}
+  // Estadísticas
+  stats = { total: 0, pending: 0, inProgress: 0, resolved: 0, closed: 0 };
+
+  // Utilidades compartidas (re-expuestas al template)
+  getCategoryIconClass = getCategoryIconClass;
+  getCategoryLabel = getCategoryLabel;
+  getStatusBadgeClass = getStatusBadgeClass;
+  getStatusLabel = getStatusLabel;
+
+  private destroy$ = new Subject<void>();
+
+  constructor(private reportService: ReportService) { }
 
   ngOnInit(): void {
     this.loadReports();
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   loadReports(): void {
     this.loading = true;
     this.error = '';
-    
-    this.reportService.getReports(this.filter).subscribe({
+
+    this.reportService.getReports(this.filter).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe({
       next: (reports) => {
         this.reports = reports;
+        this.stats = this.reportService.getStats();
         this.applySearchFilter();
-        this.updatePagination();
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'Error al cargar los reportes';
+        this.error = 'Error al cargar los reportes. Intente nuevamente.';
         this.loading = false;
         console.error(err);
       }
@@ -67,8 +88,8 @@ export class ReportListComponent implements OnInit {
   }
 
   updatePagination(): void {
-    this.totalPages = Math.ceil(this.filteredReports.length / this.itemsPerPage);
-    if (this.currentPage > this.totalPages && this.totalPages > 0) {
+    this.totalPages = Math.max(1, Math.ceil(this.filteredReports.length / this.itemsPerPage));
+    if (this.currentPage > this.totalPages) {
       this.currentPage = this.totalPages;
     }
   }
@@ -76,6 +97,10 @@ export class ReportListComponent implements OnInit {
   get paginatedReports(): Report[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     return this.filteredReports.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  get totalPagesArray(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 
   onFilterChange(): void {
@@ -90,48 +115,21 @@ export class ReportListComponent implements OnInit {
 
   deleteReport(id: number): void {
     if (confirm('¿Está seguro de que desea eliminar este reporte?')) {
-      this.reportService.deleteReport(id).subscribe({
-        next: () => {
-          this.loadReports();
-        },
+      this.reportService.deleteReport(id).pipe(
+        takeUntil(this.destroy$)
+      ).subscribe({
+        next: () => this.loadReports(),
         error: (err) => {
-          this.error = 'Error al eliminar el reporte';
+          this.error = 'Error al eliminar el reporte.';
           console.error(err);
         }
       });
     }
   }
 
-  getStatusBadgeClass(status: ReportStatus): string {
-    const classes: Record<ReportStatus, string> = {
-      [ReportStatus.PENDING]: 'badge-warning',
-      [ReportStatus.IN_PROGRESS]: 'badge-info',
-      [ReportStatus.RESOLVED]: 'badge-success',
-      [ReportStatus.CLOSED]: 'badge-secondary'
-    };
-    return classes[status] || 'badge-secondary';
-  }
-
-  getCategoryIcon(category: ReportCategory): string {
-    const icons: Record<ReportCategory, string> = {
-      [ReportCategory.INFRASTRUCTURE]: '',
-      [ReportCategory.SECURITY]: '',
-      [ReportCategory.ENVIRONMENT]: '',
-      [ReportCategory.TRANSPORT]: '',
-      [ReportCategory.OTHER]: ''
-    };
-    return icons[category] || '';
-  }
-
-  prevPage(): void {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-    }
-  }
-
-  nextPage(): void {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
     }
   }
 }

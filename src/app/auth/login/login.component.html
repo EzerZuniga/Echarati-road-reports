@@ -1,75 +1,85 @@
-<div class="login-container">
-  <div class="row justify-content-center">
-    <div class="col-md-6 col-lg-4">
-      <div class="card">
-        <div class="card-header">
-          <h3 class="text-center">Iniciar Sesión</h3>
+<div class="login-page">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-10 col-md-8 col-lg-5 col-xl-4">
+
+        <!-- Branding -->
+        <div class="login-branding text-center mb-4">
+          <div class="login-logo mb-3">
+            <i class="bi bi-building-fill text-primary"></i>
+          </div>
+          <h1 class="login-title">Reportes Ciudadanos</h1>
+          <p class="login-subtitle">Municipalidad Distrital de Echarati</p>
         </div>
-        <div class="card-body">
-          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-            
-            <div class="form-group">
-              <label for="username" class="form-label">Usuario</label>
-              <input
-                type="text"
-                id="username"
-                formControlName="username"
-                class="form-control"
-                [class.is-invalid]="submitted && f['username'].errors"
-                placeholder="Ingrese su usuario"
-              >
-              @if (submitted && f['username'].errors) {
-                <div class="invalid-feedback d-block">
+
+        <!-- Login Card -->
+        <div class="card">
+          <div class="card-body p-4">
+            <h2 class="card-title h5 mb-4">Iniciar sesión</h2>
+
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+
+              <!-- Usuario -->
+              <div class="mb-3">
+                <label for="username" class="form-label">Usuario</label>
+                <input type="text" id="username" formControlName="username" class="form-control"
+                  [class.is-invalid]="submitted && f['username'].errors" placeholder="Ingrese su usuario"
+                  autocomplete="username">
+                @if (submitted && f['username'].errors) {
+                <div class="invalid-feedback">
                   @if (f['username'].errors['required']) {
-                    <div>Usuario es requerido</div>
+                  El usuario es requerido.
                   }
                   @if (f['username'].errors['minlength']) {
-                    <div>Usuario debe tener al menos 3 caracteres</div>
+                  El usuario debe tener al menos 3 caracteres.
                   }
                 </div>
-              }
-            </div>
+                }
+              </div>
 
-            <div class="form-group">
-              <label for="password" class="form-label">Contraseña</label>
-              <input
-                type="password"
-                id="password"
-                formControlName="password"
-                class="form-control"
-                [class.is-invalid]="submitted && f['password'].errors"
-                placeholder="Ingrese su contraseña"
-              >
-              @if (submitted && f['password'].errors) {
-                <div class="invalid-feedback d-block">
+              <!-- Contraseña -->
+              <div class="mb-3">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" id="password" formControlName="password" class="form-control"
+                  [class.is-invalid]="submitted && f['password'].errors" placeholder="Ingrese su contraseña"
+                  autocomplete="current-password">
+                @if (submitted && f['password'].errors) {
+                <div class="invalid-feedback">
                   @if (f['password'].errors['required']) {
-                    <div>Contraseña es requerida</div>
+                  La contraseña es requerida.
                   }
                   @if (f['password'].errors['minlength']) {
-                    <div>Contraseña debe tener al menos 6 caracteres</div>
+                  La contraseña debe tener al menos 6 caracteres.
                   }
                 </div>
-              }
-            </div>
+                }
+              </div>
 
-            @if (error) {
-              <div class="alert alert-danger mt-3">
+              <!-- Error general -->
+              @if (error) {
+              <div class="alert alert-danger py-2" role="alert">
                 {{ error }}
               </div>
-            }
+              }
 
-            <div class="form-group mt-4">
-              <button type="submit" class="btn btn-primary w-100" [disabled]="loading">
+              <!-- Submit -->
+              <button type="submit" class="btn btn-primary w-100 mt-2" [disabled]="loading">
                 @if (loading) {
-                  <span class="spinner-border spinner-border-sm mr-2"></span>
-                  Iniciando sesión...
+                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                Iniciando sesión...
                 } @else {
-                  Iniciar Sesión
+                Iniciar Sesión
                 }
               </button>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
+
+        <!-- Help text -->
+        <p class="text-center text-muted mt-3 small">
+          ¿Problemas para acceder? Comuníquese con la oficina de sistemas de la municipalidad.
+        </p>
+
       </div>
     </div>
   </div>

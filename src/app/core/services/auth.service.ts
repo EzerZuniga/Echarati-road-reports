@@ -21,33 +21,39 @@ export class AuthService {
   private readonly TOKEN_KEY = 'auth_token';
   private readonly USER_KEY = 'auth_user';
   private currentUserSubject = new BehaviorSubject<User | null>(null);
-  
+
   constructor() {
     this.loadStoredUser();
   }
-  
+
   private loadStoredUser(): void {
-    const userJson = localStorage.getItem(this.USER_KEY);
-    if (userJson) {
-      const user = JSON.parse(userJson);
-      this.currentUserSubject.next(user);
+    try {
+      const userJson = localStorage.getItem(this.USER_KEY);
+      if (userJson) {
+        const user: User = JSON.parse(userJson);
+        this.currentUserSubject.next(user);
+      }
+    } catch (error) {
+      console.error('Error al cargar usuario almacenado, limpiando datos corruptos:', error);
+      localStorage.removeItem(this.USER_KEY);
+      localStorage.removeItem(this.TOKEN_KEY);
     }
   }
-  
+
   login(username: string, password: string): Observable<AuthResponse> {
     // Simulación de login - en producción aquí harías una petición HTTP real
     const mockUser: User = {
       id: 1,
       username: username,
-      email: `${username}@example.com`,
+      email: `${username}@echarati.gob.pe`,
       name: 'Usuario Demo'
     };
-    
+
     const mockResponse: AuthResponse = {
       user: mockUser,
       token: 'mock-jwt-token-' + Date.now()
     };
-    
+
     return of(mockResponse).pipe(
       delay(1000), // Simular delay de red
       tap(response => {
@@ -55,31 +61,31 @@ export class AuthService {
       })
     );
   }
-  
+
   logout(): void {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
     this.currentUserSubject.next(null);
   }
-  
+
   isAuthenticated(): boolean {
     return !!localStorage.getItem(this.TOKEN_KEY);
   }
-  
+
   getCurrentUser(): User | null {
     return this.currentUserSubject.value;
   }
-  
+
   getCurrentUserObservable(): Observable<User | null> {
     return this.currentUserSubject.asObservable();
   }
-  
+
   private setSession(authResult: AuthResponse): void {
     localStorage.setItem(this.TOKEN_KEY, authResult.token);
     localStorage.setItem(this.USER_KEY, JSON.stringify(authResult.user));
     this.currentUserSubject.next(authResult.user);
   }
-  
+
   getToken(): string | null {
     return localStorage.getItem(this.TOKEN_KEY);
   }

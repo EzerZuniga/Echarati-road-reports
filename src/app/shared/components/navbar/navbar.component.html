@@ -1,86 +1,64 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+<nav class="navbar navbar-expand-lg bg-white border-bottom">
   <div class="container">
-    <!-- Logo/Brand -->
-    <a class="navbar-brand" routerLink="/">
-      <span class="brand-icon"> </span>
+    <a class="navbar-brand d-flex align-items-center" routerLink="/">
+      <i class="bi bi-building-fill me-2 brand-icon"></i>
       <span class="brand-text">Reportes Ciudadanos</span>
     </a>
 
-    <!-- Mobile Toggle Button -->
-    <button 
-      class="navbar-toggler" 
-      type="button" 
-      data-bs-toggle="collapse" 
-      data-bs-target="#navbarContent"
-      aria-controls="navbarContent" 
-      aria-expanded="false" 
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon"></span>
+    <!-- Mobile Toggle -->
+    <button class="navbar-toggler border-0" type="button" (click)="toggleMenu()" [attr.aria-expanded]="!isMenuCollapsed"
+      aria-label="Abrir menú de navegación">
+      <i class="bi bi-list"></i>
     </button>
 
     <!-- Navbar Content -->
-    <div class="collapse navbar-collapse" id="navbarContent">
-      <!-- Navigation Links -->
+    <div class="collapse navbar-collapse" [class.show]="!isMenuCollapsed" id="navbarContent">
       @if (isLoggedIn()) {
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item">
-            <a class="nav-link" routerLink="/reports" routerLinkActive="active">
-                Mis Reportes
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" routerLink="/reports/new" routerLinkActive="active">
-                Nuevo Reporte
-            </a>
-          </li>
-        </ul>
-
-        <!-- User Menu -->
-        <div class="navbar-nav ms-auto">
-          <div class="nav-item dropdown">
-            <a 
-              class="nav-link dropdown-toggle d-flex align-items-center" 
-              href="#" 
-              id="userDropdown" 
-              role="button"
-              data-bs-toggle="dropdown" 
-              aria-expanded="false"
-            >
-              <div class="user-avatar me-2">
-                <span></span>
-              </div>
-              <span class="user-name">
-                {{ currentUser?.name || 'Usuario' }}
-              </span>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-              <li>
-                <a class="dropdown-item" href="#">
-                  <span class="me-2"></span> Mi Perfil
-                </a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="#">
-                  <span class="me-2"></span> Configuración
-                </a>
-              </li>
-              <li><hr class="dropdown-divider"></li>
-              <li>
-                <button class="dropdown-item" (click)="logout()">
-                  <span class="me-2"></span> Cerrar Sesión
-                </button>
-              </li>
-            </ul>
-          </div>
-        </div>
-      } @else {
-        <!-- Login Button -->
-        <div class="navbar-nav ms-auto">
-          <a class="nav-link" routerLink="/auth/login">
-             Iniciar Sesión
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/reports" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+            Mis Reportes
           </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/reports/new" routerLinkActive="active">
+            Nuevo Reporte
+          </a>
+        </li>
+      </ul>
+
+      <!-- User Menu -->
+      <div class="navbar-nav ms-auto">
+        <div class="nav-item dropdown" [class.show]="isDropdownOpen">
+          <button class="btn btn-link nav-link dropdown-toggle d-flex align-items-center text-decoration-none"
+            type="button" id="userDropdown" (click)="toggleDropdown()" [attr.aria-expanded]="isDropdownOpen">
+            <span class="user-avatar me-2">
+              {{ (currentUser?.name || 'U').charAt(0) }}
+            </span>
+            <span class="d-none d-md-inline">{{ currentUser?.name || 'Usuario' }}</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" [class.show]="isDropdownOpen">
+            <li class="dropdown-header">
+              <strong>{{ currentUser?.name }}</strong>
+              <div class="text-muted small">{{ currentUser?.email }}</div>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <button class="dropdown-item" (click)="logout()">
+                Cerrar Sesión
+              </button>
+            </li>
+          </ul>
         </div>
+      </div>
+      } @else {
+      <div class="navbar-nav ms-auto">
+        <a class="btn btn-primary btn-sm" routerLink="/auth/login">
+          Iniciar Sesión
+        </a>
+      </div>
       }
     </div>
   </div>

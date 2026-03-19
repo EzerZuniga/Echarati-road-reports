@@ -1,30 +1,20 @@
-import { Injectable } from '@angular/core';
-import { Router, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { Observable } from 'rxjs';
+import { inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class AuthGuard {
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
+/**
+ * Functional route guard (Angular 15+ best practice).
+ * Replaces the deprecated class-based CanActivate interface.
+ */
+export const authGuard = () => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
 
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    
-    if (this.authService.isAuthenticated()) {
-      return true;
-    }
-    
-    // Redirigir a login si no está autenticado
-    this.router.navigate(['/auth/login'], {
-      queryParams: { returnUrl: state.url }
-    });
-    return false;
+  if (authService.isAuthenticated()) {
+    return true;
   }
-}
+
+  return router.createUrlTree(['/auth/login'], {
+    queryParams: { returnUrl: router.routerState.snapshot.url }
+  });
+};

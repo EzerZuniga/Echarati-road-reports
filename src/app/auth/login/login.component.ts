@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
@@ -8,12 +10,14 @@ import { AuthService } from '../../core/services/auth.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   loginForm: FormGroup;
   loading = false;
   submitted = false;
   error = '';
   returnUrl = '';
+
+  private destroy$ = new Subject<void>();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -32,6 +36,11 @@ export class LoginComponent implements OnInit {
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/reports';
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   // Getter conveniente para acceder a los controles del formulario
   get f() { return this.loginForm.controls; }
 
@@ -45,15 +54,17 @@ export class LoginComponent implements OnInit {
     }
 
     this.loading = true;
-    
+
     this.authService.login(
-      this.f['username'].value, 
+      this.f['username'].value,
       this.f['password'].value
+    ).pipe(
+      takeUntil(this.destroy$)
     ).subscribe({
       next: () => {
         this.router.navigate([this.returnUrl]);
       },
-      error: (error) => {
+      error: () => {
         this.error = 'Usuario o contraseña incorrectos';
         this.loading = false;
       },

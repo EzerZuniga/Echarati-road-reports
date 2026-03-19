@@ -1,51 +1,60 @@
-.login-container {
-  min-height: 70vh;
+.login-page {
+  min-height: 80vh;
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 2rem;
+  padding: var(--spacing-xl) 0;
+}
 
-  .card {
-    border: none;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    
-    .card-header {
-      background-color: #4a90e2;
-      color: white;
-      border-bottom: none;
-      padding: 2rem 1.5rem;
-      
-      h3 {
-        margin: 0;
-        font-weight: 600;
-      }
-    }
-    
-    .card-body {
-      padding: 2rem;
-    }
+.login-branding {
+  .login-logo {
+    font-size: 3rem;
+    line-height: 1;
   }
-  
-  .invalid-feedback {
-    color: #dc3545;
-    font-size: 0.875rem;
-    margin-top: 0.25rem;
+
+  .login-title {
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: 0;
   }
-  
-  .spinner-border {
-    margin-right: 0.5rem;
+
+  .login-subtitle {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    margin: var(--spacing-xs) 0 0;
   }
 }
 
-// Responsive
-@media (max-width: 768px) {
-  .login-container {
-    padding: 1rem;
-    
-    .card {
-      margin: 0;
-      box-shadow: none;
-      border: 1px solid #dee2e6;
+.card {
+  .card-title {
+    font-weight: 600;
+    color: var(--color-text);
+  }
+}
+
+.invalid-feedback {
+  font-size: var(--font-size-xs);
+}
+
+@media (max-width: 576px) {
+  .login-page {
+    padding: var(--spacing-lg) 0;
+    min-height: auto;
+    align-items: flex-start;
+    padding-top: var(--spacing-2xl);
+  }
+
+  .login-branding {
+    .login-logo {
+      font-size: 2.5rem;
     }
+
+    .login-title {
+      font-size: var(--font-size-xl);
+    }
+  }
+
+  .card {
+    border-radius: var(--radius-lg);
   }
 }

@@ -1,115 +1,105 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { ReportService } from '../../services/report.service';
 import { Report, ReportStatus } from '../../models/report.model';
+import { getCategoryIconClass, getCategoryLabel, getStatusBadgeClass, getStatusLabel, formatDate } from '../../utils/report-utils';
 
 @Component({
   selector: 'app-report-detail',
   templateUrl: './report-detail.component.html',
   styleUrls: ['./report-detail.component.scss']
 })
-export class ReportDetailComponent implements OnInit {
+export class ReportDetailComponent implements OnInit, OnDestroy {
   report?: Report;
   loading = true;
   error = '';
-  
+
   statusOptions = Object.values(ReportStatus);
+
+  // Utilidades compartidas
+  getCategoryIconClass = getCategoryIconClass;
+  getCategoryLabel = getCategoryLabel;
+  getStatusBadgeClass = getStatusBadgeClass;
+  getStatusLabel = getStatusLabel;
+  formatDate = formatDate;
+
+  private destroy$ = new Subject<void>();
 
   constructor(
     private route: ActivatedRoute,
-    public router: Router,
+    private router: Router,
     private reportService: ReportService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadReport();
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   loadReport(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    
+
     if (!id) {
-      this.error = 'ID de reporte no válido';
+      this.error = 'ID de reporte no válido.';
       this.loading = false;
       return;
     }
 
     this.loading = true;
-    this.reportService.getReport(+id).subscribe({
+    this.reportService.getReport(+id).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe({
       next: (report) => {
         this.report = report;
         this.loading = false;
       },
-      error: (err) => {
-        this.error = 'Error al cargar el reporte';
+      error: () => {
+        this.error = 'No se pudo cargar el reporte. Verifique que existe.';
         this.loading = false;
-        console.error(err);
       }
     });
   }
 
   updateStatus(newStatus: ReportStatus): void {
-    if (!this.report || !this.report.id) return;
-    
+    if (!this.report?.id || newStatus === this.report.status) return;
+
     this.loading = true;
-    this.reportService.updateReport(this.report.id, { status: newStatus }).subscribe({
+    this.reportService.updateReport(this.report.id, { status: newStatus }).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe({
       next: (updatedReport) => {
         this.report = updatedReport;
         this.loading = false;
       },
-      error: (err) => {
-        this.error = 'Error al actualizar el estado';
+      error: () => {
+        this.error = 'Error al actualizar el estado.';
         this.loading = false;
-        console.error(err);
       }
     });
   }
 
   deleteReport(): void {
-    if (!this.report || !this.report.id) return;
-    
+    if (!this.report?.id) return;
+
     if (confirm('¿Está seguro de que desea eliminar este reporte? Esta acción no se puede deshacer.')) {
-      this.reportService.deleteReport(this.report.id).subscribe({
-        next: () => {
-          this.router.navigate(['/reports']);
-        },
-        error: (err) => {
-          this.error = 'Error al eliminar el reporte';
-          console.error(err);
+      this.reportService.deleteReport(this.report.id).pipe(
+        takeUntil(this.destroy$)
+      ).subscribe({
+        next: () => this.router.navigate(['/reports']),
+        error: () => {
+          this.error = 'Error al eliminar el reporte.';
         }
       });
     }
   }
 
-  getStatusBadgeClass(status: ReportStatus): string {
-    const classes: Record<ReportStatus, string> = {
-      [ReportStatus.PENDING]: 'badge-warning',
-      [ReportStatus.IN_PROGRESS]: 'badge-info',
-      [ReportStatus.RESOLVED]: 'badge-success',
-      [ReportStatus.CLOSED]: 'badge-secondary'
-    };
-    return classes[status] || 'badge-secondary';
-  }
-
-  getCategoryIcon(category: string): string {
-    const icons: Record<string, string> = {
-      'INFRASTRUCTURE': '',
-      'SECURITY': '',
-      'ENVIRONMENT': '',
-      'TRANSPORT': '',
-      'OTHER': ''
-    };
-    return icons[category] || '';
-  }
-
-  getFormattedDate(date?: Date): string {
-    if (!date) return 'N/A';
-    return new Date(date).toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+  goBack(): void {
+    this.router.navigate(['/reports']);
   }
 }

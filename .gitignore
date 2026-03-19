@@ -9,7 +9,8 @@
 
 # Node modules and dependency files
 /node_modules/
-/package-lock.json
+# package-lock.json should be committed for reproducible CI installs
+# /package-lock.json
 /yarn.lock
 
 # Environment files

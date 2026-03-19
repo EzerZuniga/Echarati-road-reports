@@ -7,24 +7,24 @@ import { ReportDetailComponent } from './components/report-detail/report-detail.
 const routes: Routes = [
   {
     path: '',
-    component: ReportListComponent
+    component: ReportListComponent,
   },
   {
     path: 'new',
-    component: ReportFormComponent
+    component: ReportFormComponent,
   },
   {
     path: ':id',
-    component: ReportDetailComponent
+    component: ReportDetailComponent,
   },
   {
     path: ':id/edit',
-    component: ReportFormComponent
-  }
+    component: ReportFormComponent,
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class ReportsRoutingModule { }
+export class ReportsRoutingModule {}

@@ -17,6 +17,15 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "ES2022",
+    "skipLibCheck": true,
+    "incremental": true,
+    "tsBuildInfoFile": ".angular/.tsbuildinfo",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "@app/*": ["src/app/*"],
+      "@env/*": ["src/environments/*"]
+    },
     "useDefineForClassFields": false,
     "lib": ["ES2022", "dom"]
   },

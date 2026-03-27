@@ -1,0 +1,44 @@
+<mat-toolbar color="primary" class="main-toolbar">
+  <a routerLink="/" class="brand">
+    <img
+      src="assets/logos/logo.png"
+      alt="Echarati"
+      height="36"
+      onerror="this.style.display = 'none'"
+    />
+    <span>Reportes Ciudadanos</span>
+  </a>
+
+  <span class="spacer"></span>
+
+  <nav class="nav-links" *ngIf="auth.isAuthenticated">
+    <a mat-button routerLink="/reports" routerLinkActive="active-link">
+      <mat-icon>list_alt</mat-icon> Mis Reportes
+    </a>
+    <a mat-button routerLink="/reports/new" routerLinkActive="active-link">
+      <mat-icon>add_circle_outline</mat-icon> Nuevo Reporte
+    </a>
+  </nav>
+
+  <ng-container *ngIf="auth.isAuthenticated; else loginBtn">
+    <button mat-icon-button [matMenuTriggerFor]="userMenu" aria-label="Menú de usuario">
+      <mat-icon>account_circle</mat-icon>
+    </button>
+    <mat-menu #userMenu>
+      <div class="user-menu-header">
+        <mat-icon>person</mat-icon>
+        <span>{{ userName }}</span>
+      </div>
+      <mat-divider></mat-divider>
+      <button mat-menu-item (click)="logout()"><mat-icon>logout</mat-icon> Cerrar sesión</button>
+    </mat-menu>
+  </ng-container>
+
+  <ng-template #loginBtn>
+    <a mat-button routerLink="/auth/login"> <mat-icon>login</mat-icon> Iniciar sesión </a>
+  </ng-template>
+</mat-toolbar>
+
+<main class="main-content">
+  <router-outlet></router-outlet>
+</main>

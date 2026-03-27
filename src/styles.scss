@@ -3,7 +3,37 @@
    Estilos Globales
    ========================================= */
 
-@import "../node_modules/bootstrap-icons/font/bootstrap-icons.css";
+/* Angular Material Theme */
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+$primary-palette: mat.define-palette(mat.$indigo-palette, 800);
+$accent-palette: mat.define-palette(mat.$amber-palette, 600);
+$warn-palette: mat.define-palette(mat.$red-palette);
+
+$app-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $primary-palette,
+      accent: $accent-palette,
+      warn: $warn-palette,
+    ),
+    typography: mat.define-typography-config(
+        $font-family: 'Roboto, sans-serif',
+      ),
+    density: 0,
+  )
+);
+
+@include mat.all-component-themes($app-theme);
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
 
 /* --- CSS Custom Properties (Design Tokens) --- */
 :root {

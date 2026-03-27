@@ -1,39 +1,39 @@
 import { Component, OnInit, OnDestroy, HostListener, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService, User } from '../../../core/services/auth.service';
-import { Subscription } from 'rxjs';
+import { AuthService } from '../../../core/services/auth.service';
+import { User } from '../../../core/models';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.scss']
+  styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   currentUser: User | null = null;
   isMenuCollapsed = true;
   isDropdownOpen = false;
 
-  private userSubscription!: Subscription;
+  private readonly destroy$ = new Subject<void>();
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private elementRef: ElementRef
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    this.userSubscription = this.authService.getCurrentUserObservable().subscribe(
-      user => this.currentUser = user
-    );
+    this.authService.currentUser$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((user) => (this.currentUser = user));
   }
 
   ngOnDestroy(): void {
-    if (this.userSubscription) {
-      this.userSubscription.unsubscribe();
-    }
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
-  /** Cierra el dropdown al hacer click fuera del componente */
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event): void {
     if (!this.elementRef.nativeElement.contains(event.target)) {
@@ -43,7 +43,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   isLoggedIn(): boolean {
-    return this.authService.isAuthenticated();
+    return this.authService.isAuthenticated;
   }
 
   toggleMenu(): void {
@@ -65,6 +65,5 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.authService.logout();
     this.isDropdownOpen = false;
     this.isMenuCollapsed = true;
-    this.router.navigate(['/auth/login']);
   }
 }

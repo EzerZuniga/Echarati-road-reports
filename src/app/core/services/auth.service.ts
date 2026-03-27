@@ -1,92 +1,102 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { delay, tap } from 'rxjs/operators';
+﻿import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { environment } from '@env/environment';
+import {
+  User, AuthResponse, LoginRequest, RegisterRequest, GoogleAuthRequest, AuthTokens
+} from '../models';
 
-export interface User {
-  id: number;
-  username: string;
-  email: string;
-  name: string;
-}
-
-export interface AuthResponse {
-  user: User;
-  token: string;
-}
-
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly TOKEN_KEY = 'auth_token';
-  private readonly USER_KEY = 'auth_user';
+  private readonly TOKEN_KEY = 'echarati_access_token';
+  private readonly REFRESH_KEY = 'echarati_refresh_token';
+  private readonly USER_KEY = 'echarati_user';
+
   private currentUserSubject = new BehaviorSubject<User | null>(null);
+  readonly currentUser$: Observable<User | null> = this.currentUserSubject.asObservable();
 
-  constructor() {
-    this.loadStoredUser();
+  constructor(private http: HttpClient, private router: Router) {
+    this.restoreSession();
   }
 
-  private loadStoredUser(): void {
-    try {
-      const userJson = localStorage.getItem(this.USER_KEY);
-      if (userJson) {
-        const user: User = JSON.parse(userJson);
-        this.currentUserSubject.next(user);
-      }
-    } catch (error) {
-      console.error('Error al cargar usuario almacenado, limpiando datos corruptos:', error);
-      localStorage.removeItem(this.USER_KEY);
-      localStorage.removeItem(this.TOKEN_KEY);
-    }
+  get currentUser(): User | null { return this.currentUserSubject.value; }
+  get isAuthenticated(): boolean { return !!this.getAccessToken(); }
+  get isAdmin(): boolean { return this.currentUser?.role === 'admin'; }
+
+  getAccessToken(): string | null {
+    return localStorage.getItem(this.TOKEN_KEY);
   }
 
-  login(username: string, password: string): Observable<AuthResponse> {
-    // Simulación de login - en producción aquí harías una petición HTTP real
-    const mockUser: User = {
-      id: 1,
-      username: username,
-      email: `${username}@echarati.gob.pe`,
-      name: 'Usuario Demo'
-    };
+  login(credentials: LoginRequest): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/login`, credentials).pipe(
+      tap(res => this.persistSession(res)),
+      catchError(err => throwError(() => this.mapError(err)))
+    );
+  }
 
-    const mockResponse: AuthResponse = {
-      user: mockUser,
-      token: 'mock-jwt-token-' + Date.now()
-    };
+  register(data: RegisterRequest): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/register`, data).pipe(
+      tap(res => this.persistSession(res)),
+      catchError(err => throwError(() => this.mapError(err)))
+    );
+  }
 
-    return of(mockResponse).pipe(
-      delay(1000), // Simular delay de red
-      tap(response => {
-        this.setSession(response);
-      })
+  loginWithGoogle(request: GoogleAuthRequest): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/google`, request).pipe(
+      tap(res => this.persistSession(res)),
+      catchError(err => throwError(() => this.mapError(err)))
+    );
+  }
+
+  refreshToken(): Observable<AuthTokens> {
+    const refreshToken = localStorage.getItem(this.REFRESH_KEY);
+    if (!refreshToken) { this.logout(); return throwError(() => new Error('No refresh token')); }
+    return this.http.post<AuthTokens>(`${environment.apiUrl}/auth/refresh`, { refreshToken }).pipe(
+      tap(tokens => {
+        localStorage.setItem(this.TOKEN_KEY, tokens.accessToken);
+        if (tokens.refreshToken) localStorage.setItem(this.REFRESH_KEY, tokens.refreshToken);
+      }),
+      catchError(() => { this.logout(); return throwError(() => new Error('Session expired')); })
     );
   }
 
   logout(): void {
     localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem(this.REFRESH_KEY);
     localStorage.removeItem(this.USER_KEY);
     this.currentUserSubject.next(null);
+    this.router.navigate(['/auth/login']);
   }
 
-  isAuthenticated(): boolean {
-    return !!localStorage.getItem(this.TOKEN_KEY);
+  getProfile(): Observable<User> {
+    return this.http.get<User>(`${environment.apiUrl}/users/profile`).pipe(
+      tap(user => {
+        this.currentUserSubject.next(user);
+        localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+      })
+    );
   }
 
-  getCurrentUser(): User | null {
-    return this.currentUserSubject.value;
+  private persistSession(res: AuthResponse): void {
+    localStorage.setItem(this.TOKEN_KEY, res.tokens.accessToken);
+    if (res.tokens.refreshToken) localStorage.setItem(this.REFRESH_KEY, res.tokens.refreshToken);
+    localStorage.setItem(this.USER_KEY, JSON.stringify(res.user));
+    this.currentUserSubject.next(res.user);
   }
 
-  getCurrentUserObservable(): Observable<User | null> {
-    return this.currentUserSubject.asObservable();
+  private restoreSession(): void {
+    try {
+      const raw = localStorage.getItem(this.USER_KEY);
+      if (raw && this.getAccessToken()) this.currentUserSubject.next(JSON.parse(raw) as User);
+    } catch { this.logout(); }
   }
 
-  private setSession(authResult: AuthResponse): void {
-    localStorage.setItem(this.TOKEN_KEY, authResult.token);
-    localStorage.setItem(this.USER_KEY, JSON.stringify(authResult.user));
-    this.currentUserSubject.next(authResult.user);
-  }
-
-  getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
+  private mapError(err: { status: number }): Error {
+    if (err.status === 401) return new Error('Credenciales invalidas');
+    if (err.status === 409) return new Error('El email o DNI ya esta registrado');
+    if (err.status === 422) return new Error('Datos de registro invalidos');
+    return new Error('Error de conexion. Intente nuevamente');
   }
 }

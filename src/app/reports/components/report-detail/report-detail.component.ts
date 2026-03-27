@@ -2,14 +2,20 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { ReportService } from '../../services/report.service';
+import { ReportFacadeService } from '../../services/report-facade.service';
 import { Report, ReportStatus } from '../../models/report.model';
-import { getCategoryIconClass, getCategoryLabel, getStatusBadgeClass, getStatusLabel, formatDate } from '../../utils/report-utils';
+import {
+  getCategoryIconClass,
+  getCategoryLabel,
+  getStatusBadgeClass,
+  getStatusLabel,
+  formatDate,
+} from '../../utils/report-utils';
 
 @Component({
   selector: 'app-report-detail',
   templateUrl: './report-detail.component.html',
-  styleUrls: ['./report-detail.component.scss']
+  styleUrls: ['./report-detail.component.scss'],
 })
 export class ReportDetailComponent implements OnInit, OnDestroy {
   report?: Report;
@@ -25,13 +31,13 @@ export class ReportDetailComponent implements OnInit, OnDestroy {
   getStatusLabel = getStatusLabel;
   formatDate = formatDate;
 
-  private destroy$ = new Subject<void>();
+  private readonly destroy$ = new Subject<void>();
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private reportService: ReportService
-  ) { }
+    private facade: ReportFacadeService
+  ) {}
 
   ngOnInit(): void {
     this.loadReport();
@@ -52,50 +58,55 @@ export class ReportDetailComponent implements OnInit, OnDestroy {
     }
 
     this.loading = true;
-    this.reportService.getReport(+id).pipe(
-      takeUntil(this.destroy$)
-    ).subscribe({
-      next: (report) => {
-        this.report = report;
-        this.loading = false;
-      },
-      error: () => {
-        this.error = 'No se pudo cargar el reporte. Verifique que existe.';
-        this.loading = false;
-      }
-    });
+    this.facade
+      .getReport(+id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (report) => {
+          this.report = report;
+          this.loading = false;
+        },
+        error: () => {
+          this.error = 'No se pudo cargar el reporte. Verifique que existe.';
+          this.loading = false;
+        },
+      });
   }
 
   updateStatus(newStatus: ReportStatus): void {
     if (!this.report?.id || newStatus === this.report.status) return;
 
     this.loading = true;
-    this.reportService.updateReport(this.report.id, { status: newStatus }).pipe(
-      takeUntil(this.destroy$)
-    ).subscribe({
-      next: (updatedReport) => {
-        this.report = updatedReport;
-        this.loading = false;
-      },
-      error: () => {
-        this.error = 'Error al actualizar el estado.';
-        this.loading = false;
-      }
-    });
+    this.facade
+      .updateReport(this.report.id, { status: newStatus })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (updatedReport) => {
+          this.report = updatedReport;
+          this.loading = false;
+        },
+        error: () => {
+          this.error = 'Error al actualizar el estado.';
+          this.loading = false;
+        },
+      });
   }
 
   deleteReport(): void {
     if (!this.report?.id) return;
 
-    if (confirm('¿Está seguro de que desea eliminar este reporte? Esta acción no se puede deshacer.')) {
-      this.reportService.deleteReport(this.report.id).pipe(
-        takeUntil(this.destroy$)
-      ).subscribe({
-        next: () => this.router.navigate(['/reports']),
-        error: () => {
-          this.error = 'Error al eliminar el reporte.';
-        }
-      });
+    if (
+      confirm('¿Está seguro de que desea eliminar este reporte? Esta acción no se puede deshacer.')
+    ) {
+      this.facade
+        .deleteReport(this.report.id)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => this.router.navigate(['/reports']),
+          error: () => {
+            this.error = 'Error al eliminar el reporte.';
+          },
+        });
     }
   }
 

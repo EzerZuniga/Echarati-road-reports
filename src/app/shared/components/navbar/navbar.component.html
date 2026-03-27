@@ -6,59 +6,74 @@
     </a>
 
     <!-- Mobile Toggle -->
-    <button class="navbar-toggler border-0" type="button" (click)="toggleMenu()" [attr.aria-expanded]="!isMenuCollapsed"
-      aria-label="Abrir menú de navegación">
+    <button
+      class="navbar-toggler border-0"
+      type="button"
+      (click)="toggleMenu()"
+      [attr.aria-expanded]="!isMenuCollapsed"
+      aria-label="Abrir menú de navegación"
+    >
       <i class="bi bi-list"></i>
     </button>
 
     <!-- Navbar Content -->
     <div class="collapse navbar-collapse" [class.show]="!isMenuCollapsed" id="navbarContent">
       @if (isLoggedIn()) {
-      <ul class="navbar-nav me-auto">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/reports" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-            Mis Reportes
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/reports/new" routerLinkActive="active">
-            Nuevo Reporte
-          </a>
-        </li>
-      </ul>
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              routerLink="/reports"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+            >
+              Mis Reportes
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/reports/new" routerLinkActive="active">
+              Nuevo Reporte
+            </a>
+          </li>
+        </ul>
 
-      <!-- User Menu -->
-      <div class="navbar-nav ms-auto">
-        <div class="nav-item dropdown" [class.show]="isDropdownOpen">
-          <button class="btn btn-link nav-link dropdown-toggle d-flex align-items-center text-decoration-none"
-            type="button" id="userDropdown" (click)="toggleDropdown()" [attr.aria-expanded]="isDropdownOpen">
-            <span class="user-avatar me-2">
-              {{ (currentUser?.name || 'U').charAt(0) }}
-            </span>
-            <span class="d-none d-md-inline">{{ currentUser?.name || 'Usuario' }}</span>
-          </button>
-          <ul class="dropdown-menu dropdown-menu-end" [class.show]="isDropdownOpen">
-            <li class="dropdown-header">
-              <strong>{{ currentUser?.name }}</strong>
-              <div class="text-muted small">{{ currentUser?.email }}</div>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li>
-              <button class="dropdown-item" (click)="logout()">
-                Cerrar Sesión
-              </button>
-            </li>
-          </ul>
+        <!-- User Menu -->
+        <div class="navbar-nav ms-auto">
+          <div class="nav-item dropdown" [class.show]="isDropdownOpen">
+            <button
+              class="btn btn-link nav-link dropdown-toggle d-flex align-items-center text-decoration-none"
+              type="button"
+              id="userDropdown"
+              (click)="toggleDropdown()"
+              [attr.aria-expanded]="isDropdownOpen"
+            >
+              <span class="user-avatar me-2">
+                {{ (currentUser?.firstName || 'U').charAt(0) }}
+              </span>
+              <span class="d-none d-md-inline">{{
+                currentUser ? currentUser.firstName + ' ' + currentUser.lastName : 'Usuario'
+              }}</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" [class.show]="isDropdownOpen">
+              <li class="dropdown-header">
+                <strong>{{
+                  currentUser ? currentUser.firstName + ' ' + currentUser.lastName : ''
+                }}</strong>
+                <div class="text-muted small">{{ currentUser?.email }}</div>
+              </li>
+              <li>
+                <hr class="dropdown-divider" />
+              </li>
+              <li>
+                <button class="dropdown-item" (click)="logout()">Cerrar Sesión</button>
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
       } @else {
-      <div class="navbar-nav ms-auto">
-        <a class="btn btn-primary btn-sm" routerLink="/auth/login">
-          Iniciar Sesión
-        </a>
-      </div>
+        <div class="navbar-nav ms-auto">
+          <a class="btn btn-primary btn-sm" routerLink="/auth/login"> Iniciar Sesión </a>
+        </div>
       }
     </div>
   </div>

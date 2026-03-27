@@ -1,0 +1,9 @@
+@use '../login/login.component.scss' as base;
+
+.form-row {
+  display: flex;
+  gap: 12px;
+  .half-width {
+    flex: 1;
+  }
+}

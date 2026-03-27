@@ -1,0 +1,112 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1 class="mat-h1">Crear Cuenta Ciudadana</h1>
+      <p class="auth-subtitle">Municipalidad Distrital de Echarati</p>
+    </div>
+
+    <mat-card class="auth-form-card">
+      <mat-card-content>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Nombres</mat-label>
+              <input matInput formControlName="firstName" autocomplete="given-name" />
+              @if (f['firstName'].hasError('required') && f['firstName'].touched) {
+                <mat-error>Requerido</mat-error>
+              }
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Apellidos</mat-label>
+              <input matInput formControlName="lastName" autocomplete="family-name" />
+              @if (f['lastName'].hasError('required') && f['lastName'].touched) {
+                <mat-error>Requerido</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>DNI (8 dígitos)</mat-label>
+            <input
+              matInput
+              formControlName="dni"
+              maxlength="8"
+              inputmode="numeric"
+              pattern="[0-9]*"
+              autocomplete="off"
+            />
+            <mat-icon matSuffix>badge</mat-icon>
+            @if (f['dni'].hasError('required') && f['dni'].touched) {
+              <mat-error>El DNI es requerido</mat-error>
+            }
+            @if (f['dni'].hasError('invalidDni') && f['dni'].touched) {
+              <mat-error>DNI debe tener exactamente 8 dígitos</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Correo electrónico</mat-label>
+            <input matInput type="email" formControlName="email" autocomplete="email" />
+            <mat-icon matSuffix>email</mat-icon>
+            @if (f['email'].hasError('email') && f['email'].touched) {
+              <mat-error>Ingrese un correo válido</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Teléfono (9 dígitos)</mat-label>
+            <input
+              matInput
+              formControlName="phone"
+              maxlength="9"
+              inputmode="numeric"
+              autocomplete="tel"
+            />
+            <mat-icon matSuffix>phone</mat-icon>
+            @if (f['phone'].hasError('pattern') && f['phone'].touched) {
+              <mat-error>Teléfono debe tener 9 dígitos</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Contraseña</mat-label>
+            <input
+              matInput
+              [type]="hidePassword ? 'password' : 'text'"
+              formControlName="password"
+              autocomplete="new-password"
+            />
+            <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
+              <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            @if (f['password'].hasError('minlength') && f['password'].touched) {
+              <mat-error>Mínimo 8 caracteres</mat-error>
+            }
+            @if (f['password'].hasError('pattern') && f['password'].touched) {
+              <mat-error>Debe contener letras y números</mat-error>
+            }
+          </mat-form-field>
+
+          <button
+            mat-flat-button
+            color="primary"
+            type="submit"
+            class="full-width submit-btn"
+            [disabled]="loading"
+          >
+            @if (loading) {
+              <mat-spinner diameter="20" class="inline-spinner"></mat-spinner>
+              Creando cuenta...
+            } @else {
+              Crear Cuenta
+            }
+          </button>
+        </form>
+
+        <p class="auth-link text-center mt-3">
+          ¿Ya tienes cuenta? <a routerLink="/auth/login">Inicia sesión</a>
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

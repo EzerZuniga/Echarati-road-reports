@@ -1,0 +1,63 @@
+.admin-container {
+  height: 100vh;
+}
+
+.admin-sidenav {
+  width: 240px;
+  background: #1a237e;
+  color: #fff;
+
+  .sidenav-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 16px;
+    font-size: 1.1rem;
+    font-weight: 700;
+
+    .brand-icon {
+      font-size: 28px;
+    }
+  }
+
+  mat-nav-list {
+    padding-top: 8px;
+
+    a {
+      color: rgba(255, 255, 255, 0.85);
+      border-radius: 0 24px 24px 0;
+      margin-right: 16px;
+
+      &.active-nav {
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+        font-weight: 600;
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+    }
+  }
+}
+
+.admin-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+  .spacer {
+    flex: 1;
+  }
+  .user-name {
+    margin: 0 6px;
+    font-weight: 500;
+  }
+}
+
+.page-content {
+  padding: 24px;
+  background: #f5f5f5;
+  min-height: calc(100vh - 64px);
+}

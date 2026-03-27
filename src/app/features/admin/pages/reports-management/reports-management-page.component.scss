@@ -1,0 +1,100 @@
+.page-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+.page-header {
+  margin-bottom: 20px;
+}
+.page-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1a237e;
+  margin: 0;
+}
+.page-subtitle {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 4px 0 0;
+}
+.filter-card {
+  margin-bottom: 20px;
+}
+.filter-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.search-field {
+  flex: 2;
+  min-width: 200px;
+}
+.filter-field {
+  flex: 1;
+  min-width: 150px;
+}
+.table-card {
+  border-radius: 12px !important;
+  overflow: hidden;
+}
+.table-wrapper {
+  overflow-x: auto;
+}
+.reports-table {
+  width: 100%;
+}
+.title-cell {
+  max-width: 220px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.location-cell {
+  max-width: 160px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.8rem;
+  color: #666;
+}
+.status-chip {
+  font-size: 0.72rem;
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+  &[data-status='pending'] {
+    background: #fff3e0;
+    color: #e65100;
+  }
+  &[data-status='in_progress'] {
+    background: #e3f2fd;
+    color: #1565c0;
+  }
+  &[data-status='resolved'] {
+    background: #e8f5e9;
+    color: #2e7d32;
+  }
+  &[data-status='rejected'] {
+    background: #fce4ec;
+    color: #c62828;
+  }
+}
+.actions-cell {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.action-btn {
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  line-height: 28px;
+  min-width: auto;
+}
+.no-data-cell {
+  text-align: center;
+  padding: 48px;
+  color: #888;
+}

@@ -1,4 +1,5 @@
 export const environment = {
-    production: false,
-    apiUrl: 'http://localhost:3000/api'
+  production: false,
+  apiUrl: 'https://api.echarati-reportes.com',
+  googleClientId: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com',
 };

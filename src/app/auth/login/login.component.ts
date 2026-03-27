@@ -8,7 +8,7 @@ import { AuthService } from '../../core/services/auth.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit, OnDestroy {
   loginForm: FormGroup;
@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   ) {
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
@@ -42,7 +42,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   // Getter conveniente para acceder a los controles del formulario
-  get f() { return this.loginForm.controls; }
+  get f() {
+    return this.loginForm.controls;
+  }
 
   onSubmit(): void {
     this.submitted = true;
@@ -55,22 +57,20 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     this.loading = true;
 
-    this.authService.login(
-      this.f['username'].value,
-      this.f['password'].value
-    ).pipe(
-      takeUntil(this.destroy$)
-    ).subscribe({
-      next: () => {
-        this.router.navigate([this.returnUrl]);
-      },
-      error: () => {
-        this.error = 'Usuario o contraseña incorrectos';
-        this.loading = false;
-      },
-      complete: () => {
-        this.loading = false;
-      }
-    });
+    this.authService
+      .login({ email: this.f['username'].value, password: this.f['password'].value })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.router.navigate([this.returnUrl]);
+        },
+        error: () => {
+          this.error = 'Usuario o contraseña incorrectos';
+          this.loading = false;
+        },
+        complete: () => {
+          this.loading = false;
+        },
+      });
   }
 }

@@ -1,0 +1,83 @@
+<div class="page-container">
+  <div class="page-header">
+    <button mat-icon-button routerLink="/reports" aria-label="Volver">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div>
+      <h1 class="page-title">{{ isEdit ? 'Editar Reporte' : 'Nuevo Reporte' }}</h1>
+      <p class="page-subtitle">Complete todos los campos para registrar la incidencia</p>
+    </div>
+  </div>
+
+  <mat-card class="form-card">
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Título del reporte</mat-label>
+          <input matInput formControlName="title" placeholder="Ej: Bache en calle principal" />
+          <mat-hint align="end">{{ f['title'].value?.length ?? 0 }}/100</mat-hint>
+          @if (f['title'].hasError('required') && f['title'].touched) {
+            <mat-error>El título es requerido</mat-error>
+          }
+          @if (f['title'].hasError('minlength') && f['title'].touched) {
+            <mat-error>Mínimo 5 caracteres</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Categoría</mat-label>
+          <mat-select formControlName="category">
+            @for (cat of categories; track cat.value) {
+              <mat-option [value]="cat.value">{{ cat.label }}</mat-option>
+            }
+          </mat-select>
+          @if (f['category'].hasError('required') && f['category'].touched) {
+            <mat-error>Seleccione una categoría</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Descripción detallada</mat-label>
+          <textarea
+            matInput
+            formControlName="description"
+            rows="5"
+            placeholder="Describa la incidencia con el mayor detalle posible..."
+          ></textarea>
+          <mat-hint align="end">{{ descLen }}/1000</mat-hint>
+          @if (f['description'].hasError('required') && f['description'].touched) {
+            <mat-error>La descripción es requerida</mat-error>
+          }
+          @if (f['description'].hasError('minlength') && f['description'].touched) {
+            <mat-error>Mínimo 20 caracteres</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Dirección / Ubicación</mat-label>
+          <input matInput formControlName="address" placeholder="Ej: Jr. Libertad 123, Echarati" />
+          <mat-icon matSuffix>location_on</mat-icon>
+          @if (f['address'].hasError('required') && f['address'].touched) {
+            <mat-error>La dirección es requerida</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>URL de imagen (opcional)</mat-label>
+          <input matInput formControlName="imageUrl" type="url" placeholder="https://..." />
+          <mat-icon matSuffix>image</mat-icon>
+        </mat-form-field>
+
+        <div class="form-actions">
+          <button mat-stroked-button type="button" routerLink="/reports">Cancelar</button>
+          <button mat-flat-button color="primary" type="submit" [disabled]="loading">
+            @if (loading) {
+              <mat-spinner diameter="20" class="inline-spinner"></mat-spinner>
+            }
+            {{ isEdit ? 'Actualizar' : 'Crear Reporte' }}
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

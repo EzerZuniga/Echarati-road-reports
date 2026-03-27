@@ -1,0 +1,41 @@
+.page-container {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.page-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1a237e;
+  margin: 0;
+}
+.page-subtitle {
+  color: #666;
+  margin: 4px 0 0;
+  font-size: 0.875rem;
+}
+.form-card {
+  border-radius: 12px !important;
+  padding: 8px;
+}
+.full-width {
+  width: 100%;
+  margin-bottom: 12px;
+}
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+}
+.inline-spinner {
+  display: inline-block;
+  margin-right: 8px;
+  vertical-align: middle;
+}

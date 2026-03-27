@@ -1,14 +1,19 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { ReportService } from '../../services/report.service';
-import { Report, ReportCategory, ReportStatus, ReportFilter } from '../../models/report.model';
-import { getCategoryIconClass, getCategoryLabel, getStatusBadgeClass, getStatusLabel } from '../../utils/report-utils';
+import { ReportFacadeService } from '../../services/report-facade.service';
+import { Report, ReportCategory, ReportFilter, ReportStatus } from '../../models/report.model';
+import {
+  getCategoryIconClass,
+  getCategoryLabel,
+  getStatusBadgeClass,
+  getStatusLabel,
+} from '../../utils/report-utils';
 
 @Component({
   selector: 'app-report-list',
   templateUrl: './report-list.component.html',
-  styleUrls: ['./report-list.component.scss']
+  styleUrls: ['./report-list.component.scss'],
 })
 export class ReportListComponent implements OnInit, OnDestroy {
   reports: Report[] = [];
@@ -38,11 +43,23 @@ export class ReportListComponent implements OnInit, OnDestroy {
   getStatusBadgeClass = getStatusBadgeClass;
   getStatusLabel = getStatusLabel;
 
-  private destroy$ = new Subject<void>();
+  private readonly destroy$ = new Subject<void>();
 
-  constructor(private reportService: ReportService) { }
+  constructor(private facade: ReportFacadeService) {}
 
   ngOnInit(): void {
+    this.facade.loading$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((loading) => (this.loading = loading));
+
+    this.facade.error$.pipe(takeUntil(this.destroy$)).subscribe((err) => (this.error = err));
+
+    this.facade.reports$.pipe(takeUntil(this.destroy$)).subscribe((reports) => {
+      this.reports = reports;
+      this.computeStats(reports);
+      this.applySearchFilter();
+    });
+
     this.loadReports();
   }
 
@@ -52,24 +69,17 @@ export class ReportListComponent implements OnInit, OnDestroy {
   }
 
   loadReports(): void {
-    this.loading = true;
-    this.error = '';
+    this.facade.loadReports(this.filter);
+  }
 
-    this.reportService.getReports(this.filter).pipe(
-      takeUntil(this.destroy$)
-    ).subscribe({
-      next: (reports) => {
-        this.reports = reports;
-        this.stats = this.reportService.getStats();
-        this.applySearchFilter();
-        this.loading = false;
-      },
-      error: (err) => {
-        this.error = 'Error al cargar los reportes. Intente nuevamente.';
-        this.loading = false;
-        console.error(err);
-      }
-    });
+  private computeStats(reports: Report[]): void {
+    this.stats = {
+      total: reports.length,
+      pending: reports.filter((r) => r.status === ReportStatus.PENDING).length,
+      inProgress: reports.filter((r) => r.status === ReportStatus.IN_PROGRESS).length,
+      resolved: reports.filter((r) => r.status === ReportStatus.RESOLVED).length,
+      closed: reports.filter((r) => r.status === ReportStatus.CLOSED).length,
+    };
   }
 
   applySearchFilter(): void {
@@ -77,10 +87,11 @@ export class ReportListComponent implements OnInit, OnDestroy {
       this.filteredReports = [...this.reports];
     } else {
       const term = this.searchTerm.toLowerCase();
-      this.filteredReports = this.reports.filter(report =>
-        report.title.toLowerCase().includes(term) ||
-        report.description.toLowerCase().includes(term) ||
-        report.location.toLowerCase().includes(term)
+      this.filteredReports = this.reports.filter(
+        (report) =>
+          report.title.toLowerCase().includes(term) ||
+          report.description.toLowerCase().includes(term) ||
+          report.location.toLowerCase().includes(term)
       );
     }
     this.currentPage = 1;
@@ -115,15 +126,15 @@ export class ReportListComponent implements OnInit, OnDestroy {
 
   deleteReport(id: number): void {
     if (confirm('¿Está seguro de que desea eliminar este reporte?')) {
-      this.reportService.deleteReport(id).pipe(
-        takeUntil(this.destroy$)
-      ).subscribe({
-        next: () => this.loadReports(),
-        error: (err) => {
-          this.error = 'Error al eliminar el reporte.';
-          console.error(err);
-        }
-      });
+      this.facade
+        .deleteReport(id)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          error: (err: Error) => {
+            this.error = 'Error al eliminar el reporte.';
+            console.error(err);
+          },
+        });
     }
   }
 

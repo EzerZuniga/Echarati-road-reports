@@ -25,17 +25,17 @@ interface Metric {
 export class LandingComponent {
   readonly highlights: ReadonlyArray<Highlight> = [
     {
-      icon: 'heroShieldCheckSolid',
+      icon: 'HeroShieldCheckSolid',
       title: 'Respuesta confiable',
       description: 'Protocolos claros y trazables para garantizar soluciones verificadas.',
     },
     {
-      icon: 'heroMegaphoneSolid',
+      icon: 'HeroSpeakerphoneSolid',
       title: 'Comunicación directa',
       description: 'Los vecinos reciben actualizaciones puntuales de cada incidencia registrada.',
     },
     {
-      icon: 'heroBoltSolid',
+      icon: 'HeroLightningBoltSolid',
       title: 'Prioridad inteligente',
       description: 'Algoritmos sencillos que ordenan los reportes según criticidad y sector.',
     },

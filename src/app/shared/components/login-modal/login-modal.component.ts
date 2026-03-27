@@ -67,23 +67,25 @@ export class LoginModalComponent {
     }
     this.loading = true;
     this.cdr.markForCheck();
-    this.authService.login(this.f['username'].value, this.f['password'].value).subscribe({
-      next: () => {
-        this.loading = false;
-        this.close.emit();
-        const target = this.returnUrl && this.returnUrl.trim() ? this.returnUrl : '/reports';
-        this.router.navigateByUrl(target);
-        this.cdr.markForCheck();
-      },
-      error: (err: Error) => {
-        this.error = err.message || 'Credenciales inválidas';
-        this.loading = false;
-        this.cdr.markForCheck();
-      },
-      complete: () => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      },
-    });
+    this.authService
+      .login({ email: this.f['username'].value, password: this.f['password'].value })
+      .subscribe({
+        next: () => {
+          this.loading = false;
+          this.close.emit();
+          const target = this.returnUrl && this.returnUrl.trim() ? this.returnUrl : '/reports';
+          this.router.navigateByUrl(target);
+          this.cdr.markForCheck();
+        },
+        error: (err: Error) => {
+          this.error = err.message || 'Credenciales inválidas';
+          this.loading = false;
+          this.cdr.markForCheck();
+        },
+        complete: () => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        },
+      });
   }
 }

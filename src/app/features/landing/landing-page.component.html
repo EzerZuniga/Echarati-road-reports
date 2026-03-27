@@ -1,0 +1,324 @@
+<!-- ===== NAVBAR ===== -->
+<header class="navbar" [class.is-scrolled]="isScrolled">
+  <div class="navbar-container">
+    <a class="navbar-brand" routerLink="/" aria-label="Ir al inicio">
+      <span class="brand-mark">
+        <img
+          src="assets/logos/logoe.png"
+          alt="Municipalidad Distrital de Echarati"
+          class="brand-logo"
+        />
+      </span>
+      <span class="brand-text">
+        <span class="brand-entity">
+          Municipalidad Distrital
+          <span class="brand-entity-accent">de Echarati</span>
+        </span>
+        <span class="brand-product">Sistema de Reportes Ciudadanos</span>
+      </span>
+    </a>
+
+    <nav class="desktop-nav" aria-label="Navegación principal">
+      <ng-container *ngFor="let item of navItems; trackBy: trackByNavItemId">
+        <button
+          class="nav-link"
+          type="button"
+          (click)="scrollTo(item.id)"
+          [class.is-active]="activeSection === item.id"
+          [attr.aria-current]="activeSection === item.id ? 'page' : null"
+        >
+          {{ item.label }}
+        </button>
+      </ng-container>
+    </nav>
+
+    <div class="desktop-utilities">
+      <div class="social-links" aria-label="Redes sociales institucionales">
+        <ng-container *ngFor="let item of socialItems; trackBy: trackBySocialLabel">
+          <button
+            class="social-link"
+            type="button"
+            [attr.aria-label]="item.ariaLabel"
+            [attr.title]="item.label"
+          >
+            <i [class]="item.icon" aria-hidden="true"></i>
+          </button>
+        </ng-container>
+      </div>
+
+      <div class="desktop-actions">
+        <a mat-stroked-button routerLink="/auth/login" class="btn-login">Iniciar Sesión</a>
+        <a mat-flat-button color="primary" routerLink="/auth/register" class="btn-register">
+          Crear Cuenta
+        </a>
+      </div>
+    </div>
+
+    <button
+      class="menu-toggle"
+      type="button"
+      (click)="toggleMenu()"
+      [attr.aria-label]="menuOpen ? 'Cerrar menú' : 'Abrir menú'"
+      [attr.aria-expanded]="menuOpen"
+      aria-controls="mobileMenu"
+    >
+      <mat-icon>{{ menuOpen ? 'close' : 'menu' }}</mat-icon>
+    </button>
+  </div>
+
+  <nav id="mobileMenu" class="mobile-menu" [class.open]="menuOpen" aria-label="Menú móvil">
+    <div class="mobile-menu-panel">
+      <div class="mobile-menu-copy">
+        <span class="official-badge">Menú principal</span>
+        <p>Accede a la información clave del sistema y a tus opciones de cuenta.</p>
+      </div>
+
+      <ng-container *ngFor="let item of navItems; trackBy: trackByNavItemId">
+        <button
+          class="nav-link"
+          type="button"
+          (click)="scrollTo(item.id)"
+          [class.is-active]="activeSection === item.id"
+        >
+          <mat-icon>{{ item.icon }}</mat-icon>
+          {{ item.label }}
+        </button>
+      </ng-container>
+
+      <mat-divider></mat-divider>
+
+      <div class="mobile-social-links" aria-label="Redes sociales institucionales">
+        <ng-container *ngFor="let item of socialItems; trackBy: trackBySocialLabel">
+          <button
+            class="social-link"
+            type="button"
+            [attr.aria-label]="item.ariaLabel"
+            [attr.title]="item.label"
+          >
+            <i [class]="item.icon" aria-hidden="true"></i>
+          </button>
+        </ng-container>
+      </div>
+
+      <div class="mobile-auth">
+        <a
+          mat-stroked-button
+          routerLink="/auth/login"
+          (click)="closeMenu()"
+          class="btn-login-mobile"
+        >
+          <mat-icon>login</mat-icon>
+          Iniciar Sesión
+        </a>
+        <a
+          mat-flat-button
+          color="primary"
+          routerLink="/auth/register"
+          (click)="closeMenu()"
+          class="btn-register-mobile"
+        >
+          <mat-icon>person_add</mat-icon>
+          Crear Cuenta
+        </a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<div class="landing">
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Sistema de Reportes Ciudadanos</h1>
+      <p class="hero-lead">
+        Reporta incidencias urbanas, da seguimiento al estado de tus solicitudes y colabora con la
+        municipalidad para mejorar tu distrito.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== STATS ===== -->
+  <section class="stats-section">
+    <div class="stats-grid">
+      <div class="stat-card" *ngFor="let stat of stats; trackBy: trackByLabel">
+        <mat-icon class="stat-icon">{{ stat.icon }}</mat-icon>
+        <span class="stat-value">{{ stat.value }}</span>
+        <span class="stat-label">{{ stat.label }}</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CÓMO FUNCIONA ===== -->
+  <section class="steps-section" id="como-funciona">
+    <div class="section-container">
+      <div class="section-header">
+        <h2>¿Cómo funciona?</h2>
+        <p>En tres simples pasos puedes reportar cualquier problema de tu distrito.</p>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card" *ngFor="let step of steps; trackBy: trackByStepNumber">
+          <div class="step-number">{{ step.number }}</div>
+          <mat-icon class="step-icon">{{ step.icon }}</mat-icon>
+          <h3>{{ step.title }}</h3>
+          <p>{{ step.desc }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TIPOS DE REPORTE ===== -->
+  <section class="report-types-section" id="tipos-reporte">
+    <div class="section-container">
+      <div class="section-header">
+        <h2>¿Qué puedes reportar?</h2>
+        <p>
+          El sistema cubre todas las categorías de incidencias urbanas del distrito de Echarati.
+        </p>
+      </div>
+      <div class="report-types-grid">
+        <div class="report-type-card" *ngFor="let type of reportTypes; trackBy: trackByLabel">
+          <div class="report-type-icon-wrap">
+            <mat-icon>{{ type.icon }}</mat-icon>
+          </div>
+          <h3>{{ type.label }}</h3>
+          <p>{{ type.desc }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CARACTERÍSTICAS ===== -->
+  <section class="features-section">
+    <div class="section-container">
+      <div class="section-header">
+        <h2>¿Por qué usar el sistema?</h2>
+        <p>
+          Una plataforma diseñada para el ciudadano con las máximas garantías de calidad y
+          seguridad.
+        </p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-item" *ngFor="let feat of features; trackBy: trackByTitle">
+          <div class="feature-icon-wrap">
+            <mat-icon>{{ feat.icon }}</mat-icon>
+          </div>
+          <div class="feature-text">
+            <h3>{{ feat.title }}</h3>
+            <p>{{ feat.desc }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PREGUNTAS FRECUENTES ===== -->
+  <section class="faq-section" id="preguntas">
+    <div class="section-container section-container--narrow">
+      <div class="section-header">
+        <h2>Preguntas Frecuentes</h2>
+        <p>Resolvemos tus dudas antes de que te registres.</p>
+      </div>
+      <div class="faq-list">
+        <div
+          class="faq-item"
+          *ngFor="let faq of faqs; let i = index; trackBy: trackByQuestion"
+          [class.open]="openFaqIndex === i"
+        >
+          <button class="faq-question" type="button" (click)="toggleFaq(i)">
+            <span>{{ faq.question }}</span>
+            <mat-icon>{{ openFaqIndex === i ? 'expand_less' : 'expand_more' }}</mat-icon>
+          </button>
+          <div class="faq-answer" *ngIf="openFaqIndex === i">
+            <p>{{ faq.answer }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section class="cta-section">
+    <div class="cta-inner">
+      <mat-icon class="cta-icon">campaign</mat-icon>
+      <h2>¿Listo para mejorar tu distrito?</h2>
+      <p>Únete a más de 1,200 ciudadanos que ya contribuyen activamente a mejorar Echarati.</p>
+      <div class="cta-actions">
+        <a mat-flat-button color="accent" routerLink="/auth/register" class="cta-btn">
+          <mat-icon>person_add</mat-icon>
+          Registrarme Ahora
+        </a>
+        <a mat-stroked-button routerLink="/auth/login" class="cta-btn cta-btn-outline">
+          Ya tengo cuenta
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="landing-footer">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <img
+            src="assets/logos/logo.jpg"
+            alt="Municipalidad Distrital de Echarati"
+            class="footer-logo-image"
+          />
+          <span>Municipalidad Distrital de Echarati <strong>Reportes</strong></span>
+        </div>
+        <p class="footer-tagline">
+          Sistema oficial de reportes ciudadanos de la Municipalidad Distrital de Echarati. Juntos
+          construimos un distrito mejor.
+        </p>
+      </div>
+
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Plataforma</h4>
+          <ul>
+            <li><a href="#como-funciona">Cómo funciona</a></li>
+            <li><a href="#tipos-reporte">Tipos de reporte</a></li>
+            <li><a href="#preguntas">Preguntas frecuentes</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Acceso</h4>
+          <ul>
+            <li><a routerLink="/auth/register">Crear cuenta</a></li>
+            <li><a routerLink="/auth/login">Iniciar sesión</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Contacto</h4>
+          <ul>
+            <li>
+              <mat-icon class="contact-icon">location_on</mat-icon>
+              <span>Plaza de Armas s/n, Echarati, Cusco</span>
+            </li>
+            <li>
+              <mat-icon class="contact-icon">phone</mat-icon>
+              <span>(084) 123-456</span>
+            </li>
+            <li>
+              <mat-icon class="contact-icon">email</mat-icon>
+              <span>contacto&#64;mde-echarati.gob.pe</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <mat-divider class="footer-divider"></mat-divider>
+
+    <div class="footer-bottom">
+      <p>© {{ currentYear }} Municipalidad Distrital de Echarati — Todos los derechos reservados</p>
+      <div class="footer-legal">
+        <a href="#">Política de privacidad</a>
+        <span class="dot">·</span>
+        <a href="#">Términos de uso</a>
+      </div>
+    </div>
+  </footer>
+</div>

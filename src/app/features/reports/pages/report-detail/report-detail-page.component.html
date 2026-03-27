@@ -1,0 +1,69 @@
+<div class="page-container">
+  <button mat-icon-button routerLink="/reports" class="back-btn" aria-label="Volver">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+
+  @if (loading) {
+    <div class="loading-center"><mat-spinner diameter="48"></mat-spinner></div>
+  } @else if (report) {
+    <div class="detail-layout">
+      <mat-card class="detail-card">
+        <mat-card-header>
+          <mat-card-title>{{ report.title }}</mat-card-title>
+          <span class="status-chip" [attr.data-status]="report.status">
+            {{ getStatusLabel(report.status) }}
+          </span>
+        </mat-card-header>
+
+        @if (report.imageUrl) {
+          <img mat-card-image [src]="report.imageUrl" [alt]="report.title" class="report-image" />
+        }
+
+        <mat-card-content>
+          <div class="meta-grid">
+            <div class="meta-item">
+              <mat-icon>category</mat-icon>
+              <span>{{ getCategoryLabel(report.category) }}</span>
+            </div>
+            <div class="meta-item">
+              <mat-icon>location_on</mat-icon>
+              <span>{{ report.location.address }}</span>
+            </div>
+            <div class="meta-item">
+              <mat-icon>schedule</mat-icon>
+              <span>{{ report.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+            </div>
+            @if (report.updatedAt !== report.createdAt) {
+              <div class="meta-item">
+                <mat-icon>update</mat-icon>
+                <span>Actualizado: {{ report.updatedAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+              </div>
+            }
+          </div>
+
+          <mat-divider class="my-3"></mat-divider>
+
+          <h3 class="section-title">Descripción</h3>
+          <p class="description-text">{{ report.description }}</p>
+
+          @if (report.adminNotes) {
+            <mat-divider class="my-3"></mat-divider>
+            <h3 class="section-title">Respuesta Municipal</h3>
+            <div class="admin-notes">
+              <mat-icon>admin_panel_settings</mat-icon>
+              <p>{{ report.adminNotes }}</p>
+            </div>
+          }
+        </mat-card-content>
+
+        @if (report.citizenId === auth.currentUser?.id) {
+          <mat-card-actions align="end">
+            <a mat-stroked-button [routerLink]="['/reports', report.id, 'edit']">
+              <mat-icon>edit</mat-icon> Editar
+            </a>
+          </mat-card-actions>
+        }
+      </mat-card>
+    </div>
+  }
+</div>

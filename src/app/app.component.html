@@ -1,20 +1,3 @@
-<div class="app-container">
-  <!-- Skip link para accesibilidad -->
-  <a class="skip-link" href="#main-content">Saltar al contenido</a>
-
-  <!-- Barra superior de progreso durante navegación -->
-  <div class="top-progress" [class.active]="loading" role="presentation"></div>
-
-  <!-- Navbar será cargado desde shared/components/navbar -->
-  <app-navbar></app-navbar>
-
-  <!-- Banner de conectividad -->
-  <app-connectivity-banner></app-connectivity-banner>
-
-  <main id="main-content" class="main-content" tabindex="-1" [attr.aria-busy]="loading">
-    <router-outlet></router-outlet>
-  </main>
-
-  <!-- Footer será cargado desde shared/components/footer -->
-  <app-footer></app-footer>
-</div>
+<!-- Navigation bar de carga muestra barra de progreso global -->
+<div class="global-progress" [class.active]="loading" role="presentation"></div>
+<router-outlet></router-outlet>

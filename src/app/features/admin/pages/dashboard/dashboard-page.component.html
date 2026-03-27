@@ -1,0 +1,82 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Dashboard</h1>
+      <p class="page-subtitle">Resumen general del sistema de reportes ciudadanos</p>
+    </div>
+  </div>
+
+  @if (loading) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  } @else if (metrics) {
+    <!-- Total -->
+    <div class="total-banner">
+      <span class="total-number">{{ metrics.totalReports }}</span>
+      <span class="total-label">Reportes totales en el sistema</span>
+    </div>
+
+    <!-- Stat Cards -->
+    <div class="stats-grid">
+      @for (card of statCards; track card.key) {
+        <mat-card class="stat-card" [style.border-left-color]="card.color">
+          <mat-card-content>
+            <div class="stat-icon-wrap" [style.background]="card.color + '22'">
+              <mat-icon [style.color]="card.color">{{ card.icon }}</mat-icon>
+            </div>
+            <div class="stat-info">
+              <span class="stat-number">{{ getMetricValue(card.key) }}</span>
+              <span class="stat-label">{{ card.label }}</span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+
+    <!-- Reportes Recientes -->
+    <mat-card class="table-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>receipt_long</mat-icon>
+          Reportes Recientes
+        </mat-card-title>
+        <a mat-stroked-button routerLink="/admin/reports" class="view-all-btn">
+          Ver todos <mat-icon>arrow_forward</mat-icon>
+        </a>
+      </mat-card-header>
+      <mat-card-content>
+        <table mat-table [dataSource]="metrics.recentReports" class="full-width">
+          <ng-container matColumnDef="title">
+            <th mat-header-cell *matHeaderCellDef>Título</th>
+            <td mat-cell *matCellDef="let r">{{ r.title }}</td>
+          </ng-container>
+          <ng-container matColumnDef="category">
+            <th mat-header-cell *matHeaderCellDef>Categoría</th>
+            <td mat-cell *matCellDef="let r">{{ r.category }}</td>
+          </ng-container>
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Estado</th>
+            <td mat-cell *matCellDef="let r">
+              <span class="status-chip" [attr.data-status]="r.status">{{
+                getStatusLabel(r.status)
+              }}</span>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="citizenName">
+            <th mat-header-cell *matHeaderCellDef>Ciudadano</th>
+            <td mat-cell *matCellDef="let r">{{ r.citizenName ?? '—' }}</td>
+          </ng-container>
+          <ng-container matColumnDef="createdAt">
+            <th mat-header-cell *matHeaderCellDef>Fecha</th>
+            <td mat-cell *matCellDef="let r">{{ r.createdAt | date: 'dd/MM/yyyy' }}</td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns"
+            [routerLink]="['/admin/reports']"
+          ></tr>
+        </table>
+      </mat-card-content>
+    </mat-card>
+  }
+</div>

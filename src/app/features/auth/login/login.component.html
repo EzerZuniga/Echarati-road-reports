@@ -1,0 +1,95 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <!-- Cabecera -->
+    <div class="auth-header">
+      <img
+        src="assets/logos/municipalidad.png"
+        alt="Municipalidad Distrital de Echarati"
+        class="auth-logo"
+        onerror="this.style.display = 'none'"
+      />
+      <h1 class="mat-h1">Reportes Ciudadanos</h1>
+      <p class="auth-subtitle">Municipalidad Distrital de Echarati</p>
+    </div>
+
+    <mat-card class="auth-form-card">
+      <mat-card-content>
+        <h2 class="mat-h2 text-center mb-4">Iniciar Sesión</h2>
+
+        <!-- Google Sign-In -->
+        <div id="google-signin-btn" class="google-btn-wrapper"></div>
+        <mat-divider class="my-divider"
+          ><span class="divider-text">o con tu cuenta</span></mat-divider
+        >
+
+        <!-- Formulario -->
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Correo electrónico</mat-label>
+            <input
+              matInput
+              type="email"
+              formControlName="email"
+              autocomplete="email"
+              placeholder="usuario@email.com"
+            />
+            <mat-icon matSuffix>email</mat-icon>
+            @if (f['email'].hasError('required') && f['email'].touched) {
+              <mat-error>El correo es requerido</mat-error>
+            }
+            @if (f['email'].hasError('email') && f['email'].touched) {
+              <mat-error>Ingrese un correo válido</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Contraseña</mat-label>
+            <input
+              matInput
+              [type]="hidePassword ? 'password' : 'text'"
+              formControlName="password"
+              autocomplete="current-password"
+            />
+            <button
+              mat-icon-button
+              matSuffix
+              type="button"
+              (click)="hidePassword = !hidePassword"
+              [attr.aria-label]="hidePassword ? 'Mostrar contraseña' : 'Ocultar contraseña'"
+            >
+              <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            @if (f['password'].hasError('required') && f['password'].touched) {
+              <mat-error>La contraseña es requerida</mat-error>
+            }
+            @if (f['password'].hasError('minlength') && f['password'].touched) {
+              <mat-error>Mínimo 6 caracteres</mat-error>
+            }
+          </mat-form-field>
+
+          <button
+            mat-flat-button
+            color="primary"
+            type="submit"
+            class="full-width submit-btn"
+            [disabled]="loading"
+          >
+            @if (loading) {
+              <mat-spinner diameter="20" class="inline-spinner"></mat-spinner>
+              Iniciando sesión...
+            } @else {
+              Iniciar Sesión
+            }
+          </button>
+        </form>
+
+        <p class="auth-link text-center mt-3">
+          ¿No tienes cuenta?
+          <a routerLink="/auth/register">Regístrate aquí</a>
+        </p>
+      </mat-card-content>
+    </mat-card>
+
+    <p class="auth-footer">¿Problemas para acceder? Comuníquese con la oficina de sistemas.</p>
+  </div>
+</div>

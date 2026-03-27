@@ -1,0 +1,53 @@
+.main-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: inherit;
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+
+  .spacer {
+    flex: 1;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 4px;
+
+    a {
+      font-weight: 500;
+    }
+    .active-link {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+    }
+  }
+}
+
+.user-menu-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.main-content {
+  min-height: calc(100vh - 64px);
+  background: #f5f5f5;
+}
+
+@media (max-width: 600px) {
+  .nav-links span {
+    display: none;
+  }
+}

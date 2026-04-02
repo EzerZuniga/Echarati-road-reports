@@ -41,58 +41,76 @@
 
     <button
       class="menu-toggle"
+      [class.is-open]="menuOpen"
       type="button"
       (click)="toggleMenu()"
       [attr.aria-label]="menuOpen ? 'Cerrar menú' : 'Abrir menú'"
       [attr.aria-expanded]="menuOpen"
       aria-controls="mobileMenu"
     >
-      <mat-icon>{{ menuOpen ? 'close' : 'menu' }}</mat-icon>
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
     </button>
   </div>
 
-  <nav id="mobileMenu" class="mobile-menu" [class.open]="menuOpen" aria-label="Menú móvil">
-    <div class="mobile-menu-panel">
-      <div class="mobile-menu-copy">
-        <span class="official-badge">Menú principal</span>
-        <p>Accede a la información clave del sistema y a tus opciones de cuenta.</p>
-      </div>
+  <!-- Backdrop: clic fuera = cerrar -->
+  <div
+    class="mobile-menu-overlay"
+    [class.open]="menuOpen"
+    (click)="closeMenu()"
+    aria-hidden="true"
+  ></div>
 
+  <!-- Panel full-screen -->
+  <nav
+    id="mobileMenu"
+    class="mobile-menu"
+    [class.open]="menuOpen"
+    aria-label="Menú móvil"
+    [attr.aria-hidden]="!menuOpen ? 'true' : null"
+  >
+    <!-- Botón X -->
+    <div class="mobile-menu-header">
+      <button class="mobile-close" type="button" (click)="closeMenu()" aria-label="Cerrar menú">
+        <span class="c-bar"></span>
+        <span class="c-bar"></span>
+      </button>
+    </div>
+
+    <!-- Ítems de navegación -->
+    <ul class="mobile-nav-list" role="list">
       <ng-container *ngFor="let item of navItems; trackBy: trackByNavItemId">
-        <button
-          class="nav-link"
-          type="button"
-          (click)="scrollTo(item.id)"
-          [class.is-active]="activeSection === item.id"
-        >
-          <mat-icon>{{ item.icon }}</mat-icon>
-          {{ item.label }}
-        </button>
+        <li class="mobile-nav-item-wrap">
+          <button
+            class="mobile-nav-item"
+            type="button"
+            (click)="scrollTo(item.id)"
+            [class.is-active]="activeSection === item.id"
+          >
+            {{ item.label }}
+            <mat-icon class="item-chevron">chevron_right</mat-icon>
+          </button>
+        </li>
       </ng-container>
+    </ul>
 
-      <mat-divider></mat-divider>
-
-      <div class="mobile-auth">
-        <a
-          mat-stroked-button
-          routerLink="/auth/login"
-          (click)="closeMenu()"
-          class="btn-login-mobile"
-        >
-          <mat-icon>login</mat-icon>
-          Iniciar Sesión
-        </a>
-        <a
-          mat-flat-button
-          color="primary"
-          routerLink="/auth/register"
-          (click)="closeMenu()"
-          class="btn-register-mobile"
-        >
-          <mat-icon>person_add</mat-icon>
-          Crear Cuenta
-        </a>
-      </div>
+    <!-- Acciones de cuenta -->
+    <div class="mobile-auth">
+      <a mat-stroked-button routerLink="/auth/login" (click)="closeMenu()" class="btn-login-mobile">
+        <mat-icon>login</mat-icon>
+        Iniciar Sesión
+      </a>
+      <a
+        mat-flat-button
+        color="primary"
+        routerLink="/auth/register"
+        (click)="closeMenu()"
+        class="btn-register-mobile"
+      >
+        <mat-icon>person_add</mat-icon>
+        Crear Cuenta
+      </a>
     </div>
   </nav>
 </header>

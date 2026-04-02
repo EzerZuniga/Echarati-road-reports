@@ -57,10 +57,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "citizen-reports-angular:build:production"
+              "buildTarget": "citizen-reports-angular:build:production"
             },
             "development": {
-              "browserTarget": "citizen-reports-angular:build:development"
+              "buildTarget": "citizen-reports-angular:build:development"
             }
           },
           "defaultConfiguration": "development"

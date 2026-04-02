@@ -1,27 +1,47 @@
-/* =========================================
-   SISTEMA DE REPORTES CIUDADANOS - ECHARATI
-   Sistema Global de Diseño (Institucional)
-   ========================================= */
+// =============================================================================
+// SISTEMA DE REPORTES VIALES — ECHARATI
+// Hoja de estilos global
+//
+// Índice de secciones:
+//  1. Angular Material — Tema
+//  2. Design Tokens   — Variables CSS personalizadas
+//  3. Reset & Base
+//  4. Tipografía
+//  5. Formularios
+//  6. Botones
+//  7. Cards
+//  8. Scrollbar
+//  9. Utilidades
+// 10. Animaciones
+// 11. Componentes Landing
+// 12. Accesibilidad
+// =============================================================================
+
+// =============================================================================
+// 1. ANGULAR MATERIAL — TEMA
+// =============================================================================
 
 @use '@angular/material' as mat;
+@use './variables' as v; // Única fuente de verdad para hex, radios, sombras y tipografía
 
 @include mat.core();
 
-$font-base: "'Source Sans 3', 'Segoe UI', system-ui, -apple-system, sans-serif";
+// Fuente base inyectada en la configuración tipográfica de Material (requiere string)
+$_font-family: '#{v.$font-sans}';
 
-$primary-palette: mat.define-palette(mat.$teal-palette, 700, 500, 900);
-$accent-palette: mat.define-palette(mat.$red-palette, 700, 500, 900);
-$warn-palette: mat.define-palette(mat.$red-palette, 700);
+$_primary: mat.define-palette(mat.$teal-palette, 700, 500, 900);
+$_accent: mat.define-palette(mat.$red-palette, 700, 500, 900);
+$_warn: mat.define-palette(mat.$red-palette, 700);
 
 $app-theme: mat.define-light-theme(
   (
     color: (
-      primary: $primary-palette,
-      accent: $accent-palette,
-      warn: $warn-palette,
+      primary: $_primary,
+      accent: $_accent,
+      warn: $_warn,
     ),
     typography: mat.define-typography-config(
-        $font-family: $font-base,
+        $font-family: $_font-family,
       ),
     density: 0,
   )
@@ -29,47 +49,93 @@ $app-theme: mat.define-light-theme(
 
 @include mat.all-component-themes($app-theme);
 
-/* --- Design Tokens Institucionales --- */
+// =============================================================================
+// 2. DESIGN TOKENS — Variables CSS personalizadas
+// Todas las variables están en :root para disponibilidad global.
+// =============================================================================
+
 :root {
-  /* Marca institucional — Teal GOB.PE + Rojo bandera */
-  --gov-primary: #00695c;
-  --gov-primary-dark: #004d40;
-  --gov-primary-soft: #e0f2f1;
-  --gov-secondary: #eb1e23;
-  --gov-accent: #eb1e23;
-  --gov-red: #eb1e23;
+  // ---------------------------------------------------------------------------
+  // Marca institucional
+  // Los valores provienen de _variables.scss (única fuente de verdad).
+  // Primario: Teal GOB.PE | Acento: Rojo bandera peruana
+  // ---------------------------------------------------------------------------
+  --gov-primary: #{v.$primary-800};
+  --gov-primary-dark: #{v.$primary-900};
+  --gov-primary-soft: #{v.$primary-50};
+  --gov-red: #{v.$accent-400};
 
-  /* Superficies y texto */
-  --gov-bg: #f7f7f7;
-  --gov-surface: #ffffff;
-  --gov-surface-subtle: #fafafa;
-  --gov-border: #e5e5e5;
-  --gov-text: #1a1a1a;
-  --gov-text-secondary: #58595b;
-  --gov-text-muted: #6b7280;
+  // ---------------------------------------------------------------------------
+  // Superficies y texto
+  // ---------------------------------------------------------------------------
+  --gov-bg: #{v.$gray-100};
+  --gov-surface: #{v.$white};
+  --gov-surface-subtle: #{v.$gray-50};
+  --gov-border: #{v.$gray-300};
+  --gov-text: #{v.$gray-900};
+  --gov-text-secondary: #{v.$gray-700};
+  --gov-text-muted: #{v.$gray-600};
 
-  /* Estados */
+  // ---------------------------------------------------------------------------
+  // Estados de reporte (badges / chips)
+  // Los bg de estados no tienen variable equivalente → quedan como literales.
+  // ---------------------------------------------------------------------------
   --status-pending-bg: #fff3e0;
-  --status-pending-text: #e67e00;
-  --status-progress-bg: #e0f2f1;
-  --status-progress-text: #00695c;
+  --status-pending-text: #{v.$warning};
+  --status-progress-bg: #{v.$primary-50};
+  --status-progress-text: #{v.$primary-800};
   --status-resolved-bg: #e8f5e9;
-  --status-resolved-text: #169b62;
+  --status-resolved-text: #{v.$success};
   --status-rejected-bg: #ffebee;
-  --status-rejected-text: #eb1e23;
+  --status-rejected-text: #{v.$danger};
 
-  /* Tipografías */
-  --font-family-base: 'Source Sans 3', 'Segoe UI', system-ui, -apple-system, sans-serif;
-  --font-family-heading: 'Raleway', 'Source Sans 3', 'Segoe UI', system-ui, sans-serif;
+  // ---------------------------------------------------------------------------
+  // Tipografía
+  // ---------------------------------------------------------------------------
+  --font-family-base: #{v.$font-sans};
+  --font-family-heading: #{v.$font-heading};
 
-  /* Compatibilidad con estilos existentes */
+  // Escala modular (base 16 px)
+  --font-size-xs: 0.75rem; // 12 px
+  --font-size-sm: 0.875rem; // 14 px
+  --font-size-base: 1rem; // 16 px
+  --font-size-lg: 1.125rem; // 18 px
+  --font-size-xl: 1.25rem; // 20 px
+  --font-size-2xl: 1.5rem; // 24 px
+  --font-size-3xl: 1.875rem; // 30 px
+
+  // ---------------------------------------------------------------------------
+  // Espaciado (unidad base 4 px)
+  // ---------------------------------------------------------------------------
+  --spacing-xs: 0.25rem; //  4 px
+  --spacing-sm: 0.5rem; //  8 px
+  --spacing-md: 1rem; // 16 px
+  --spacing-lg: 1.5rem; // 24 px
+  --spacing-xl: 2rem; // 32 px
+  --spacing-2xl: 3rem; // 48 px
+
+  // ---------------------------------------------------------------------------
+  // Radios y sombras — tomados directamente de $radius-* y $shadow-* de SCSS
+  // ---------------------------------------------------------------------------
+  --radius-sm: #{v.$radius-sm};
+  --radius-md: #{v.$radius-md};
+  --radius-lg: #{v.$radius-lg};
+  --radius-xl: #{v.$radius-xl};
+
+  --shadow-sm: #{v.$shadow-sm};
+  --shadow-md: #{v.$shadow-md};
+  --shadow-lg: #{v.$shadow-lg};
+
+  // ---------------------------------------------------------------------------
+  // Alias semánticos — compatibilidad con componentes existentes
+  // ---------------------------------------------------------------------------
   --color-primary: var(--gov-primary);
   --color-primary-dark: var(--gov-primary-dark);
   --color-primary-light: var(--gov-primary-soft);
-  --color-success: #169b62;
-  --color-warning: #e67e00;
-  --color-danger: #eb1e23;
-  --color-info: #00695c;
+  --color-success: #{v.$success};
+  --color-warning: #{v.$warning};
+  --color-danger: var(--gov-red);
+  --color-info: var(--gov-primary);
   --color-text: var(--gov-text);
   --color-text-secondary: var(--gov-text-secondary);
   --color-text-muted: var(--gov-text-muted);
@@ -78,37 +144,12 @@ $app-theme: mat.define-light-theme(
   --color-bg-white: var(--gov-surface);
   --color-bg-subtle: var(--gov-surface-subtle);
   --font-family: var(--font-family-base);
-
-  /* Escala tipográfica */
-  --font-size-xs: 0.75rem;
-  --font-size-sm: 0.875rem;
-  --font-size-base: 1rem;
-  --font-size-lg: 1.125rem;
-  --font-size-xl: 1.25rem;
-  --font-size-2xl: 1.5rem;
-  --font-size-3xl: 1.875rem;
-
-  /* Espaciado */
-  --spacing-xs: 0.25rem;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 1.5rem;
-  --spacing-xl: 2rem;
-  --spacing-2xl: 3rem;
-
-  /* Bordes */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 10px;
-  --radius-xl: 12px;
-
-  /* Sombras */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.1);
 }
 
-/* --- Reset & Base --- */
+// =============================================================================
+// 3. RESET & BASE
+// =============================================================================
+
 *,
 *::before,
 *::after {
@@ -132,6 +173,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+// =============================================================================
+// 4. TIPOGRAFÍA
+// =============================================================================
+
 h1,
 h2,
 h3,
@@ -150,7 +195,7 @@ p {
 }
 
 a {
-  color: #1a33f1;
+  color: var(--color-primary);
   text-decoration: none;
 
   &:hover {
@@ -159,55 +204,61 @@ a {
   }
 }
 
-/* --- Focus accesible --- */
+// Anillo de foco accesible para navegación por teclado
 :focus-visible {
   outline: 2px solid var(--gov-primary);
   outline-offset: 2px;
 }
 
-/* --- Formularios --- */
+// =============================================================================
+// 5. FORMULARIOS
+// =============================================================================
+
 .form-group {
   margin-bottom: var(--spacing-lg);
 }
 
 .form-label {
-  font-weight: 600;
-  color: var(--color-text);
+  display: block;
   margin-bottom: var(--spacing-sm);
   font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text);
 }
 
 .form-control,
 .form-select {
-  border-color: var(--color-border);
-  color: var(--color-text);
-  font-size: var(--font-size-base);
   padding: 0.625rem 0.875rem;
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  border-color: var(--color-border);
   border-radius: var(--radius-md);
+
+  &::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  &:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgb(0 105 92 / 12%);
+  }
 }
 
-.form-control::placeholder {
-  color: var(--color-text-muted);
-}
+// =============================================================================
+// 6. BOTONES
+// =============================================================================
 
-.form-control:focus,
-.form-select:focus {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(0, 105, 92, 0.12);
-}
-
-/* --- Botones --- */
 .btn {
-  font-weight: 600;
-  font-size: var(--font-size-sm);
   padding: 0.5rem 1rem;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
   border-radius: var(--radius-md);
   cursor: pointer;
-}
 
-.btn:disabled {
-  cursor: not-allowed;
-  opacity: 0.65;
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+  }
 }
 
 .btn-primary {
@@ -220,26 +271,33 @@ a {
   }
 
   &:focus {
-    box-shadow: 0 0 0 3px rgba(0, 105, 92, 0.16);
+    box-shadow: 0 0 0 3px rgb(0 105 92 / 16%);
   }
 }
 
-/* --- Cards --- */
+// =============================================================================
+// 7. CARDS
+// =============================================================================
+
 .card {
+  background-color: var(--color-bg-white);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
-  background-color: var(--color-bg-white);
 }
 
 .card-header {
-  background-color: var(--color-bg-subtle);
-  border-bottom: 1px solid var(--color-border);
   padding: var(--spacing-md) var(--spacing-lg);
   font-weight: 600;
+  background-color: var(--color-bg-subtle);
+  border-bottom: 1px solid var(--color-border);
 }
 
-/* --- Scrollbar --- */
+// =============================================================================
+// 8. SCROLLBAR (Chromium / WebKit)
+// Firefox usa la propiedad estándar scrollbar-color (no aplicada aquí).
+// =============================================================================
+
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -251,21 +309,31 @@ a {
 ::-webkit-scrollbar-thumb {
   background: #b0bfce;
   border-radius: var(--radius-sm);
+
+  &:hover {
+    background: #94a9bc;
+  }
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #94a9bc;
-}
+// =============================================================================
+// 9. UTILIDADES
+// =============================================================================
 
-/* --- Utility: text truncate --- */
+// Recorta el texto al número de líneas indicado con puntos suspensivos
 .text-truncate-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-/* --- Landing: reveal on scroll --- */
+// =============================================================================
+// 10. ANIMACIONES
+// =============================================================================
+
+// Estado visible por defecto (progressive enhancement).
+// La animación se activa solo si el usuario no ha solicitado movimiento reducido.
 .reveal-on-scroll {
   opacity: 1;
   transform: none;
@@ -289,87 +357,88 @@ a {
     opacity: 0;
     transform: translateY(14px);
   }
+
   to {
     opacity: 1;
     transform: none;
   }
 }
 
-/* --- Landing: stats headline style --- */
-.stats-section .stats-headline {
-  text-align: center;
-  margin-bottom: clamp(22px, 3vw, 30px);
-}
+// =============================================================================
+// 11. COMPONENTES LANDING
+// Estilos globales compartidos entre secciones de la página de inicio.
+// =============================================================================
 
-.stats-section .stats-headline .stats-kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 8px;
-}
-
-.stats-section .stats-headline .stats-kicker .line {
-  width: clamp(20px, 3vw, 28px);
-  height: 1px;
-  background: #169b62;
-}
-
-.stats-section .stats-headline .stats-kicker .text {
-  color: #169b62;
-  font-size: 0.77rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.stats-section .stats-headline h2 {
-  font-size: clamp(1.6rem, 3.5vw, 2.2rem);
-  color: var(--gov-primary);
-  margin: 0 0 10px;
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: -0.01em;
-  text-wrap: balance;
-}
-
-.stats-section .stats-headline p {
-  margin: 0 auto;
-  color: var(--gov-text-muted);
-  font-size: 1rem;
-  line-height: 1.7;
-  max-width: 680px;
-  text-wrap: pretty;
-}
-
-/* --- Landing: section headline kicker --- */
-.steps-section .section-header .steps-kicker,
-.report-types-section .section-header .steps-kicker,
-.features-section .section-header .steps-kicker {
+// Placeholder reutilizable: etiqueta decorativa "kicker" encima de títulos.
+// Aplicado con @extend en las secciones que lo usan.
+%section-kicker {
   display: inline-flex;
   align-items: center;
   gap: 10px;
   margin-bottom: 10px;
+
+  .line {
+    width: clamp(22px, 3vw, 30px);
+    height: 1px;
+    background: var(--color-success);
+  }
+
+  .text {
+    color: var(--color-success);
+    font-size: 0.77rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
 }
 
-.steps-section .section-header .steps-kicker .line,
-.report-types-section .section-header .steps-kicker .line,
-.features-section .section-header .steps-kicker .line {
-  width: clamp(22px, 3vw, 30px);
-  height: 1px;
-  background: #169b62;
+// Sección de estadísticas
+.stats-section {
+  .stats-headline {
+    text-align: center;
+    margin-bottom: clamp(22px, 3vw, 30px);
+
+    .stats-kicker {
+      @extend %section-kicker;
+
+      margin-bottom: 8px;
+    }
+
+    h2 {
+      margin: 0 0 10px;
+      font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      color: var(--gov-primary);
+      text-wrap: balance;
+    }
+
+    p {
+      max-width: 680px;
+      margin: 0 auto;
+      font-size: var(--font-size-base);
+      line-height: 1.7;
+      color: var(--gov-text-muted);
+      text-wrap: pretty;
+    }
+  }
 }
 
-.steps-section .section-header .steps-kicker .text,
-.report-types-section .section-header .steps-kicker .text,
-.features-section .section-header .steps-kicker .text {
-  color: #169b62;
-  font-size: 0.77rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+// Secciones de pasos, tipos de reporte y características — kicker compartido
+.steps-section,
+.report-types-section,
+.features-section {
+  .section-header .steps-kicker {
+    @extend %section-kicker;
+  }
 }
 
-/* --- Reduced Motion --- */
+// =============================================================================
+// 12. ACCESIBILIDAD
+// Desactiva animaciones/transiciones para usuarios que lo soliciten.
+// =============================================================================
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

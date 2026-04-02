@@ -1,22 +1,42 @@
-// =========================================
-//  DESIGN SYSTEM VARIABLES
-//  Municipalidad Distrital de Echarati
-// =========================================
+// =============================================================================
+// DESIGN SYSTEM — VARIABLES SCSS
+// Municipalidad Distrital de Echarati
+//
+// Índice:
+//  1. Paleta primaria   — Teal GOB.PE
+//  2. Paleta acento     — Rojo bandera peruana
+//  3. Escala de grises
+//  4. Colores semánticos
+//  5. Tipografía
+//  6. Radios de borde
+//  7. Sombras
+//  8. Transiciones
+// =============================================================================
 
-// --- Color Palette ---
-// Primary: Teal GOB.PE (Identidad gobierno peruano)
+// =============================================================================
+// 1. PALETA PRIMARIA — Teal GOB.PE
+// Identidad de gobierno peruano. Base de acciones principales y navegación.
+// =============================================================================
+
 $primary-900: #004d40;
-$primary-800: #00695c;
+$primary-800: #00695c; // Color principal de la aplicación
 $primary-700: #00897b;
 $primary-500: #26a69a;
-$primary-50: #e0f2f1;
+$primary-50: #e0f2f1; // Fondo suave / tono de marca
 
-// Accents (Rojo institucional — bandera perú)
-$accent-500: #c4171b;
-$accent-400: #eb1e23;
-$gov-red: #eb1e23;
+// =============================================================================
+// 2. PALETA ACENTO — Rojo bandera peruana
+// Énfasis institucional, acciones de alerta y elementos destacados.
+// =============================================================================
 
-// Neutrals
+$accent-500: #c4171b; // Variante oscura
+$accent-400: #eb1e23; // Rojo principal / variante vibrante
+
+// =============================================================================
+// 3. ESCALA DE GRISES
+// Escala neutral para superficies, bordes y texto.
+// =============================================================================
+
 $gray-50: #fafafa;
 $gray-100: #f7f7f7;
 $gray-200: #eeeeee;
@@ -29,27 +49,21 @@ $gray-800: #333333;
 $gray-900: #1a1a1a;
 $white: #ffffff;
 
-// Semantic Colors
-$success: #169b62;
-$warning: #e67e00;
-$danger: #eb1e23;
-$info: #00695c;
+// =============================================================================
+// 4. COLORES SEMÁNTICOS
+// Mapean la paleta a intenciones de UI. Usar estas variables en componentes,
+// nunca los hexadecimales de la paleta directamente.
+// =============================================================================
 
-// --- Components ---
-$radius-sm: 4px;
-$radius: 8px;
-$radius-lg: 10px;
-$radius-xl: 12px;
+$success: #169b62; // Confirmación / estado resuelto
+$warning: #e67e00; // Advertencia / estado pendiente
+$danger: $accent-400; // Error / acción destructiva / estado rechazado
+$info: $primary-800; // Informativo / estado en progreso
 
-$shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
-$shadow:
-  0 4px 12px rgba(0, 0, 0, 0.08),
-  0 1px 3px rgba(0, 0, 0, 0.04);
-$shadow-lg:
-  0 12px 28px rgba(0, 0, 0, 0.1),
-  0 4px 8px rgba(0, 0, 0, 0.04);
-
-$transition-base: 0.2s ease;
+// =============================================================================
+// 5. TIPOGRAFÍA
+// Familias de fuentes del sistema de diseño institucional.
+// =============================================================================
 
 $font-sans:
   'Source Sans 3',
@@ -57,5 +71,36 @@ $font-sans:
   system-ui,
   -apple-system,
   sans-serif;
-
 $font-heading: 'Raleway', 'Source Sans 3', 'Segoe UI', system-ui, sans-serif;
+
+// =============================================================================
+// 6. RADIOS DE BORDE
+// Escala sm → xl para esquinas redondeadas.
+// =============================================================================
+
+$radius-sm: 4px;
+$radius-md: 8px; // Base / uso general
+$radius-lg: 10px;
+$radius-xl: 12px;
+
+// =============================================================================
+// 7. SOMBRAS
+// Escala de elevación sm → lg para jerarquía visual entre capas.
+// =============================================================================
+
+$shadow-sm: 0 1px 3px rgb(0 0 0 / 6%);
+
+$shadow-md:
+  0 4px 12px rgb(0 0 0 / 8%),
+  0 1px 3px rgb(0 0 0 / 4%);
+
+$shadow-lg:
+  0 12px 28px rgb(0 0 0 / 10%),
+  0 4px 8px rgb(0 0 0 / 4%);
+
+// =============================================================================
+// 8. TRANSICIONES
+// Duración y curva de animación predeterminadas.
+// =============================================================================
+
+$transition-base: 0.2s ease;

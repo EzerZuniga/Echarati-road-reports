@@ -24,5 +24,34 @@
 
   <body>
     <app-root></app-root>
+    <script>
+      // Deshabilitar clic derecho
+      document.addEventListener('contextmenu', function (e) {
+        e.preventDefault();
+      });
+      // Deshabilitar atajos de teclado para ver código fuente
+      document.addEventListener('keydown', function (e) {
+        // F12
+        if (e.key === 'F12') {
+          e.preventDefault();
+        }
+        // Ctrl+Shift+I (DevTools)
+        if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+          e.preventDefault();
+        }
+        // Ctrl+Shift+J (Console)
+        if (e.ctrlKey && e.shiftKey && e.key === 'J') {
+          e.preventDefault();
+        }
+        // Ctrl+U (View Source)
+        if (e.ctrlKey && e.key === 'u') {
+          e.preventDefault();
+        }
+        // Ctrl+Shift+C (Inspect element)
+        if (e.ctrlKey && e.shiftKey && e.key === 'C') {
+          e.preventDefault();
+        }
+      });
+    </script>
   </body>
 </html>

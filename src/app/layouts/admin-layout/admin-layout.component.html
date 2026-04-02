@@ -1,11 +1,20 @@
 <mat-sidenav-container class="admin-container">
+  <!-- ===== SIDENAV ===== -->
   <mat-sidenav #sidenav mode="side" opened class="admin-sidenav">
+    <!-- Cabecera del sidenav -->
     <div class="sidenav-header">
-      <mat-icon class="brand-icon">admin_panel_settings</mat-icon>
-      <span>Panel Admin</span>
+      <div class="sidenav-brand-icon">
+        <mat-icon>admin_panel_settings</mat-icon>
+      </div>
+      <div class="sidenav-title-group">
+        <span class="sidenav-title">Panel Admin</span>
+        <span class="sidenav-subtitle">Sistema de gestión</span>
+      </div>
     </div>
     <mat-divider></mat-divider>
-    <mat-nav-list>
+
+    <!-- Navegación -->
+    <mat-nav-list class="sidenav-nav">
       @for (item of navItems; track item.route) {
         <a
           mat-list-item
@@ -18,23 +27,69 @@
         </a>
       }
     </mat-nav-list>
+
+    <!-- Usuario en la parte inferior -->
+    <div class="sidenav-footer">
+      <mat-divider></mat-divider>
+      <div class="sidenav-user">
+        <div class="sidenav-user-avatar">
+          {{ auth.currentUser?.firstName?.[0] }}{{ auth.currentUser?.lastName?.[0] }}
+        </div>
+        <div class="sidenav-user-info">
+          <span class="sidenav-user-name">{{ userName }}</span>
+          <span class="sidenav-user-email">{{ auth.currentUser?.email }}</span>
+        </div>
+        <button
+          mat-icon-button
+          class="sidenav-logout-btn"
+          (click)="logout()"
+          matTooltip="Cerrar sesión"
+          aria-label="Cerrar sesión"
+        >
+          <mat-icon>logout</mat-icon>
+        </button>
+      </div>
+    </div>
   </mat-sidenav>
 
+  <!-- ===== CONTENIDO ===== -->
   <mat-sidenav-content class="admin-content">
     <mat-toolbar color="primary" class="admin-toolbar">
       @if (isMobile) {
-        <button mat-icon-button (click)="sidenav.toggle()">
+        <button mat-icon-button (click)="sidenav.toggle()" aria-label="Abrir menú">
           <mat-icon>menu</mat-icon>
         </button>
       }
+
+      @if (!isMobile) {
+        <span class="toolbar-app-name">Echarati Road Reports</span>
+      }
+
       <span class="spacer"></span>
-      <mat-icon>account_circle</mat-icon>
-      <span class="user-name">{{ userName }}</span>
-      <button mat-icon-button [matMenuTriggerFor]="adminMenu">
+
+      <button
+        mat-button
+        [matMenuTriggerFor]="adminMenu"
+        class="toolbar-user-btn"
+        aria-label="Menú de usuario"
+      >
+        <div class="toolbar-avatar">
+          {{ auth.currentUser?.firstName?.[0] }}{{ auth.currentUser?.lastName?.[0] }}
+        </div>
+        <span class="user-name">{{ userName }}</span>
         <mat-icon>arrow_drop_down</mat-icon>
       </button>
-      <mat-menu #adminMenu>
-        <button mat-menu-item (click)="logout()"><mat-icon>logout</mat-icon> Cerrar sesión</button>
+
+      <mat-menu #adminMenu="matMenu">
+        <div class="admin-menu-header" (click)="$event.stopPropagation()">
+          <span class="admin-menu-name">{{ userName }}</span>
+          <span class="admin-menu-role">Administrador</span>
+        </div>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          Cerrar sesión
+        </button>
       </mat-menu>
     </mat-toolbar>
 

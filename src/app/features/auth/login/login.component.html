@@ -1,94 +1,151 @@
-<div class="auth-page">
-  <div class="auth-card">
-    <!-- Cabecera -->
-    <div class="auth-header">
+<div class="auth-split">
+  <!-- ===== PANEL IZQUIERDO: marca y características (solo escritorio) ===== -->
+  <aside class="auth-split-left" aria-hidden="true">
+    <div class="split-left-inner">
       <img
         src="assets/logos/municipalidad.png"
         alt="Municipalidad Distrital de Echarati"
-        class="auth-logo"
+        class="split-left-logo"
         onerror="this.style.display = 'none'"
       />
-      <h1 class="mat-h1">Reportes Ciudadanos</h1>
-      <p class="auth-subtitle">Municipalidad Distrital de Echarati</p>
+      <h2 class="split-left-title">Sistema de Reportes Ciudadanos</h2>
+      <p class="split-left-sub">Municipalidad Distrital de Echarati</p>
+
+      <ul class="split-features" role="list">
+        <li>
+          <span class="split-feat-icon"><mat-icon>verified_user</mat-icon></span>
+          <div>
+            <strong>Plataforma oficial y segura</strong>
+            <span>Cifrado de extremo a extremo</span>
+          </div>
+        </li>
+        <li>
+          <span class="split-feat-icon"><mat-icon>track_changes</mat-icon></span>
+          <div>
+            <strong>Seguimiento en tiempo real</strong>
+            <span>Estado siempre actualizado</span>
+          </div>
+        </li>
+        <li>
+          <span class="split-feat-icon"><mat-icon>groups</mat-icon></span>
+          <div>
+            <strong>+1,200 ciudadanos activos</strong>
+            <span>Comunidad comprometida con Echarati</span>
+          </div>
+        </li>
+        <li>
+          <span class="split-feat-icon"><mat-icon>support_agent</mat-icon></span>
+          <div>
+            <strong>Atención municipal directa</strong>
+            <span>Respuesta a cada reporte garantizada</span>
+          </div>
+        </li>
+      </ul>
     </div>
+  </aside>
 
-    <mat-card class="auth-form-card">
-      <mat-card-content>
-        <h2 class="mat-h2 text-center mb-4">Iniciar Sesión</h2>
+  <!-- ===== PANEL DERECHO: formulario ===== -->
+  <main class="auth-split-right">
+    <div class="auth-card">
+      <!-- Cabecera solo visible en móvil -->
+      <div class="auth-header">
+        <img
+          src="assets/logos/municipalidad.png"
+          alt="Municipalidad Distrital de Echarati"
+          class="auth-logo"
+          onerror="this.style.display = 'none'"
+        />
+        <h1 class="mat-h1">Reportes Ciudadanos</h1>
+        <p class="auth-subtitle">Municipalidad Distrital de Echarati</p>
+      </div>
 
-        <!-- Google Sign-In -->
-        <div id="google-signin-btn" class="google-btn-wrapper"></div>
-        <mat-divider class="my-divider"
-          ><span class="divider-text">o con tu cuenta</span></mat-divider
-        >
+      <mat-card class="auth-form-card">
+        <mat-card-content>
+          <div class="form-card-header">
+            <h2>Iniciar Sesión</h2>
+            <p>Accede a tu cuenta para gestionar tus reportes</p>
+          </div>
 
-        <!-- Formulario -->
-        <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Correo electrónico</mat-label>
-            <input
-              matInput
-              type="email"
-              formControlName="email"
-              autocomplete="email"
-              placeholder="usuario@email.com"
-            />
-            <mat-icon matSuffix>email</mat-icon>
-            @if (f['email'].hasError('required') && f['email'].touched) {
-              <mat-error>El correo es requerido</mat-error>
-            }
-            @if (f['email'].hasError('email') && f['email'].touched) {
-              <mat-error>Ingrese un correo válido</mat-error>
-            }
-          </mat-form-field>
+          <!-- Google Sign-In -->
+          <div class="google-btn-wrapper">
+            <div id="google-signin-btn" #googleBtn></div>
+          </div>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Contraseña</mat-label>
-            <input
-              matInput
-              [type]="hidePassword ? 'password' : 'text'"
-              formControlName="password"
-              autocomplete="current-password"
-            />
-            <button
-              mat-icon-button
-              matSuffix
-              type="button"
-              (click)="hidePassword = !hidePassword"
-              [attr.aria-label]="hidePassword ? 'Mostrar contraseña' : 'Ocultar contraseña'"
-            >
-              <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-            </button>
-            @if (f['password'].hasError('required') && f['password'].touched) {
-              <mat-error>La contraseña es requerida</mat-error>
-            }
-            @if (f['password'].hasError('minlength') && f['password'].touched) {
-              <mat-error>Mínimo 6 caracteres</mat-error>
-            }
-          </mat-form-field>
-
-          <button
-            mat-flat-button
-            color="primary"
-            type="submit"
-            class="full-width submit-btn"
-            [disabled]="loading"
+          <mat-divider class="my-divider"
+            ><span class="divider-text">o continúa con tu correo</span></mat-divider
           >
-            @if (loading) {
-              <mat-spinner diameter="20" class="inline-spinner"></mat-spinner>
-              Iniciando sesión...
-            } @else {
-              Iniciar Sesión
-            }
-          </button>
-        </form>
-      </mat-card-content>
-    </mat-card>
 
-    <div class="auth-alt-action">
-      <a routerLink="/auth/register" class="auth-alt-btn">Crear Cuenta</a>
+          <!-- Formulario -->
+          <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Correo electrónico</mat-label>
+              <input
+                matInput
+                type="email"
+                formControlName="email"
+                autocomplete="email"
+                placeholder="usuario@email.com"
+              />
+              <mat-icon matSuffix>email</mat-icon>
+              @if (f['email'].hasError('required') && f['email'].touched) {
+                <mat-error>El correo es requerido</mat-error>
+              }
+              @if (f['email'].hasError('email') && f['email'].touched) {
+                <mat-error>Ingrese un correo válido</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Contraseña</mat-label>
+              <input
+                matInput
+                [type]="hidePassword ? 'password' : 'text'"
+                formControlName="password"
+                autocomplete="current-password"
+              />
+              <button
+                mat-icon-button
+                matSuffix
+                type="button"
+                (click)="hidePassword = !hidePassword"
+                [attr.aria-label]="hidePassword ? 'Mostrar contraseña' : 'Ocultar contraseña'"
+              >
+                <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+              </button>
+              @if (f['password'].hasError('required') && f['password'].touched) {
+                <mat-error>La contraseña es requerida</mat-error>
+              }
+              @if (f['password'].hasError('minlength') && f['password'].touched) {
+                <mat-error>Mínimo 6 caracteres</mat-error>
+              }
+            </mat-form-field>
+
+            <button
+              mat-flat-button
+              color="primary"
+              type="submit"
+              class="full-width submit-btn"
+              [disabled]="loading"
+            >
+              @if (loading) {
+                <mat-spinner diameter="20" class="inline-spinner"></mat-spinner>
+                Verificando...
+              } @else {
+                <mat-icon>login</mat-icon>
+                Iniciar Sesión
+              }
+            </button>
+          </form>
+        </mat-card-content>
+      </mat-card>
+
+      <div class="auth-alt-action">
+        <a routerLink="/auth/register" class="auth-alt-btn">
+          ¿No tienes cuenta?&nbsp;<strong>Crear Cuenta Ciudadana</strong>
+        </a>
+      </div>
+
+      <p class="auth-footer">&#128274;&nbsp;Conexión segura · Sistema oficial de Echarati</p>
     </div>
-
-    <p class="auth-footer">¿Problemas para acceder? Comuníquese con la oficina de sistemas.</p>
-  </div>
+  </main>
 </div>

@@ -1,14 +1,31 @@
 <div class="auth-page">
   <div class="auth-card">
+    <!-- Cabecera -->
     <div class="auth-header">
+      <img
+        src="assets/logos/municipalidad.png"
+        alt="Municipalidad Distrital de Echarati"
+        class="auth-logo"
+        onerror="this.style.display = 'none'"
+      />
       <h1 class="mat-h1">Crear Cuenta Ciudadana</h1>
       <p class="auth-subtitle">Municipalidad Distrital de Echarati</p>
     </div>
 
     <mat-card class="auth-form-card">
       <mat-card-content>
+        <div class="form-card-header">
+          <h2>Registro de Ciudadano</h2>
+          <p>Complete sus datos para acceder al sistema de reportes</p>
+        </div>
+
         <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
-          <!-- DNI primero para auto-rellenar nombres -->
+          <!-- ── SECCIÓN: Verificación de identidad ── -->
+          <div class="form-section-label">
+            <mat-icon>badge</mat-icon>
+            <span>Verificación de identidad (RENIEC)</span>
+          </div>
+
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>DNI (8 dígitos)</mat-label>
             <input
@@ -18,6 +35,7 @@
               inputmode="numeric"
               pattern="[0-9]*"
               autocomplete="off"
+              placeholder="12345678"
             />
             @if (dniLoading) {
               <mat-spinner matSuffix diameter="20"></mat-spinner>
@@ -37,7 +55,7 @@
           @if (dniVerified) {
             <div class="dni-result">
               <mat-icon>verified_user</mat-icon>
-              <span>Identidad verificada por RENIEC</span>
+              <span>Identidad verificada exitosamente por RENIEC</span>
             </div>
           }
           @if (dniError) {
@@ -46,6 +64,12 @@
               <span>No se pudo verificar. Complete los datos manualmente.</span>
             </div>
           }
+
+          <!-- ── SECCIÓN: Datos personales ── -->
+          <div class="form-section-label">
+            <mat-icon>person</mat-icon>
+            <span>Datos personales</span>
+          </div>
 
           <div class="form-row">
             <mat-form-field appearance="outline" class="half-width">
@@ -56,6 +80,7 @@
                 autocomplete="given-name"
                 [readonly]="dniVerified"
               />
+              <mat-icon matSuffix>person_outline</mat-icon>
               @if (f['firstName'].hasError('required') && f['firstName'].touched) {
                 <mat-error>Requerido</mat-error>
               }
@@ -68,16 +93,32 @@
                 autocomplete="family-name"
                 [readonly]="dniVerified"
               />
+              <mat-icon matSuffix>person_outline</mat-icon>
               @if (f['lastName'].hasError('required') && f['lastName'].touched) {
                 <mat-error>Requerido</mat-error>
               }
             </mat-form-field>
           </div>
 
+          <!-- ── SECCIÓN: Datos de contacto ── -->
+          <div class="form-section-label">
+            <mat-icon>contact_mail</mat-icon>
+            <span>Datos de contacto</span>
+          </div>
+
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Correo electrónico</mat-label>
-            <input matInput type="email" formControlName="email" autocomplete="email" />
+            <input
+              matInput
+              type="email"
+              formControlName="email"
+              autocomplete="email"
+              placeholder="usuario@email.com"
+            />
             <mat-icon matSuffix>email</mat-icon>
+            @if (f['email'].hasError('required') && f['email'].touched) {
+              <mat-error>El correo es requerido</mat-error>
+            }
             @if (f['email'].hasError('email') && f['email'].touched) {
               <mat-error>Ingrese un correo válido</mat-error>
             }
@@ -91,12 +132,22 @@
               maxlength="9"
               inputmode="numeric"
               autocomplete="tel"
+              placeholder="987654321"
             />
             <mat-icon matSuffix>phone</mat-icon>
+            @if (f['phone'].hasError('required') && f['phone'].touched) {
+              <mat-error>El teléfono es requerido</mat-error>
+            }
             @if (f['phone'].hasError('pattern') && f['phone'].touched) {
               <mat-error>Teléfono debe tener 9 dígitos</mat-error>
             }
           </mat-form-field>
+
+          <!-- ── SECCIÓN: Seguridad ── -->
+          <div class="form-section-label">
+            <mat-icon>lock</mat-icon>
+            <span>Seguridad de la cuenta</span>
+          </div>
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Contraseña</mat-label>
@@ -105,10 +156,20 @@
               [type]="hidePassword ? 'password' : 'text'"
               formControlName="password"
               autocomplete="new-password"
+              placeholder="Mínimo 8 caracteres con letras y números"
             />
-            <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
+            <button
+              mat-icon-button
+              matSuffix
+              type="button"
+              (click)="hidePassword = !hidePassword"
+              [attr.aria-label]="hidePassword ? 'Mostrar contraseña' : 'Ocultar contraseña'"
+            >
               <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
             </button>
+            @if (f['password'].hasError('required') && f['password'].touched) {
+              <mat-error>La contraseña es requerida</mat-error>
+            }
             @if (f['password'].hasError('minlength') && f['password'].touched) {
               <mat-error>Mínimo 8 caracteres</mat-error>
             }
@@ -126,8 +187,9 @@
           >
             @if (loading) {
               <mat-spinner diameter="20" class="inline-spinner"></mat-spinner>
-              Creando cuenta...
+              Registrando...
             } @else {
+              <mat-icon>how_to_reg</mat-icon>
               Crear Cuenta
             }
           </button>
@@ -136,7 +198,9 @@
     </mat-card>
 
     <div class="auth-alt-action">
-      <a routerLink="/auth/login" class="auth-alt-btn">Ya tengo cuenta</a>
+      <a routerLink="/auth/login" class="auth-alt-btn">
+        ¿Ya tienes cuenta?&nbsp;<strong>Iniciar Sesión</strong>
+      </a>
     </div>
   </div>
 </div>

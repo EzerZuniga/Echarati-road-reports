@@ -1,57 +1,102 @@
 <div class="page-container">
+  <!-- ===== CABECERA ===== -->
   <div class="page-header">
-    <div>
-      <h1 class="page-title">Gestión de Reportes</h1>
-      <p class="page-subtitle">Administra todos los reportes ciudadanos</p>
+    <div class="page-header-info">
+      <h1 class="page-title">
+        <mat-icon class="page-title-icon">manage_search</mat-icon>
+        Gestión de Reportes
+      </h1>
+      <p class="page-subtitle">Administra, filtra y actualiza todos los reportes ciudadanos</p>
+    </div>
+    <div class="result-badge" [class.result-badge--active]="total > 0">
+      <mat-icon>receipt_long</mat-icon>
+      <span>{{ total }} {{ total === 1 ? 'reporte' : 'reportes' }}</span>
     </div>
   </div>
 
-  <!-- Filtros -->
+  <!-- ===== FILTROS ===== -->
   <mat-card class="filter-card">
-    <mat-card-content class="filter-row">
-      <mat-form-field appearance="outline" class="search-field">
-        <mat-label>Buscar</mat-label>
-        <input matInput [formControl]="searchCtrl" placeholder="Título, descripción..." />
-        <mat-icon matSuffix>search</mat-icon>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="filter-field">
-        <mat-label>Estado</mat-label>
-        <mat-select [formControl]="statusCtrl">
-          @for (opt of statusOptions; track opt.value) {
-            <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+    <mat-card-content>
+      <div class="filter-row">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Buscar</mat-label>
+          <mat-icon matPrefix class="search-prefix-icon">search</mat-icon>
+          <input
+            matInput
+            [formControl]="searchCtrl"
+            placeholder="Título, descripción, ciudadano..."
+          />
+          @if (searchCtrl.value) {
+            <button
+              matSuffix
+              mat-icon-button
+              aria-label="Limpiar búsqueda"
+              (click)="searchCtrl.reset()"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
           }
-        </mat-select>
-      </mat-form-field>
+        </mat-form-field>
 
-      <mat-form-field appearance="outline" class="filter-field">
-        <mat-label>Categoría</mat-label>
-        <mat-select [formControl]="categoryCtrl">
-          @for (opt of categoryOptions; track opt.value) {
-            <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Estado</mat-label>
+          <mat-icon matPrefix class="filter-prefix-icon">tune</mat-icon>
+          <mat-select [formControl]="statusCtrl">
+            @for (opt of statusOptions; track opt.value) {
+              <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Categoría</mat-label>
+          <mat-icon matPrefix class="filter-prefix-icon">category</mat-icon>
+          <mat-select [formControl]="categoryCtrl">
+            @for (opt of categoryOptions; track opt.value) {
+              <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        @if (searchCtrl.value || statusCtrl.value || categoryCtrl.value) {
+          <button
+            mat-stroked-button
+            class="clear-btn"
+            (click)="searchCtrl.reset(); statusCtrl.reset(); categoryCtrl.reset()"
+          >
+            <mat-icon>filter_alt_off</mat-icon>
+            Limpiar
+          </button>
+        }
+      </div>
     </mat-card-content>
   </mat-card>
 
-  <!-- Tabla -->
+  <!-- ===== TABLA ===== -->
   <mat-card class="table-card">
     @if (loading) {
-      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      <mat-progress-bar mode="indeterminate" class="table-loading-bar"></mat-progress-bar>
     }
+
     <div class="table-wrapper">
       <table mat-table [dataSource]="dataSource" matSort class="reports-table">
+        <!-- Título -->
         <ng-container matColumnDef="title">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Título</th>
-          <td mat-cell *matCellDef="let r" class="title-cell">{{ r.title }}</td>
+          <td mat-cell *matCellDef="let r" class="title-cell">
+            <span class="title-text">{{ r.title }}</span>
+          </td>
         </ng-container>
 
+        <!-- Categoría -->
         <ng-container matColumnDef="category">
           <th mat-header-cell *matHeaderCellDef>Categoría</th>
-          <td mat-cell *matCellDef="let r">{{ getCategoryLabel(r.category) }}</td>
+          <td mat-cell *matCellDef="let r">
+            <span class="category-badge">{{ getCategoryLabel(r.category) }}</span>
+          </td>
         </ng-container>
 
+        <!-- Estado -->
         <ng-container matColumnDef="status">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
           <td mat-cell *matCellDef="let r">
@@ -61,32 +106,54 @@
           </td>
         </ng-container>
 
+        <!-- Ciudadano -->
         <ng-container matColumnDef="citizenName">
           <th mat-header-cell *matHeaderCellDef>Ciudadano</th>
-          <td mat-cell *matCellDef="let r">{{ r.citizenName ?? '—' }}</td>
+          <td mat-cell *matCellDef="let r" class="citizen-cell">
+            <mat-icon class="citizen-icon">person</mat-icon>
+            {{ r.citizenName ?? '—' }}
+          </td>
         </ng-container>
 
+        <!-- Ubicación -->
         <ng-container matColumnDef="location">
           <th mat-header-cell *matHeaderCellDef>Ubicación</th>
-          <td mat-cell *matCellDef="let r" class="location-cell">{{ r.location.address }}</td>
+          <td mat-cell *matCellDef="let r" class="location-cell">
+            <mat-icon class="location-icon">place</mat-icon>
+            {{ r.location.address }}
+          </td>
         </ng-container>
 
+        <!-- Fecha -->
         <ng-container matColumnDef="createdAt">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</th>
-          <td mat-cell *matCellDef="let r">{{ r.createdAt | date: 'dd/MM/yy' }}</td>
+          <td mat-cell *matCellDef="let r" class="date-cell">
+            {{ r.createdAt | date: 'dd/MM/yy' }}
+          </td>
         </ng-container>
 
+        <!-- Acciones -->
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef>Acciones</th>
           <td mat-cell *matCellDef="let r">
             <div class="actions-cell">
               @for (trans of getTransitions(r.status); track trans.value) {
                 <button
-                  mat-stroked-button
+                  mat-flat-button
                   [color]="trans.value === 'rejected' ? 'warn' : 'primary'"
                   (click)="updateStatus(r, trans.value)"
                   class="action-btn"
+                  [matTooltip]="'Cambiar estado a: ' + trans.label"
                 >
+                  <mat-icon>{{
+                    trans.value === 'rejected'
+                      ? 'block'
+                      : trans.value === 'resolved'
+                        ? 'check_circle'
+                        : trans.value === 'pending'
+                          ? 'undo'
+                          : 'play_arrow'
+                  }}</mat-icon>
                   {{ trans.label }}
                 </button>
               }
@@ -94,21 +161,31 @@
                 mat-icon-button
                 color="warn"
                 (click)="deleteReport(r.id)"
-                matTooltip="Eliminar reporte"
-                aria-label="Eliminar"
+                matTooltip="Eliminar reporte permanentemente"
+                aria-label="Eliminar reporte"
+                class="delete-btn"
               >
-                <mat-icon>delete</mat-icon>
+                <mat-icon>delete_outline</mat-icon>
               </button>
             </div>
           </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns" class="data-row"></tr>
 
         <tr class="mat-row" *matNoDataRow>
           <td class="mat-cell no-data-cell" [attr.colspan]="displayedColumns.length">
-            No se encontraron reportes
+            <div class="no-data-content">
+              <mat-icon>search_off</mat-icon>
+              <p>No se encontraron reportes con los filtros aplicados</p>
+              <button
+                mat-stroked-button
+                (click)="searchCtrl.reset(); statusCtrl.reset(); categoryCtrl.reset()"
+              >
+                Limpiar filtros
+              </button>
+            </div>
           </td>
         </tr>
       </table>
@@ -118,8 +195,9 @@
       [length]="total"
       [pageSize]="10"
       [pageSizeOptions]="[10, 25, 50]"
+      showFirstLastButtons
       (page)="onPageChange($event)"
-      aria-label="Paginación"
+      aria-label="Paginación de reportes"
     >
     </mat-paginator>
   </mat-card>

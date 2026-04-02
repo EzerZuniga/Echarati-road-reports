@@ -1,18 +1,20 @@
 <div class="page-container">
+  <!-- ===== CABECERA ===== -->
   <div class="page-header">
-    <div>
+    <div class="page-header-info">
       <h1 class="page-title">Mis Reportes</h1>
       <p class="page-subtitle">Gestiona y da seguimiento a tus reportes ciudadanos</p>
     </div>
-    <a mat-flat-button color="primary" routerLink="/reports/new">
+    <a mat-flat-button color="primary" routerLink="/reports/new" class="new-report-btn">
       <mat-icon>add</mat-icon>
       Nuevo Reporte
     </a>
   </div>
 
-  <!-- Filtros -->
+  <!-- ===== FILTROS ===== -->
   <mat-card class="filter-card">
     <mat-card-content class="filter-row">
+      <mat-icon class="filter-icon">filter_list</mat-icon>
       <mat-form-field appearance="outline" class="filter-field">
         <mat-label>Estado</mat-label>
         <mat-select (selectionChange)="onFilterChange('status', $event.value)">
@@ -20,6 +22,7 @@
             <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
           }
         </mat-select>
+        <mat-icon matSuffix>unfold_more</mat-icon>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="filter-field">
@@ -29,44 +32,97 @@
             <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
           }
         </mat-select>
+        <mat-icon matSuffix>unfold_more</mat-icon>
       </mat-form-field>
+
+      @if (total > 0) {
+        <div class="result-count">
+          <mat-icon>assignment</mat-icon>
+          <span
+            >{{ total }} reporte{{ total !== 1 ? 's' : '' }} encontrado{{
+              total !== 1 ? 's' : ''
+            }}</span
+          >
+        </div>
+      }
     </mat-card-content>
   </mat-card>
 
-  <!-- Lista -->
+  <!-- ===== CONTENIDO ===== -->
   @if (loading) {
     <div class="loading-center">
-      <mat-spinner diameter="48"></mat-spinner>
+      <mat-spinner diameter="52"></mat-spinner>
+      <p class="loading-text">Cargando reportes...</p>
     </div>
   } @else if (reports.length === 0) {
-    <mat-card class="empty-state">
-      <mat-card-content class="text-center">
-        <mat-icon class="empty-icon">inbox</mat-icon>
-        <h3>No tienes reportes aún</h3>
-        <p>Crea tu primer reporte ciudadano</p>
-        <a mat-flat-button color="primary" routerLink="/reports/new">Crear Reporte</a>
-      </mat-card-content>
-    </mat-card>
+    <!-- Estado vacío -->
+    <div class="empty-state">
+      <div class="empty-icon-wrap">
+        <mat-icon>inbox</mat-icon>
+      </div>
+      <h3>No hay reportes que mostrar</h3>
+      <p>Aún no has registrado ningún reporte ciudadano.</p>
+      <a mat-flat-button color="primary" routerLink="/reports/new" class="empty-cta">
+        <mat-icon>add_circle_outline</mat-icon>
+        Crear mi primer reporte
+      </a>
+    </div>
   } @else {
     <div class="reports-grid">
       @for (report of reports; track report.id) {
-        <mat-card class="report-card" [routerLink]="['/reports', report.id]">
+        <mat-card
+          class="report-card"
+          [routerLink]="['/reports', report.id]"
+          role="link"
+          tabindex="0"
+        >
+          <!-- Imagen del reporte si existe -->
+          @if (report.imageUrl) {
+            <div class="report-card-image">
+              <img [src]="report.imageUrl" [alt]="report.title" loading="lazy" />
+            </div>
+          }
+
           <mat-card-header>
-            <mat-card-title>{{ report.title }}</mat-card-title>
-            <mat-card-subtitle>{{ report.location.address }}</mat-card-subtitle>
-            <span class="status-chip" [attr.data-status]="report.status">
-              {{ getStatusLabel(report.status) }}
-            </span>
+            <div class="card-header-row">
+              <mat-card-title class="card-title-text">{{ report.title }}</mat-card-title>
+              <span class="status-chip" [attr.data-status]="report.status">
+                {{ getStatusLabel(report.status) }}
+              </span>
+            </div>
+            <mat-card-subtitle class="card-address">
+              <mat-icon class="inline-icon">location_on</mat-icon>
+              {{ report.location.address }}
+            </mat-card-subtitle>
           </mat-card-header>
+
           <mat-card-content>
             <p class="report-desc">{{ report.description }}</p>
+
             <div class="report-meta">
-              <mat-icon class="meta-icon">category</mat-icon>
-              <span>{{ getCategoryLabel(report.category) }}</span>
-              <mat-icon class="meta-icon ml-auto">schedule</mat-icon>
-              <span>{{ report.createdAt | date: 'dd/MM/yyyy' }}</span>
+              <div class="meta-tag">
+                <mat-icon>category</mat-icon>
+                <span>{{ getCategoryLabel(report.category) }}</span>
+              </div>
+              <div class="meta-tag meta-tag--date">
+                <mat-icon>schedule</mat-icon>
+                <span>{{ report.createdAt | date: 'dd/MM/yyyy' }}</span>
+              </div>
             </div>
           </mat-card-content>
+
+          <mat-card-actions class="card-actions" align="end">
+            <a
+              mat-stroked-button
+              [routerLink]="['/reports', report.id]"
+              color="primary"
+              class="view-btn"
+              (click)="$event.stopPropagation()"
+            >
+              <mat-icon>open_in_new</mat-icon>
+              Ver detalle
+            </a>
+          </mat-card-actions>
         </mat-card>
       }
     </div>
@@ -77,6 +133,7 @@
       [pageSizeOptions]="[5, 10, 20]"
       (page)="onPageChange($event)"
       aria-label="Paginación de reportes"
+      showFirstLastButtons
     >
     </mat-paginator>
   }

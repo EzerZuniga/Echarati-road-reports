@@ -1,160 +1,379 @@
+// ==========================================
+// DASHBOARD PAGE — ESTILOS
+// ==========================================
+
 .page-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 24px 16px;
+  padding: 28px 20px;
 }
+
+// --- Barra de carga ---
+.loading-bar {
+  border-radius: 4px;
+  margin-bottom: 24px;
+}
+
+// --- Cabecera ---
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 24px;
+  gap: 16px;
+  margin-bottom: 28px;
 }
+
 .page-title {
-  font-size: 1.8rem;
+  font-size: 1.9rem;
   font-weight: 700;
   color: var(--gov-primary);
   margin: 0;
   font-family: 'Raleway', sans-serif;
+  line-height: 1.2;
 }
+
 .page-subtitle {
   color: var(--gov-text-secondary);
   font-size: 0.9rem;
-  margin: 4px 0 0;
+  margin: 6px 0 0;
 }
+
+.manage-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+// --- Banner total ---
 .total-banner {
-  background: linear-gradient(90deg, var(--gov-primary-dark), var(--gov-primary));
+  background: linear-gradient(135deg, var(--gov-primary-dark) 0%, var(--gov-primary) 100%);
   color: #fff;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 24px 32px;
   display: flex;
-  align-items: baseline;
-  gap: 16px;
-  margin-bottom: 24px;
-  .total-number {
-    font-size: 3rem;
-    font-weight: 700;
-  }
-  .total-label {
-    font-size: 1.1rem;
-    opacity: 0.85;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 28px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+}
+
+.total-banner-icon {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  mat-icon {
+    font-size: 30px;
+    width: 30px;
+    height: 30px;
+    color: #fff;
   }
 }
+
+.total-banner-info {
+  flex: 1;
+  min-width: 0;
+
+  .total-number {
+    display: block;
+    font-size: 2.8rem;
+    font-weight: 800;
+    line-height: 1;
+    font-family: 'Raleway', sans-serif;
+  }
+
+  .total-label {
+    font-size: 1rem;
+    opacity: 0.88;
+    margin-top: 4px;
+  }
+}
+
+.total-banner-actions {
+  flex-shrink: 0;
+}
+
+.total-cta {
+  color: #fff !important;
+  border-color: rgba(255, 255, 255, 0.7) !important;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+  }
+}
+
+// --- Grid estadísticas ---
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
   gap: 20px;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
 }
+
 .stat-card {
-  border-radius: 8px !important;
-  border-left: 5px solid;
+  border-radius: 10px !important;
+  border-left: 5px solid var(--card-color, var(--gov-primary));
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07) !important;
+  transition:
+    box-shadow 0.2s,
+    transform 0.2s;
+
+  &:hover {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12) !important;
+    transform: translateY(-2px);
+  }
+
   mat-card-content {
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 20px !important;
+    gap: 14px;
+    padding: 20px 16px !important;
   }
 }
+
 .stat-icon-wrap {
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 10px;
   display: flex;
+  flex-shrink: 0;
+
   mat-icon {
     font-size: 28px;
     width: 28px;
     height: 28px;
   }
 }
+
 .stat-info {
+  flex: 1;
+  min-width: 0;
+
   .stat-number {
     display: block;
     font-size: 2rem;
     font-weight: 700;
+    line-height: 1.1;
+    color: var(--gov-text);
   }
+
   .stat-label {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--gov-text-secondary);
+    margin-top: 2px;
   }
 }
+
+.stat-percentage {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+
+.stat-pct {
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.stat-pct-label {
+  font-size: 0.7rem;
+  color: var(--gov-text-muted);
+  margin-top: 2px;
+}
+
+// --- Tabla recientes ---
 .table-card {
-  border-radius: 8px !important;
+  border-radius: 10px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07) !important;
+
   mat-card-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 16px 8px;
+    padding: 20px 20px 12px;
+
     mat-card-title {
       display: flex;
       align-items: center;
       gap: 8px;
       font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--gov-text);
     }
+
     .view-all-btn {
       display: flex;
       align-items: center;
       gap: 4px;
     }
   }
+
+  mat-card-content {
+    padding: 0 20px 20px !important;
+  }
 }
+
+.table-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  color: var(--gov-text-muted);
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    opacity: 0.4;
+    margin-bottom: 12px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.95rem;
+  }
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 8px;
+  border: 1px solid var(--gov-border);
+}
+
 .full-width {
   width: 100%;
 }
+
+.title-cell {
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.citizen-cell {
+  font-size: 0.88rem;
+  color: var(--gov-text-secondary);
+}
+
+.date-cell {
+  font-size: 0.85rem;
+  color: var(--gov-text-muted);
+  white-space: nowrap;
+}
+
+.clickable-row {
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.03);
+  }
+}
+
+// --- Status chips ---
 .status-chip {
   font-size: 0.72rem;
-  padding: 3px 8px;
-  border-radius: 10px;
+  padding: 3px 10px;
+  border-radius: 12px;
   font-weight: 600;
   white-space: nowrap;
+  display: inline-block;
+
   &[data-status='pending'] {
     background: var(--status-pending-bg);
     color: var(--status-pending-text);
   }
+
   &[data-status='in_progress'] {
     background: var(--status-progress-bg);
     color: var(--status-progress-text);
   }
+
   &[data-status='resolved'] {
     background: var(--status-resolved-bg);
     color: var(--status-resolved-text);
   }
+
   &[data-status='rejected'] {
     background: var(--status-rejected-bg);
     color: var(--status-rejected-text);
   }
 }
 
-// --- Responsive ---
+// ==========================================
+// RESPONSIVE
+// ==========================================
+
+@media (max-width: 900px) {
+  .total-banner {
+    padding: 20px 24px;
+    gap: 16px;
+
+    .total-banner-icon {
+      display: none;
+    }
+  }
+
+  .total-banner-info .total-number {
+    font-size: 2.4rem;
+  }
+}
+
 @media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .manage-btn {
+    justify-content: center;
+    width: 100%;
+  }
+
   .page-title {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
   }
 
   .total-banner {
-    flex-direction: column;
+    flex-wrap: wrap;
     padding: 20px;
-    gap: 4px;
+  }
 
-    .total-number {
-      font-size: 2.2rem;
-    }
+  .total-banner-actions {
+    width: 100%;
 
-    .total-label {
-      font-size: 0.95rem;
+    .total-cta {
+      width: 100%;
+      justify-content: center;
     }
   }
 
   .table-card {
-    overflow: hidden;
-
     mat-card-header {
       flex-direction: column;
       align-items: flex-start;
-      gap: 8px;
+      gap: 10px;
+      padding: 16px 16px 8px;
     }
 
     mat-card-content {
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
+      padding: 0 12px 16px !important;
     }
   }
 }
@@ -170,6 +389,10 @@
   }
 
   .stat-info .stat-number {
-    font-size: 1.6rem;
+    font-size: 1.7rem;
+  }
+
+  .stat-percentage .stat-pct {
+    font-size: 0.95rem;
   }
 }

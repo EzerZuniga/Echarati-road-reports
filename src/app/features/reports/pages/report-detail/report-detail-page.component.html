@@ -1,69 +1,211 @@
 <div class="page-container">
-  <button mat-icon-button routerLink="/reports" class="back-btn" aria-label="Volver">
-    <mat-icon>arrow_back</mat-icon>
-  </button>
+  <!-- ===== BARRA DE NAVEGACIÓN ===== -->
+  <div class="page-nav">
+    <button mat-button routerLink="/reports" class="back-btn" aria-label="Volver">
+      <mat-icon>arrow_back</mat-icon>
+      Mis Reportes
+    </button>
+  </div>
 
+  <!-- ===== ESTADO DE CARGA ===== -->
   @if (loading) {
-    <div class="loading-center"><mat-spinner diameter="48"></mat-spinner></div>
+    <div class="loading-center">
+      <mat-spinner diameter="52"></mat-spinner>
+      <p class="loading-text">Cargando reporte...</p>
+    </div>
   } @else if (report) {
     <div class="detail-layout">
-      <mat-card class="detail-card">
-        <mat-card-header>
-          <mat-card-title>{{ report.title }}</mat-card-title>
-          <span class="status-chip" [attr.data-status]="report.status">
-            {{ getStatusLabel(report.status) }}
-          </span>
-        </mat-card-header>
-
-        @if (report.imageUrl) {
-          <img mat-card-image [src]="report.imageUrl" [alt]="report.title" class="report-image" />
-        }
-
-        <mat-card-content>
-          <div class="meta-grid">
-            <div class="meta-item">
-              <mat-icon>category</mat-icon>
-              <span>{{ getCategoryLabel(report.category) }}</span>
-            </div>
-            <div class="meta-item">
-              <mat-icon>location_on</mat-icon>
-              <span>{{ report.location.address }}</span>
-            </div>
-            <div class="meta-item">
-              <mat-icon>schedule</mat-icon>
-              <span>{{ report.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
-            </div>
-            @if (report.updatedAt !== report.createdAt) {
-              <div class="meta-item">
-                <mat-icon>update</mat-icon>
-                <span>Actualizado: {{ report.updatedAt | date: 'dd/MM/yyyy HH:mm' }}</span>
-              </div>
-            }
-          </div>
-
-          <mat-divider class="my-3"></mat-divider>
-
-          <h3 class="section-title">Descripción</h3>
-          <p class="description-text">{{ report.description }}</p>
-
-          @if (report.adminNotes) {
-            <mat-divider class="my-3"></mat-divider>
-            <h3 class="section-title">Respuesta Municipal</h3>
-            <div class="admin-notes">
-              <mat-icon>admin_panel_settings</mat-icon>
-              <p>{{ report.adminNotes }}</p>
+      <!-- ===== TARJETA PRINCIPAL ===== -->
+      <main class="detail-main">
+        <mat-card class="detail-card">
+          <!-- Imagen del reporte -->
+          @if (report.imageUrl) {
+            <div class="report-image-wrap">
+              <img
+                mat-card-image
+                [src]="report.imageUrl"
+                [alt]="report.title"
+                class="report-image"
+                loading="lazy"
+              />
             </div>
           }
-        </mat-card-content>
 
-        @if (report.citizenId === auth.currentUser?.id) {
-          <mat-card-actions align="end">
-            <a mat-stroked-button [routerLink]="['/reports', report.id, 'edit']">
-              <mat-icon>edit</mat-icon> Editar
-            </a>
-          </mat-card-actions>
-        }
-      </mat-card>
+          <mat-card-header>
+            <div class="detail-header-row">
+              <div class="detail-title-group">
+                <span class="detail-category-badge">
+                  <mat-icon>category</mat-icon>
+                  {{ getCategoryLabel(report.category) }}
+                </span>
+                <h1 class="detail-title">{{ report.title }}</h1>
+              </div>
+              <span class="status-chip status-chip--lg" [attr.data-status]="report.status">
+                {{ getStatusLabel(report.status) }}
+              </span>
+            </div>
+          </mat-card-header>
+
+          <mat-card-content>
+            <!-- ── Metadatos en grid ── -->
+            <div class="meta-grid">
+              <div class="meta-item">
+                <div class="meta-icon-wrap">
+                  <mat-icon>location_on</mat-icon>
+                </div>
+                <div class="meta-info">
+                  <span class="meta-label">Ubicación</span>
+                  <span class="meta-value">{{ report.location.address }}</span>
+                </div>
+              </div>
+
+              <div class="meta-item">
+                <div class="meta-icon-wrap">
+                  <mat-icon>calendar_today</mat-icon>
+                </div>
+                <div class="meta-info">
+                  <span class="meta-label">Fecha de reporte</span>
+                  <span class="meta-value">{{ report.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+                </div>
+              </div>
+
+              @if (report.updatedAt !== report.createdAt) {
+                <div class="meta-item">
+                  <div class="meta-icon-wrap">
+                    <mat-icon>update</mat-icon>
+                  </div>
+                  <div class="meta-info">
+                    <span class="meta-label">Última actualización</span>
+                    <span class="meta-value">{{
+                      report.updatedAt | date: 'dd/MM/yyyy HH:mm'
+                    }}</span>
+                  </div>
+                </div>
+              }
+            </div>
+
+            <mat-divider class="content-divider"></mat-divider>
+
+            <!-- ── Descripción ── -->
+            <section class="content-section" aria-labelledby="desc-heading">
+              <h2 id="desc-heading" class="section-title">
+                <mat-icon>article</mat-icon>
+                Descripción
+              </h2>
+              <p class="description-text">{{ report.description }}</p>
+            </section>
+
+            <!-- ── Respuesta municipal ── -->
+            @if (report.adminNotes) {
+              <mat-divider class="content-divider"></mat-divider>
+              <section class="content-section" aria-labelledby="admin-heading">
+                <h2 id="admin-heading" class="section-title">
+                  <mat-icon>admin_panel_settings</mat-icon>
+                  Respuesta Municipal
+                </h2>
+                <div class="admin-notes">
+                  <div class="admin-notes-icon">
+                    <mat-icon>account_balance</mat-icon>
+                  </div>
+                  <div class="admin-notes-content">
+                    <p class="admin-notes-source">Municipalidad Distrital de Echarati</p>
+                    <p class="admin-notes-text">{{ report.adminNotes }}</p>
+                  </div>
+                </div>
+              </section>
+            }
+          </mat-card-content>
+
+          <!-- ── Acciones del propietario ── -->
+          @if (report.citizenId === auth.currentUser?.id) {
+            <mat-card-actions class="detail-actions" align="end">
+              <a
+                mat-flat-button
+                color="primary"
+                [routerLink]="['/reports', report.id, 'edit']"
+                class="edit-btn"
+              >
+                <mat-icon>edit</mat-icon>
+                Editar Reporte
+              </a>
+            </mat-card-actions>
+          }
+        </mat-card>
+      </main>
+
+      <!-- ===== PANEL LATERAL DE ESTADO ===== -->
+      <aside class="detail-sidebar">
+        <mat-card class="status-card">
+          <mat-card-header>
+            <mat-card-title>Estado del reporte</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="status-display">
+              <span class="status-chip status-chip--lg" [attr.data-status]="report.status">
+                {{ getStatusLabel(report.status) }}
+              </span>
+            </div>
+
+            <!-- Línea de tiempo de estados -->
+            <div class="status-timeline" role="list">
+              <div class="timeline-item" [class.timeline-item--done]="true" role="listitem">
+                <div class="timeline-dot timeline-dot--done">
+                  <mat-icon>check</mat-icon>
+                </div>
+                <div class="timeline-info">
+                  <span class="timeline-label">Pendiente</span>
+                  <span class="timeline-desc">Reporte registrado</span>
+                </div>
+              </div>
+
+              <div
+                class="timeline-item"
+                [class.timeline-item--done]="
+                  report.status === 'in_progress' || report.status === 'resolved'
+                "
+                [class.timeline-item--current]="report.status === 'pending'"
+                role="listitem"
+              >
+                <div
+                  class="timeline-dot"
+                  [class.timeline-dot--done]="
+                    report.status === 'in_progress' || report.status === 'resolved'
+                  "
+                >
+                  <mat-icon>autorenew</mat-icon>
+                </div>
+                <div class="timeline-info">
+                  <span class="timeline-label">En Progreso</span>
+                  <span class="timeline-desc">El municipio está trabajando</span>
+                </div>
+              </div>
+
+              <div
+                class="timeline-item"
+                [class.timeline-item--done]="report.status === 'resolved'"
+                [class.timeline-item--rejected]="report.status === 'rejected'"
+                role="listitem"
+              >
+                <div
+                  class="timeline-dot"
+                  [class.timeline-dot--done]="report.status === 'resolved'"
+                  [class.timeline-dot--rejected]="report.status === 'rejected'"
+                >
+                  <mat-icon>{{ report.status === 'rejected' ? 'close' : 'check_circle' }}</mat-icon>
+                </div>
+                <div class="timeline-info">
+                  <span class="timeline-label">{{
+                    report.status === 'rejected' ? 'Rechazado' : 'Resuelto'
+                  }}</span>
+                  <span class="timeline-desc">
+                    {{ report.status === 'rejected' ? 'No procesado' : 'Incidencia atendida' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </aside>
     </div>
   }
 </div>

@@ -1,83 +1,243 @@
 <div class="page-container">
+  <!-- ===== CABECERA ===== -->
   <div class="page-header">
-    <button mat-icon-button routerLink="/reports" aria-label="Volver">
+    <button
+      mat-icon-button
+      routerLink="/reports"
+      aria-label="Volver a Mis Reportes"
+      matTooltip="Volver"
+    >
       <mat-icon>arrow_back</mat-icon>
     </button>
-    <div>
+    <div class="page-header-info">
       <h1 class="page-title">{{ isEdit ? 'Editar Reporte' : 'Nuevo Reporte' }}</h1>
-      <p class="page-subtitle">Complete todos los campos para registrar la incidencia</p>
+      <p class="page-subtitle">
+        {{
+          isEdit
+            ? 'Modifica los datos del reporte existente'
+            : 'Registra una nueva incidencia en tu distrito'
+        }}
+      </p>
     </div>
   </div>
 
-  <mat-card class="form-card">
-    <mat-card-content>
-      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Título del reporte</mat-label>
-          <input matInput formControlName="title" placeholder="Ej: Bache en calle principal" />
-          <mat-hint align="end">{{ f['title'].value?.length ?? 0 }}/100</mat-hint>
-          @if (f['title'].hasError('required') && f['title'].touched) {
-            <mat-error>El título es requerido</mat-error>
-          }
-          @if (f['title'].hasError('minlength') && f['title'].touched) {
-            <mat-error>Mínimo 5 caracteres</mat-error>
-          }
-        </mat-form-field>
+  <div class="form-layout">
+    <!-- ===== FORMULARIO ===== -->
+    <mat-card class="form-card">
+      <mat-card-content>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+          <!-- ── SECCIÓN: Información básica ── -->
+          <div class="form-section">
+            <div class="form-section-header">
+              <div class="form-section-icon">
+                <mat-icon>description</mat-icon>
+              </div>
+              <div>
+                <h3 class="form-section-title">Información básica</h3>
+                <p class="form-section-desc">Identifica la incidencia con un título claro</p>
+              </div>
+            </div>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Categoría</mat-label>
-          <mat-select formControlName="category">
-            @for (cat of categories; track cat.value) {
-              <mat-option [value]="cat.value">{{ cat.label }}</mat-option>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Título del reporte</mat-label>
+              <input
+                matInput
+                formControlName="title"
+                placeholder="Ej: Bache peligroso en vía principal"
+              />
+              <mat-hint align="end">{{ f['title'].value?.length ?? 0 }}/100</mat-hint>
+              @if (f['title'].hasError('required') && f['title'].touched) {
+                <mat-error>El título es requerido</mat-error>
+              }
+              @if (f['title'].hasError('minlength') && f['title'].touched) {
+                <mat-error>Mínimo 5 caracteres</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Categoría de la incidencia</mat-label>
+              <mat-select formControlName="category">
+                @for (cat of categories; track cat.value) {
+                  <mat-option [value]="cat.value">{{ cat.label }}</mat-option>
+                }
+              </mat-select>
+              <mat-icon matSuffix>category</mat-icon>
+              @if (f['category'].hasError('required') && f['category'].touched) {
+                <mat-error>Seleccione una categoría</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <mat-divider class="section-divider"></mat-divider>
+
+          <!-- ── SECCIÓN: Descripción ── -->
+          <div class="form-section">
+            <div class="form-section-header">
+              <div class="form-section-icon">
+                <mat-icon>article</mat-icon>
+              </div>
+              <div>
+                <h3 class="form-section-title">Descripción detallada</h3>
+                <p class="form-section-desc">Proporciona el mayor detalle posible</p>
+              </div>
+            </div>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Descripción</mat-label>
+              <textarea
+                matInput
+                formControlName="description"
+                rows="5"
+                placeholder="Describa la incidencia con el mayor detalle posible: cuándo ocurrió, qué tan grave es, si hay riesgos para la comunidad..."
+              ></textarea>
+              <mat-hint align="end">{{ descLen }}/1000</mat-hint>
+              @if (f['description'].hasError('required') && f['description'].touched) {
+                <mat-error>La descripción es requerida</mat-error>
+              }
+              @if (f['description'].hasError('minlength') && f['description'].touched) {
+                <mat-error>Mínimo 20 caracteres</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <mat-divider class="section-divider"></mat-divider>
+
+          <!-- ── SECCIÓN: Ubicación y evidencia ── -->
+          <div class="form-section">
+            <div class="form-section-header">
+              <div class="form-section-icon">
+                <mat-icon>place</mat-icon>
+              </div>
+              <div>
+                <h3 class="form-section-title">Ubicación y evidencia</h3>
+                <p class="form-section-desc">Indica dónde ocurrió y adjunta una foto</p>
+              </div>
+            </div>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Dirección / Ubicación</mat-label>
+              <input
+                matInput
+                formControlName="address"
+                placeholder="Ej: Jr. Libertad 123, frente al parque central"
+              />
+              <mat-icon matSuffix>location_on</mat-icon>
+              @if (f['address'].hasError('required') && f['address'].touched) {
+                <mat-error>La dirección es requerida</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>URL de imagen (opcional)</mat-label>
+              <input matInput formControlName="imageUrl" type="url" placeholder="https://..." />
+              <mat-icon matSuffix>image</mat-icon>
+              <mat-hint>Adjunta una fotografía que evidencie la incidencia</mat-hint>
+            </mat-form-field>
+
+            <!-- Vista previa de imagen -->
+            @if (f['imageUrl'].value) {
+              <div class="image-preview">
+                <p class="preview-label">
+                  <mat-icon>visibility</mat-icon>
+                  Vista previa
+                </p>
+                <img
+                  [src]="f['imageUrl'].value"
+                  alt="Vista previa de la incidencia"
+                  class="preview-img"
+                  onerror="this.parentElement.style.display = 'none'"
+                />
+              </div>
             }
-          </mat-select>
-          @if (f['category'].hasError('required') && f['category'].touched) {
-            <mat-error>Seleccione una categoría</mat-error>
-          }
-        </mat-form-field>
+          </div>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Descripción detallada</mat-label>
-          <textarea
-            matInput
-            formControlName="description"
-            rows="5"
-            placeholder="Describa la incidencia con el mayor detalle posible..."
-          ></textarea>
-          <mat-hint align="end">{{ descLen }}/1000</mat-hint>
-          @if (f['description'].hasError('required') && f['description'].touched) {
-            <mat-error>La descripción es requerida</mat-error>
-          }
-          @if (f['description'].hasError('minlength') && f['description'].touched) {
-            <mat-error>Mínimo 20 caracteres</mat-error>
-          }
-        </mat-form-field>
+          <!-- ── ACCIONES ── -->
+          <div class="form-actions">
+            <button mat-stroked-button type="button" routerLink="/reports" class="cancel-btn">
+              <mat-icon>close</mat-icon>
+              Cancelar
+            </button>
+            <button
+              mat-flat-button
+              color="primary"
+              type="submit"
+              class="submit-btn"
+              [disabled]="loading"
+            >
+              @if (loading) {
+                <mat-spinner diameter="20" class="inline-spinner"></mat-spinner>
+                {{ isEdit ? 'Guardando...' : 'Enviando...' }}
+              } @else {
+                <mat-icon>{{ isEdit ? 'save' : 'send' }}</mat-icon>
+                {{ isEdit ? 'Guardar Cambios' : 'Enviar Reporte' }}
+              }
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Dirección / Ubicación</mat-label>
-          <input matInput formControlName="address" placeholder="Ej: Jr. Libertad 123, Echarati" />
-          <mat-icon matSuffix>location_on</mat-icon>
-          @if (f['address'].hasError('required') && f['address'].touched) {
-            <mat-error>La dirección es requerida</mat-error>
-          }
-        </mat-form-field>
+    <!-- ===== PANEL LATERAL: CONSEJOS ===== -->
+    <aside class="tips-panel">
+      <mat-card class="tips-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar class="tips-avatar">tips_and_updates</mat-icon>
+          <mat-card-title>Consejos para un buen reporte</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <ul class="tips-list" role="list">
+            <li>
+              <mat-icon>check_circle_outline</mat-icon>
+              <span
+                >Usa un <strong>título descriptivo</strong> que identifique claramente el
+                problema</span
+              >
+            </li>
+            <li>
+              <mat-icon>check_circle_outline</mat-icon>
+              <span
+                >Selecciona la <strong>categoría correcta</strong> para agilizar la atención</span
+              >
+            </li>
+            <li>
+              <mat-icon>check_circle_outline</mat-icon>
+              <span
+                >Incluye una <strong>descripción detallada</strong> con el estado del problema</span
+              >
+            </li>
+            <li>
+              <mat-icon>check_circle_outline</mat-icon>
+              <span
+                >Proporciona la <strong>dirección exacta</strong> para una atención oportuna</span
+              >
+            </li>
+            <li>
+              <mat-icon>check_circle_outline</mat-icon>
+              <span>Adjunta una <strong>fotografía</strong> como evidencia visual</span>
+            </li>
+          </ul>
+        </mat-card-content>
+      </mat-card>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>URL de imagen (opcional)</mat-label>
-          <input matInput formControlName="imageUrl" type="url" placeholder="https://..." />
-          <mat-icon matSuffix>image</mat-icon>
-        </mat-form-field>
-
-        <div class="form-actions">
-          <button mat-stroked-button type="button" routerLink="/reports">Cancelar</button>
-          <button mat-flat-button color="primary" type="submit" [disabled]="loading">
-            @if (loading) {
-              <mat-spinner diameter="20" class="inline-spinner"></mat-spinner>
-            }
-            {{ isEdit ? 'Actualizar' : 'Crear Reporte' }}
-          </button>
-        </div>
-      </form>
-    </mat-card-content>
-  </mat-card>
+      <mat-card class="info-card">
+        <mat-card-content>
+          <div class="info-item">
+            <mat-icon class="info-icon">hourglass_top</mat-icon>
+            <div>
+              <strong>Tiempo de respuesta</strong>
+              <span>El municipio revisará tu reporte en 24–48 horas hábiles</span>
+            </div>
+          </div>
+          <mat-divider class="info-divider"></mat-divider>
+          <div class="info-item">
+            <mat-icon class="info-icon">notifications_active</mat-icon>
+            <div>
+              <strong>Notificaciones</strong>
+              <span>Recibirás actualizaciones sobre el avance de tu reporte</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </aside>
+  </div>
 </div>

@@ -3,122 +3,360 @@
   margin: 0 auto;
   padding: 24px 16px;
 }
+
+/* ── Cabecera ── */
 .page-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   margin-bottom: 24px;
   flex-wrap: wrap;
   gap: 16px;
 }
+
+.page-header-info {
+  flex: 1;
+}
+
 .page-title {
-  font-size: 1.8rem;
-  font-weight: 700;
+  font-size: 1.9rem;
+  font-weight: 800;
   color: var(--gov-primary);
   margin: 0;
   font-family: 'Raleway', sans-serif;
+  letter-spacing: -0.01em;
 }
+
 .page-subtitle {
   color: var(--gov-text-secondary);
   margin: 4px 0 0;
   font-size: 0.9rem;
 }
-.filter-card {
-  margin-bottom: 20px;
-  border-radius: 8px !important;
+
+.new-report-btn {
+  height: 44px;
+  font-weight: 600;
+  border-radius: 6px !important;
+  white-space: nowrap;
+
+  mat-icon {
+    margin-right: 6px;
+  }
 }
+
+/* ── Filtros ── */
+.filter-card {
+  margin-bottom: 24px;
+  border-radius: 10px !important;
+}
+
 .filter-row {
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
+  align-items: center;
 }
+
+.filter-icon {
+  color: var(--gov-text-muted);
+  flex-shrink: 0;
+  align-self: center;
+  margin-top: 4px;
+}
+
 .filter-field {
   min-width: 180px;
   flex: 1;
 }
+
+.result-count {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--gov-text-secondary);
+  white-space: nowrap;
+  padding: 0 4px;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: var(--gov-primary);
+  }
+}
+
+/* ── Cargando ── */
 .loading-center {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  padding: 64px;
+  padding: 72px 16px;
+  gap: 16px;
 }
+
+.loading-text {
+  color: var(--gov-text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* ── Estado vacío ── */
 .empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  padding: 48px;
-  .empty-icon {
-    font-size: 64px;
-    width: 64px;
-    height: 64px;
-    color: var(--gov-text-muted);
-    margin-bottom: 16px;
-  }
+  padding: 64px 24px;
+  background: var(--gov-surface);
+  border-radius: 12px;
+  border: 2px dashed var(--gov-border);
+
   h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
     color: var(--gov-text);
+    margin: 0 0 8px;
+    font-family: 'Raleway', sans-serif;
   }
+
   p {
     color: var(--gov-text-muted);
+    margin: 0 0 28px;
+    font-size: 0.9rem;
   }
 }
+
+.empty-icon-wrap {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gov-primary-light, rgba(1, 87, 155, 0.08));
+  margin-bottom: 20px;
+
+  mat-icon {
+    font-size: 42px;
+    width: 42px;
+    height: 42px;
+    color: var(--gov-primary);
+    opacity: 0.7;
+  }
+}
+
+.empty-cta {
+  border-radius: 6px !important;
+  height: 44px;
+  font-weight: 600;
+
+  mat-icon {
+    margin-right: 6px;
+  }
+}
+
+/* ── Grid de reportes ── */
 .reports-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-  margin-bottom: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 22px;
+  margin-bottom: 24px;
 }
+
 .report-card {
   cursor: pointer;
-  border-radius: 8px !important;
+  border-radius: 10px !important;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   transition:
     box-shadow 0.22s ease,
     transform 0.22s ease;
-  &:hover {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1) !important;
-    transform: translateY(-2px);
+
+  &:hover,
+  &:focus-within {
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12) !important;
+    transform: translateY(-3px);
+    outline: none;
   }
 }
+
+/* Área de imagen */
+.report-card-image {
+  height: 160px;
+  overflow: hidden;
+  background: var(--gov-bg);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+/* Header de la tarjeta */
+.card-header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+}
+
+.card-title-text {
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  color: var(--gov-text) !important;
+  line-height: 1.3 !important;
+  flex: 1;
+}
+
+.card-address {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem !important;
+  color: var(--gov-text-secondary) !important;
+  margin-top: 4px !important;
+}
+
+.inline-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+/* Descripción */
+.report-desc {
+  font-size: 0.875rem;
+  color: var(--gov-text-secondary);
+  margin: 6px 0 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.5;
+}
+
+/* Metadatos */
+.report-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.meta-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: var(--gov-bg);
+  font-size: 0.78rem;
+  color: var(--gov-text-secondary);
+  font-weight: 500;
+
+  mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    color: var(--gov-primary);
+  }
+
+  &--date {
+    margin-left: auto;
+  }
+}
+
+/* Acciones de la tarjeta */
+.card-actions {
+  padding: 4px 12px 12px !important;
+  margin-top: auto;
+}
+
+.view-btn {
+  border-radius: 6px !important;
+  font-size: 0.82rem;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+  }
+}
+
+/* ── Badge de estado ── */
 .status-chip {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   padding: 3px 10px;
-  border-radius: 12px;
-  font-weight: 600;
+  border-radius: 20px;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+
   &[data-status='pending'] {
     background: var(--status-pending-bg);
     color: var(--status-pending-text);
   }
+
   &[data-status='in_progress'] {
     background: var(--status-progress-bg);
     color: var(--status-progress-text);
   }
+
   &[data-status='resolved'] {
     background: var(--status-resolved-bg);
     color: var(--status-resolved-text);
   }
+
   &[data-status='rejected'] {
     background: var(--status-rejected-bg);
     color: var(--status-rejected-text);
   }
 }
-.report-desc {
-  font-size: 0.875rem;
-  color: var(--gov-text-secondary);
-  margin: 8px 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.report-meta {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.8rem;
-  color: var(--gov-text-muted);
-  .meta-icon {
-    font-size: 16px;
-    width: 16px;
-    height: 16px;
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .page-container {
+    padding: 16px 12px;
   }
-  .ml-auto {
-    margin-left: auto;
+
+  .page-title {
+    font-size: 1.5rem;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .new-report-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .reports-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .filter-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .filter-field {
+    min-width: 100%;
+  }
+
+  .filter-icon {
+    display: none;
   }
 }
 

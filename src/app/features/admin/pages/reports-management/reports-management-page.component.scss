@@ -1,110 +1,336 @@
+// ==========================================
+// REPORTS MANAGEMENT PAGE — ESTILOS
+// ==========================================
+
 .page-container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 24px 16px;
+  padding: 28px 20px;
 }
+
+// --- Cabecera ---
 .page-header {
-  margin-bottom: 20px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
 }
+
+.page-header-info {
+  flex: 1;
+}
+
 .page-title {
-  font-size: 1.8rem;
+  font-size: 1.9rem;
   font-weight: 700;
   color: var(--gov-primary);
   margin: 0;
   font-family: 'Raleway', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  line-height: 1.2;
 }
+
+.page-title-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+  opacity: 0.8;
+}
+
 .page-subtitle {
   color: var(--gov-text-secondary);
   font-size: 0.9rem;
-  margin: 4px 0 0;
+  margin: 6px 0 0 38px;
 }
+
+.result-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: var(--gov-surface);
+  border: 1px solid var(--gov-border);
+  font-size: 0.9rem;
+  color: var(--gov-text-secondary);
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  &.result-badge--active {
+    background: color-mix(in srgb, var(--gov-primary) 8%, transparent);
+    border-color: color-mix(in srgb, var(--gov-primary) 30%, transparent);
+    color: var(--gov-primary);
+  }
+}
+
+// --- Filtros ---
 .filter-card {
   margin-bottom: 20px;
-  border-radius: 8px !important;
+  border-radius: 10px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+
+  mat-card-content {
+    padding: 16px !important;
+  }
 }
+
 .filter-row {
   display: flex;
-  gap: 16px;
+  gap: 12px;
   flex-wrap: wrap;
   align-items: center;
 }
+
 .search-field {
   flex: 2;
-  min-width: 200px;
+  min-width: 220px;
 }
+
 .filter-field {
   flex: 1;
-  min-width: 150px;
+  min-width: 160px;
 }
+
+.search-prefix-icon,
+.filter-prefix-icon {
+  color: var(--gov-text-muted);
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  margin-right: 4px;
+}
+
+.clear-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  color: var(--gov-text-secondary);
+  border-color: var(--gov-border);
+  height: 56px;
+}
+
+// --- Tabla ---
 .table-card {
-  border-radius: 8px !important;
+  border-radius: 10px !important;
   overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07) !important;
 }
+
+.table-loading-bar {
+  border-radius: 0;
+}
+
 .table-wrapper {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
+
 .reports-table {
   width: 100%;
 }
+
+// --- Celdas ---
 .title-cell {
   max-width: 220px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+
+  .title-text {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 500;
+    color: var(--gov-text);
+  }
 }
-.location-cell {
-  max-width: 160px;
+
+.category-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  padding: 3px 10px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--gov-primary) 10%, transparent);
+  color: var(--gov-primary);
+  font-weight: 500;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 0.8rem;
+}
+
+.citizen-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.88rem;
   color: var(--gov-text-secondary);
+
+  .citizen-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    opacity: 0.6;
+  }
 }
+
+.location-cell {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 160px;
+  font-size: 0.82rem;
+  color: var(--gov-text-secondary);
+
+  .location-icon {
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    opacity: 0.6;
+  }
+
+  span,
+  & {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.date-cell {
+  font-size: 0.83rem;
+  color: var(--gov-text-muted);
+  white-space: nowrap;
+}
+
+// --- Status chip ---
 .status-chip {
   font-size: 0.72rem;
-  padding: 3px 8px;
-  border-radius: 10px;
+  padding: 3px 10px;
+  border-radius: 12px;
   font-weight: 600;
   white-space: nowrap;
+  display: inline-block;
+
   &[data-status='pending'] {
     background: var(--status-pending-bg);
     color: var(--status-pending-text);
   }
+
   &[data-status='in_progress'] {
     background: var(--status-progress-bg);
     color: var(--status-progress-text);
   }
+
   &[data-status='resolved'] {
     background: var(--status-resolved-bg);
     color: var(--status-resolved-text);
   }
+
   &[data-status='rejected'] {
     background: var(--status-rejected-bg);
     color: var(--status-rejected-text);
   }
 }
+
+// --- Acciones ---
 .actions-cell {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   flex-wrap: wrap;
-}
-.action-btn {
-  font-size: 0.75rem;
-  padding: 4px 8px;
-  line-height: 28px;
-  min-width: auto;
-}
-.no-data-cell {
-  text-align: center;
-  padding: 48px;
-  color: var(--gov-text-muted);
+  padding: 8px 0;
 }
 
-// --- Responsive ---
+.action-btn {
+  font-size: 0.75rem;
+  padding: 0 10px;
+  line-height: 30px;
+  min-width: auto;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  mat-icon {
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
+  }
+}
+
+.delete-btn {
+  opacity: 0.8;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+// --- Row hover ---
+.data-row {
+  transition: background 0.15s;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.02);
+  }
+}
+
+// --- Sin datos ---
+.no-data-cell {
+  padding: 0 !important;
+}
+
+.no-data-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 56px 24px;
+  color: var(--gov-text-muted);
+
+  mat-icon {
+    font-size: 52px;
+    width: 52px;
+    height: 52px;
+    opacity: 0.35;
+    margin-bottom: 14px;
+  }
+
+  p {
+    margin: 0 0 18px;
+    font-size: 0.95rem;
+  }
+}
+
+// ==========================================
+// RESPONSIVE
+// ==========================================
+
 @media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .result-badge {
+    align-self: flex-start;
+  }
+
   .page-title {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
+  }
+
+  .page-subtitle {
+    margin-left: 0;
   }
 
   .filter-row {
@@ -118,12 +344,11 @@
     flex: none;
   }
 
-  .title-cell {
-    max-width: 140px;
-  }
-
-  .location-cell {
-    max-width: 120px;
+  .clear-btn {
+    width: 100%;
+    justify-content: center;
+    height: auto;
+    padding: 10px;
   }
 }
 
@@ -134,10 +359,11 @@
 
   .actions-cell {
     flex-direction: column;
+    align-items: flex-start;
     gap: 4px;
   }
 
-  .no-data-cell {
-    padding: 32px 16px;
+  .no-data-content {
+    padding: 40px 16px;
   }
 }

@@ -1,41 +1,77 @@
 <mat-toolbar color="primary" class="main-toolbar">
-  <a routerLink="/" class="brand">
+  <!-- Marca -->
+  <a routerLink="/" class="brand" matTooltip="Inicio">
     <img
       src="assets/logos/logo.png"
       alt="Echarati"
       height="36"
+      class="brand-logo"
       onerror="this.style.display = 'none'"
     />
-    <span>Reportes Ciudadanos</span>
+    <div class="brand-text">
+      <span class="brand-name">Reportes Ciudadanos</span>
+      <span class="brand-org">Municipalidad de Echarati</span>
+    </div>
   </a>
 
   <span class="spacer"></span>
 
+  <!-- Navegación principal -->
   @if (auth.isAuthenticated) {
     <nav class="nav-links">
-      <a mat-button routerLink="/reports" routerLinkActive="active-link">
-        <mat-icon>list_alt</mat-icon> Mis Reportes
+      <a mat-button routerLink="/reports" routerLinkActive="active-link" matTooltip="Mis reportes">
+        <mat-icon>list_alt</mat-icon>
+        <span class="nav-label">Mis Reportes</span>
       </a>
-      <a mat-button routerLink="/reports/new" routerLinkActive="active-link">
-        <mat-icon>add_circle_outline</mat-icon> Nuevo Reporte
+      <a
+        mat-button
+        routerLink="/reports/new"
+        routerLinkActive="active-link"
+        matTooltip="Crear nuevo reporte"
+      >
+        <mat-icon>add_circle_outline</mat-icon>
+        <span class="nav-label">Nuevo Reporte</span>
       </a>
     </nav>
   }
 
+  <!-- Usuario autenticado -->
   @if (auth.isAuthenticated) {
-    <button mat-icon-button [matMenuTriggerFor]="userMenu" aria-label="Menú de usuario">
-      <mat-icon>account_circle</mat-icon>
+    <button
+      mat-button
+      [matMenuTriggerFor]="userMenu"
+      aria-label="Menú de usuario"
+      class="user-trigger"
+    >
+      <div class="user-avatar">
+        <span>{{ auth.currentUser?.firstName?.[0] }}{{ auth.currentUser?.lastName?.[0] }}</span>
+      </div>
+      <span class="user-display-name">{{ auth.currentUser?.firstName }}</span>
+      <mat-icon class="user-arrow">arrow_drop_down</mat-icon>
     </button>
-    <mat-menu #userMenu>
-      <div class="user-menu-header">
-        <mat-icon>person</mat-icon>
-        <span>{{ userName }}</span>
+
+    <mat-menu #userMenu="matMenu" class="user-drop-menu">
+      <div class="user-menu-header" (click)="$event.stopPropagation()">
+        <div class="user-menu-avatar">
+          {{ auth.currentUser?.firstName?.[0] }}{{ auth.currentUser?.lastName?.[0] }}
+        </div>
+        <div class="user-menu-info">
+          <span class="user-menu-name">{{ userName }}</span>
+          <span class="user-menu-email">{{ auth.currentUser?.email }}</span>
+          <span class="user-menu-role">Ciudadano</span>
+        </div>
       </div>
       <mat-divider></mat-divider>
-      <button mat-menu-item (click)="logout()"><mat-icon>logout</mat-icon> Cerrar sesión</button>
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        Cerrar sesión
+      </button>
     </mat-menu>
   } @else {
-    <a mat-button routerLink="/auth/login"> <mat-icon>login</mat-icon> Iniciar sesión </a>
+    <a mat-flat-button routerLink="/auth/login" class="login-btn">
+      <mat-icon>login</mat-icon>
+      Iniciar sesión
+    </a>
   }
 </mat-toolbar>
 

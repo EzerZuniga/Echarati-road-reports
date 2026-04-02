@@ -1,3 +1,6 @@
+/* =====================================================
+   LAYOUT: columna única (usado por register vía @use)
+   ===================================================== */
 .auth-page {
   min-height: 100vh;
   display: flex;
@@ -12,6 +15,159 @@
   padding: 24px 16px;
 }
 
+/* =====================================================
+   LAYOUT: dividido — panel de marca + formulario
+   ===================================================== */
+.auth-split {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 400px 1fr;
+}
+
+/* Panel izquierdo ------------------------------------ */
+.auth-split-left {
+  background: linear-gradient(
+    160deg,
+    var(--gov-primary-dark) 0%,
+    var(--gov-primary) 55%,
+    #26a69a 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 36px;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -80px;
+    right: -80px;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    pointer-events: none;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -100px;
+    left: -50px;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.04);
+    pointer-events: none;
+  }
+}
+
+.split-left-inner {
+  position: relative;
+  z-index: 1;
+  color: #fff;
+  text-align: center;
+}
+
+.split-left-logo {
+  height: 84px;
+  margin-bottom: 22px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.22));
+}
+
+.split-left-title {
+  font-size: 1.55rem;
+  font-weight: 800;
+  font-family: 'Raleway', sans-serif;
+  margin: 0 0 6px;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+}
+
+.split-left-sub {
+  font-size: 0.875rem;
+  opacity: 0.85;
+  margin: 0 0 36px;
+}
+
+.split-features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+
+  li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 13px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    div {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
+      strong {
+        font-size: 0.875rem;
+        font-weight: 700;
+      }
+
+      span {
+        font-size: 0.775rem;
+        opacity: 0.78;
+      }
+    }
+  }
+}
+
+.split-feat-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: #fff;
+  }
+}
+
+/* Panel derecho (formulario) ------------------------ */
+.auth-split-right {
+  background: linear-gradient(
+    135deg,
+    var(--gov-primary-dark) 0%,
+    var(--gov-primary) 60%,
+    #26a69a 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+}
+
+/* On desktop, hide the in-card logo header (left panel shows it) */
+@media (min-width: 901px) {
+  .auth-split .auth-header {
+    display: none;
+  }
+}
+
+/* =====================================================
+   COMPONENTES COMPARTIDOS (login y register)
+   ===================================================== */
 .auth-card {
   width: 100%;
   max-width: 420px;
@@ -28,7 +184,7 @@
   }
 
   h1 {
-    color: #fff; // Sobreescribe el color oscuro que aplica mat-h1
+    color: #fff;
     font-size: clamp(1.4rem, 4vw, 1.8rem);
     font-weight: 800;
     margin: 0;
@@ -50,9 +206,48 @@
 }
 
 .auth-form-card {
-  border-radius: 8px !important;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.16) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.18) !important;
   padding: 8px;
+}
+
+.form-card-header {
+  margin-bottom: 20px;
+
+  h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0 0 4px;
+    font-family: 'Raleway', sans-serif;
+    color: var(--gov-text);
+  }
+
+  p {
+    font-size: 0.875rem;
+    color: var(--gov-text-secondary);
+    margin: 0;
+  }
+}
+
+/* Separador de secciones del formulario (register) */
+.form-section-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--gov-primary);
+  margin: 18px 0 12px;
+  border-bottom: 2px solid var(--gov-primary);
+  padding-bottom: 6px;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
 }
 
 .full-width {
@@ -64,10 +259,12 @@
   display: flex;
   justify-content: center;
   margin-bottom: 16px;
+  min-height: 44px;
 }
 
 .my-divider {
   margin: 16px 0;
+
   .divider-text {
     padding: 0 12px;
     font-size: 0.8rem;
@@ -81,7 +278,14 @@
   font-weight: 600;
   letter-spacing: 0.5px;
   margin-top: 8px;
-  border-radius: 4px;
+  border-radius: 6px !important;
+
+  mat-icon {
+    margin-right: 6px;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
 }
 
 .inline-spinner {
@@ -90,37 +294,34 @@
   vertical-align: middle;
 }
 
-.auth-link {
-  font-size: 0.9rem;
-  color: var(--gov-text-secondary);
-  a {
-    color: var(--gov-primary);
-    font-weight: 600;
-  }
-}
-
 .auth-alt-action {
   text-align: center;
   margin-top: 20px;
 }
 
 .auth-alt-btn {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   width: 100%;
   padding: 12px 32px;
   border: 2px solid rgba(255, 255, 255, 0.7);
-  border-radius: 4px;
+  border-radius: 6px;
   background: transparent;
   color: #fff;
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 0.95rem;
+  font-weight: 500;
   text-decoration: none;
   text-align: center;
-  letter-spacing: 0.5px;
   cursor: pointer;
   transition:
     background 0.2s,
     border-color 0.2s;
+
+  strong {
+    font-weight: 700;
+  }
 
   &:hover {
     background: rgba(255, 255, 255, 0.12);
@@ -130,27 +331,37 @@
 
 .auth-footer {
   text-align: center;
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(255, 255, 255, 0.6);
   font-size: 0.78rem;
   margin-top: 16px;
 }
 
-@media (max-width: 480px) {
-  .auth-page {
-    padding: 16px 12px;
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+@media (max-width: 900px) {
+  .auth-split {
+    grid-template-columns: 1fr;
   }
 
-  .auth-header {
-    margin-bottom: 18px;
+  .auth-split-left {
+    display: none;
+  }
 
-    .auth-logo {
-      height: 56px;
-      margin-bottom: 8px;
-    }
+  .auth-split .auth-header {
+    display: block;
+  }
 
-    h1 {
-      font-size: 1.35rem;
-    }
+  .auth-split-right {
+    min-height: 100vh;
+    padding: 20px 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-page,
+  .auth-split-right {
+    padding: 16px 12px;
   }
 
   .auth-form-card {
@@ -159,11 +370,6 @@
 
   .submit-btn {
     height: 44px;
-    font-size: 0.95rem;
-  }
-
-  .auth-alt-btn {
-    padding: 10px 24px;
     font-size: 0.95rem;
   }
 }

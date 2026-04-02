@@ -14,16 +14,18 @@
 .page-title {
   font-size: 1.8rem;
   font-weight: 700;
-  color: #1a237e;
+  color: var(--gov-primary);
   margin: 0;
+  font-family: 'Raleway', sans-serif;
 }
 .page-subtitle {
-  color: #666;
+  color: var(--gov-text-secondary);
   margin: 4px 0 0;
   font-size: 0.9rem;
 }
 .filter-card {
   margin-bottom: 20px;
+  border-radius: 8px !important;
 }
 .filter-row {
   display: flex;
@@ -46,14 +48,14 @@
     font-size: 64px;
     width: 64px;
     height: 64px;
-    color: #ccc;
+    color: var(--gov-text-muted);
     margin-bottom: 16px;
   }
   h3 {
-    color: #444;
+    color: var(--gov-text);
   }
   p {
-    color: #888;
+    color: var(--gov-text-muted);
   }
 }
 .reports-grid {
@@ -64,10 +66,13 @@
 }
 .report-card {
   cursor: pointer;
-  border-radius: 10px !important;
-  transition: box-shadow 0.2s;
+  border-radius: 8px !important;
+  transition:
+    box-shadow 0.22s ease,
+    transform 0.22s ease;
   &:hover {
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1) !important;
+    transform: translateY(-2px);
   }
 }
 .status-chip {
@@ -76,25 +81,25 @@
   border-radius: 12px;
   font-weight: 600;
   &[data-status='pending'] {
-    background: #fff3e0;
-    color: #e65100;
+    background: var(--status-pending-bg);
+    color: var(--status-pending-text);
   }
   &[data-status='in_progress'] {
-    background: #e3f2fd;
-    color: #1565c0;
+    background: var(--status-progress-bg);
+    color: var(--status-progress-text);
   }
   &[data-status='resolved'] {
-    background: #e8f5e9;
-    color: #2e7d32;
+    background: var(--status-resolved-bg);
+    color: var(--status-resolved-text);
   }
   &[data-status='rejected'] {
-    background: #fce4ec;
-    color: #c62828;
+    background: var(--status-rejected-bg);
+    color: var(--status-rejected-text);
   }
 }
 .report-desc {
   font-size: 0.875rem;
-  color: #555;
+  color: var(--gov-text-secondary);
   margin: 8px 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -106,7 +111,7 @@
   align-items: center;
   gap: 6px;
   font-size: 0.8rem;
-  color: #777;
+  color: var(--gov-text-muted);
   .meta-icon {
     font-size: 16px;
     width: 16px;
@@ -114,5 +119,44 @@
   }
   .ml-auto {
     margin-left: auto;
+  }
+}
+
+// --- Responsive ---
+@media (max-width: 600px) {
+  .page-container {
+    padding: 16px 12px;
+  }
+
+  .page-title {
+    font-size: 1.4rem;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .reports-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .filter-row {
+    flex-direction: column;
+  }
+
+  .filter-field {
+    min-width: 100%;
+  }
+
+  .empty-state {
+    padding: 32px 16px;
+
+    .empty-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+    }
   }
 }

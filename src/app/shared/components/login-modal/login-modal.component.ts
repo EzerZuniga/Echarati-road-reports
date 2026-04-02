@@ -6,11 +6,14 @@ import {
   HostListener,
   inject,
   Input,
+  OnDestroy,
   Output,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login-modal',
@@ -18,7 +21,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./login-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginModalComponent {
+export class LoginModalComponent implements OnDestroy {
   @Output() close = new EventEmitter<void>();
   @Input() returnUrl = '/reports';
   loginForm: FormGroup;
@@ -30,12 +33,18 @@ export class LoginModalComponent {
   private authService = inject(AuthService);
   private cdr = inject(ChangeDetectorRef);
   private router = inject(Router);
+  private destroy$ = new Subject<void>();
 
   constructor() {
     this.loginForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   // close on backdrop click handled in template
@@ -59,21 +68,21 @@ export class LoginModalComponent {
 
   onSubmit(): void {
     this.submitted = true;
-    this.cdr.markForCheck();
     this.error = '';
-    this.cdr.markForCheck();
     if (this.loginForm.invalid) {
+      this.cdr.markForCheck();
       return;
     }
     this.loading = true;
     this.cdr.markForCheck();
     this.authService
       .login({ email: this.f['username'].value, password: this.f['password'].value })
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
           this.loading = false;
           this.close.emit();
-          const target = this.returnUrl && this.returnUrl.trim() ? this.returnUrl : '/reports';
+          const target = this.isSafeUrl(this.returnUrl) ? this.returnUrl : '/reports';
           this.router.navigateByUrl(target);
           this.cdr.markForCheck();
         },
@@ -82,10 +91,10 @@ export class LoginModalComponent {
           this.loading = false;
           this.cdr.markForCheck();
         },
-        complete: () => {
-          this.loading = false;
-          this.cdr.markForCheck();
-        },
       });
+  }
+
+  private isSafeUrl(url: string): boolean {
+    return !!url && url.startsWith('/') && !url.startsWith('//');
   }
 }

@@ -4,51 +4,58 @@
 // =========================================
 
 // --- Color Palette ---
-// Primary: Deep Navy/Royal Blue (Trust, Authority)
-$primary-900: #0a2540;
-$primary-800: #153e6a;
-$primary-700: #1d5288;
-$primary-500: #0056b3;
-$primary-50: #eff6ff;
+// Primary: Teal GOB.PE (Identidad gobierno peruano)
+$primary-900: #004d40;
+$primary-800: #00695c;
+$primary-700: #00897b;
+$primary-500: #26a69a;
+$primary-50: #e0f2f1;
 
-// Accents (Gold/Ochre for official tone)
-$accent-500: #d97706;
-$accent-400: #f59e0b;
+// Accents (Rojo institucional — bandera perú)
+$accent-500: #c4171b;
+$accent-400: #eb1e23;
+$gov-red: #eb1e23;
 
-// Neutrals (Slate)
-$gray-50: #f9fafb;
-$gray-100: #f3f4f6;
-$gray-200: #e5e7eb;
-$gray-300: #d1d5db;
-$gray-400: #9ca3af;
-$gray-500: #6b7280;
-$gray-600: #4b5563;
-$gray-700: #374151;
-$gray-800: #1f2937;
-$gray-900: #111827;
+// Neutrals
+$gray-50: #fafafa;
+$gray-100: #f7f7f7;
+$gray-200: #eeeeee;
+$gray-300: #e5e5e5;
+$gray-400: #bdbdbd;
+$gray-500: #9e9e9e;
+$gray-600: #6b7280;
+$gray-700: #58595b;
+$gray-800: #333333;
+$gray-900: #1a1a1a;
 $white: #ffffff;
 
 // Semantic Colors
-$success: #10b981;
-$warning: #f59e0b;
-$danger: #ef4444;
-$info: #3b82f6;
+$success: #169b62;
+$warning: #e67e00;
+$danger: #eb1e23;
+$info: #00695c;
 
 // --- Components ---
 $radius-sm: 4px;
-$radius: 6px;
-$radius-lg: 12px;
+$radius: 8px;
+$radius-lg: 10px;
+$radius-xl: 12px;
 
-$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
 $shadow:
-  0 4px 6px -1px rgba(0, 0, 0, 0.1),
-  0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  0 4px 12px rgba(0, 0, 0, 0.08),
+  0 1px 3px rgba(0, 0, 0, 0.04);
 $shadow-lg:
-  0 10px 15px -3px rgba(0, 0, 0, 0.1),
-  0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  0 12px 28px rgba(0, 0, 0, 0.1),
+  0 4px 8px rgba(0, 0, 0, 0.04);
+
+$transition-base: 0.2s ease;
 
 $font-sans:
-  'Roboto',
+  'Source Sans 3',
+  'Segoe UI',
   system-ui,
   -apple-system,
   sans-serif;
+
+$font-heading: 'Raleway', 'Source Sans 3', 'Segoe UI', system-ui, sans-serif;

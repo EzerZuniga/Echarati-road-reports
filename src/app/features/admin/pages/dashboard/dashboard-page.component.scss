@@ -12,18 +12,19 @@
 .page-title {
   font-size: 1.8rem;
   font-weight: 700;
-  color: #1a237e;
+  color: var(--gov-primary);
   margin: 0;
+  font-family: 'Raleway', sans-serif;
 }
 .page-subtitle {
-  color: #666;
+  color: var(--gov-text-secondary);
   font-size: 0.9rem;
   margin: 4px 0 0;
 }
 .total-banner {
-  background: linear-gradient(90deg, #1a237e, #3949ab);
+  background: linear-gradient(90deg, var(--gov-primary-dark), var(--gov-primary));
   color: #fff;
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 24px 32px;
   display: flex;
   align-items: baseline;
@@ -31,7 +32,7 @@
   margin-bottom: 24px;
   .total-number {
     font-size: 3rem;
-    font-weight: 800;
+    font-weight: 700;
   }
   .total-label {
     font-size: 1.1rem;
@@ -45,7 +46,7 @@
   margin-bottom: 24px;
 }
 .stat-card {
-  border-radius: 10px !important;
+  border-radius: 8px !important;
   border-left: 5px solid;
   mat-card-content {
     display: flex;
@@ -55,7 +56,7 @@
   }
 }
 .stat-icon-wrap {
-  border-radius: 50%;
+  border-radius: 8px;
   padding: 10px;
   display: flex;
   mat-icon {
@@ -68,15 +69,15 @@
   .stat-number {
     display: block;
     font-size: 2rem;
-    font-weight: 800;
+    font-weight: 700;
   }
   .stat-label {
     font-size: 0.85rem;
-    color: #666;
+    color: var(--gov-text-secondary);
   }
 }
 .table-card {
-  border-radius: 12px !important;
+  border-radius: 8px !important;
   mat-card-header {
     display: flex;
     align-items: center;
@@ -105,19 +106,70 @@
   font-weight: 600;
   white-space: nowrap;
   &[data-status='pending'] {
-    background: #fff3e0;
-    color: #e65100;
+    background: var(--status-pending-bg);
+    color: var(--status-pending-text);
   }
   &[data-status='in_progress'] {
-    background: #e3f2fd;
-    color: #1565c0;
+    background: var(--status-progress-bg);
+    color: var(--status-progress-text);
   }
   &[data-status='resolved'] {
-    background: #e8f5e9;
-    color: #2e7d32;
+    background: var(--status-resolved-bg);
+    color: var(--status-resolved-text);
   }
   &[data-status='rejected'] {
-    background: #fce4ec;
-    color: #c62828;
+    background: var(--status-rejected-bg);
+    color: var(--status-rejected-text);
+  }
+}
+
+// --- Responsive ---
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 1.4rem;
+  }
+
+  .total-banner {
+    flex-direction: column;
+    padding: 20px;
+    gap: 4px;
+
+    .total-number {
+      font-size: 2.2rem;
+    }
+
+    .total-label {
+      font-size: 0.95rem;
+    }
+  }
+
+  .table-card {
+    overflow: hidden;
+
+    mat-card-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    mat-card-content {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .page-container {
+    padding: 16px 12px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .stat-info .stat-number {
+    font-size: 1.6rem;
   }
 }

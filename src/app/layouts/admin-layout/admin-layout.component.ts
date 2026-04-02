@@ -1,6 +1,8 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
@@ -8,10 +10,11 @@ import { AuthService } from '../../core/services/auth.service';
   templateUrl: './admin-layout.component.html',
   styleUrls: ['./admin-layout.component.scss'],
 })
-export class AdminLayoutComponent {
+export class AdminLayoutComponent implements OnDestroy {
   @ViewChild('sidenav') sidenav!: MatSidenav;
 
   isMobile = false;
+  private destroy$ = new Subject<void>();
 
   navItems = [
     { label: 'Dashboard', icon: 'dashboard', route: '/admin/dashboard' },
@@ -22,18 +25,26 @@ export class AdminLayoutComponent {
     public auth: AuthService,
     private bp: BreakpointObserver
   ) {
-    this.bp.observe([Breakpoints.Handset]).subscribe((res) => {
-      this.isMobile = res.matches;
-      if (this.sidenav) {
-        if (res.matches) {
-          this.sidenav.mode = 'over';
-          this.sidenav.close();
-        } else {
-          this.sidenav.mode = 'side';
-          this.sidenav.open();
+    this.bp
+      .observe([Breakpoints.Handset])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.isMobile = res.matches;
+        if (this.sidenav) {
+          if (res.matches) {
+            this.sidenav.mode = 'over';
+            this.sidenav.close();
+          } else {
+            this.sidenav.mode = 'side';
+            this.sidenav.open();
+          }
         }
-      }
-    });
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   get userName(): string {

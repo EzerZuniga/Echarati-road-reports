@@ -3,7 +3,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #1a237e 0%, #283593 40%, #3949ab 100%);
+  background: linear-gradient(
+    135deg,
+    var(--gov-primary-dark) 0%,
+    var(--gov-primary) 60%,
+    #26a69a 100%
+  );
   padding: 24px 16px;
 }
 
@@ -26,17 +31,20 @@
     font-size: 1.6rem;
     font-weight: 700;
     margin: 0;
+    font-family: 'Raleway', sans-serif;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
   }
   .auth-subtitle {
     font-size: 0.85rem;
-    opacity: 0.85;
+    opacity: 1;
+    color: rgba(255, 255, 255, 0.95);
     margin-top: 4px;
   }
 }
 
 .auth-form-card {
-  border-radius: 12px !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.16) !important;
   padding: 8px;
 }
 
@@ -56,15 +64,17 @@
   .divider-text {
     padding: 0 12px;
     font-size: 0.8rem;
-    color: #666;
+    color: var(--gov-text-secondary);
   }
 }
 
 .submit-btn {
   height: 48px;
   font-size: 1rem;
+  font-weight: 600;
   letter-spacing: 0.5px;
   margin-top: 8px;
+  border-radius: 4px;
 }
 
 .inline-spinner {
@@ -75,10 +85,39 @@
 
 .auth-link {
   font-size: 0.9rem;
-  color: #555;
+  color: var(--gov-text-secondary);
   a {
-    color: #1a237e;
+    color: var(--gov-primary);
     font-weight: 600;
+  }
+}
+
+.auth-alt-action {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.auth-alt-btn {
+  display: inline-block;
+  width: 100%;
+  padding: 12px 32px;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  border-radius: 4px;
+  background: transparent;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  text-align: center;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: #fff;
   }
 }
 
@@ -87,4 +126,37 @@
   color: rgba(255, 255, 255, 0.65);
   font-size: 0.78rem;
   margin-top: 16px;
+}
+
+@media (max-width: 480px) {
+  .auth-page {
+    padding: 16px 12px;
+  }
+
+  .auth-header {
+    margin-bottom: 18px;
+
+    .auth-logo {
+      height: 56px;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-size: 1.35rem;
+    }
+  }
+
+  .auth-form-card {
+    padding: 4px;
+  }
+
+  .submit-btn {
+    height: 44px;
+    font-size: 0.95rem;
+  }
+
+  .auth-alt-btn {
+    padding: 10px 24px;
+    font-size: 0.95rem;
+  }
 }

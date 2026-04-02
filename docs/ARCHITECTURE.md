@@ -20,37 +20,64 @@ Este documento describe la arquitectura base del proyecto, sus decisiones de dis
 
 ### Mapa de módulos
 
-- `AppModule`: raíz de la aplicación; importa `CoreModule` y `SharedModule`; declara `AppComponent` y configura el router.
-- `CoreModule`: servicios singleton (`AuthService`, `NetworkService`, interceptores, guards). Solo `AppModule` debe importarlo para evitar duplicados.
-- `SharedModule`: componentes reutilizables (navbar, footer, banner de conectividad, modales) y pipes/directivas puras; no define providers.
-- `AuthModule`: flujo de autenticación (login, guards específicos). Se carga perezosamente.
-- `ReportsModule`: catálogo de reportes, formularios y vistas detalle. Se subdivide internamente en `components`, `data-access` (API, caché local, cola offline), `models` y `services` (fachada y orquestación).
-- `LandingModule`: página pública inicial con contenido estático y CTA hacia login/registros.
+- `AppModule`: raíz de la aplicación; importa `CoreModule`, `SharedModule`, `MaterialModule` y `LayoutsModule`; declara `AppComponent` y configura el router con lazy loading.
+- `CoreModule`: servicios singleton (`AuthService`, `NetworkService`, `ReportApiService`), interceptores (`AuthInterceptor`), guards (`authGuard`, `roleGuard`), error handler global y utilidades centralizadas (`report-labels`). Solo `AppModule` debe importarlo.
+- `SharedModule`: componentes reutilizables (navbar, footer, banner de conectividad, login modal) y módulos de formulario (FormsModule, ReactiveFormsModule); no define providers.
+- `MaterialModule`: centraliza las importaciones de Angular Material para evitar repetición.
+- `LayoutsModule`: layouts de aplicación (`MainLayoutComponent`, `AdminLayoutComponent`) usados como wrappers en las rutas.
+- **Feature modules** (todos lazy-loaded):
+  - `LandingModule` (`features/landing/`): página pública con contenido institucional, FAQ, y páginas legales.
+  - `AuthModule` (`features/auth/`): flujo de autenticación (login con email y Google Sign-In, registro).
+  - `ReportsModule` (`features/reports/`): CRUD de reportes ciudadanos (listado, formulario, detalle).
+  - `AdminModule` (`features/admin/`): dashboard de métricas y gestión de reportes con tabla Material.
 
 ### Flujo de ejecución
 
 1. `main.ts` arranca `AppModule` y configura global error handler.
-2. `AppRoutingModule` decide entre rutas públicas (landing) y privadas (reports) usando `AuthGuard`.
-3. Una vez autenticado, `ReportsModule` solicita datos a través de `ReportFacadeService`, que coordina `ReportDataService` (API + caché) y mantiene el estado compartido.
-4. Las respuestas se mapean a modelos tipados (`Report`) y se propagan a componentes mediante flujos reactivos.
+2. `AppRoutingModule` usa lazy loading para todos los feature modules; rutas privadas protegidas por `authGuard`, rutas de admin protegidas adicionalmente por `roleGuard`.
+3. Los componentes de features interactúan con `ReportApiService` (singleton en `core`) para operaciones CRUD.
+4. Las respuestas se mapean a modelos tipados (`Report`, `DashboardMetrics`) definidos en `core/models`.
 
 ### Organización de carpetas
 
-- `src/app/core`: integraciones transversales (auth, interceptors, guards, `NetworkService`). Aquí residen adaptadores a infraestructura externa.
-- `src/app/shared`: librería interna de componentes UI parametrizables (navbar, footer, banner de conectividad), sin acoplamientos al dominio.
-- `src/app/reports`: módulo de dominio con estructura interna por capas (`components`, `data-access`, `models`, `services`).
-- `src/app/landing`: presentación inicial, sin dependencias de autenticación.
-- `src/assets`: recursos estáticos (logos, favicons, estilos globales).
+```
+src/app/
+├── core/                    # Singletons: services, guards, interceptors, models, utils
+│   ├── guards/              # authGuard, roleGuard (functional guards)
+│   ├── handlers/            # GlobalErrorHandler
+│   ├── interceptors/        # AuthInterceptor (JWT + refresh token)
+│   ├── models/              # Interfaces y tipos del dominio (Report, User, etc.)
+│   ├── services/            # AuthService, NetworkService, ReportApiService
+│   └── utils/               # Utilidades centralizadas (report-labels: labels, colores, opciones)
+├── shared/                  # Componentes UI reutilizables sin lógica de dominio
+│   ├── components/          # navbar, footer, connectivity-banner, login-modal
+│   ├── shared.module.ts     # Re-exporta CommonModule, RouterModule, FormsModule
+│   └── material.module.ts   # Centraliza imports de Angular Material
+├── layouts/                 # Wrappers de layout para rutas
+│   ├── main-layout/         # Layout para usuarios autenticados
+│   └── admin-layout/        # Layout con sidenav para administradores
+├── features/                # Feature modules (lazy-loaded)
+│   ├── landing/             # Página pública + páginas legales
+│   ├── auth/                # Login + Registro (email y Google)
+│   ├── reports/             # CRUD de reportes ciudadanos
+│   │   └── pages/           # report-list, report-form, report-detail
+│   └── admin/               # Panel administrativo
+│       └── pages/           # dashboard, reports-management
+├── app.module.ts            # Módulo raíz
+├── app-routing.module.ts    # Configuración de rutas con lazy loading
+└── app.component.ts         # Componente raíz
+```
+
+- `src/assets`: recursos estáticos (logos, favicons, imágenes).
 - `src/environments`: configuración por entorno; `environment.ts` para desarrollo, `environment.prod.ts` para producción.
 - `scripts`: utilidades de desarrollo (por ejemplo, `seed-sample.mjs`).
 
 ### Comunicación con API
 
 - La URL base se obtiene de `environment.apiUrl` para no acoplar endpoints en código.
-- `AuthInterceptor` extiende `HttpInterceptor` para inyectar cabeceras de autenticación y procesar códigos de error.
-- `ReportApiService` encapsula las llamadas REST; `ReportCacheService` mantiene los datos locales e inicializa la semilla; `ReportDataService` decide si atacar API o caché y gestiona la cola offline.
-- Las operaciones offline (`create`, `update`, `delete`) se guardan en `localStorage` y se reintentan cuando `NetworkService` detecta reconexión.
-- Se recomienda añadir un `HttpErrorHandlerService` para traducir errores técnicos en mensajes de negocio y centralizar la captura de métricas.
+- `AuthInterceptor` implementa `HttpInterceptor` para inyectar cabeceras `Authorization: Bearer` y manejar la renovación automática de tokens ante 401.
+- `ReportApiService` (en `core/services`) encapsula todas las llamadas REST de reportes: `getAll`, `getMine`, `getById`, `create`, `updateStatus`, `delete`, `getDashboard`.
+- Las utilidades de etiquetas y opciones de formulario están centralizadas en `core/utils/report-labels.ts` para evitar duplicación entre componentes.
 
 ### Autenticación y autorización
 
@@ -66,16 +93,17 @@ Este documento describe la arquitectura base del proyecto, sus decisiones de dis
 
 ### Gestión de estado
 
-- `ReportFacadeService` centraliza el estado compartido del dominio de reportes (listas, filtros, indicadores de carga) y expone observables para los componentes.
-- El estado persistente fuera de línea se conserva en `ReportCacheService`; la fachada refresca el cache tras cada sincronización.
-- Si el volumen de estados compartidos crece, sigue siendo viable migrar a NgRx o ComponentStore, reutilizando la capa de `data-access` actual.
+- Los componentes de features consumen directamente `ReportApiService` para operaciones CRUD, manteniendo el estado local en cada componente.
+- `AuthService` mantiene el estado de sesión como singleton (usuario actual, tokens) con observables reactivos.
+- `NetworkService` expone un observable global de conectividad que alimenta al banner de conectividad.
+- Si el volumen de estado compartido crece, migrar a NgRx o ComponentStore, reutilizando `ReportApiService` como capa de datos.
 
 ### Estrategia de pruebas
 
-- Unit tests obligatorios para servicios (`AuthService`, `ReportDataService`, `ReportFacadeService`), guards (`AuthGuard`) e interceptores (`AuthInterceptor`).
+- Unit tests obligatorios para servicios (`AuthService`, `ReportApiService`), guards (`authGuard`, `roleGuard`) e interceptores (`AuthInterceptor`).
 - Componentes críticos (formularios) deben incluir pruebas de template y validaciones.
 - Integrar cobertura mínima del 80 % en el pipeline; fallar el build si se reduce.
-- Cypress (o Playwright) para flujos extremos a extremo: login, creación/edición de reporte, logout.
+- Cypress (o Playwright) para flujos de extremo a extremo: login, creación de reporte, gestión admin, logout.
 
 ### Calidad y automatización
 

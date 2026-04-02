@@ -3,7 +3,13 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ReportApiService } from '../../../../core/services/report-api.service';
-import { Report, ReportFilters, ReportStatus, ReportCategory } from '../../../../core/models';
+import { Report, ReportFilters, ReportStatus } from '../../../../core/models';
+import {
+  getStatusLabel,
+  getStatusColor,
+  STATUS_OPTIONS,
+  CATEGORY_OPTIONS,
+} from '../../../../core/utils';
 
 @Component({
   selector: 'app-report-list-page',
@@ -17,23 +23,8 @@ export class ReportListPageComponent implements OnInit, OnDestroy {
 
   filters: ReportFilters = { page: 1, pageSize: 10 };
 
-  readonly statusOptions: { value: ReportStatus | ''; label: string }[] = [
-    { value: '', label: 'Todos los estados' },
-    { value: 'pending', label: 'Pendiente' },
-    { value: 'in_progress', label: 'En progreso' },
-    { value: 'resolved', label: 'Resuelto' },
-    { value: 'rejected', label: 'Rechazado' },
-  ];
-
-  readonly categoryOptions: { value: ReportCategory | ''; label: string }[] = [
-    { value: '', label: 'Todas las categorías' },
-    { value: 'road_damage', label: 'Daño en vía' },
-    { value: 'lighting', label: 'Alumbrado' },
-    { value: 'waste', label: 'Residuos' },
-    { value: 'water', label: 'Agua / Saneamiento' },
-    { value: 'security', label: 'Seguridad' },
-    { value: 'other', label: 'Otro' },
-  ];
+  readonly statusOptions = STATUS_OPTIONS;
+  readonly categoryOptions = CATEGORY_OPTIONS;
 
   private destroy$ = new Subject<void>();
 
@@ -81,22 +72,10 @@ export class ReportListPageComponent implements OnInit, OnDestroy {
   }
 
   getStatusColor(status: ReportStatus): string {
-    const map: Record<ReportStatus, string> = {
-      pending: 'warn',
-      in_progress: 'primary',
-      resolved: 'accent',
-      rejected: '',
-    };
-    return map[status];
+    return getStatusColor(status);
   }
 
   getStatusLabel(status: ReportStatus): string {
-    const map: Record<ReportStatus, string> = {
-      pending: 'Pendiente',
-      in_progress: 'En progreso',
-      resolved: 'Resuelto',
-      rejected: 'Rechazado',
-    };
-    return map[status];
+    return getStatusLabel(status);
   }
 }

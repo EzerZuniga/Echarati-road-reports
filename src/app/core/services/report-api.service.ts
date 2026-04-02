@@ -3,8 +3,12 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '@env/environment';
 import {
-  Report, CreateReportRequest, UpdateReportStatusRequest,
-  ReportFilters, PaginatedResponse, DashboardMetrics
+  Report,
+  CreateReportRequest,
+  UpdateReportStatusRequest,
+  ReportFilters,
+  PaginatedResponse,
+  DashboardMetrics,
 } from '../models';
 
 @Injectable({ providedIn: 'root' })
@@ -14,23 +18,15 @@ export class ReportApiService {
   constructor(private http: HttpClient) {}
 
   getAll(filters: ReportFilters): Observable<PaginatedResponse<Report>> {
-    let params = new HttpParams()
-      .set('page', filters.page.toString())
-      .set('pageSize', filters.pageSize.toString());
-    if (filters.status)   params = params.set('status', filters.status);
-    if (filters.category) params = params.set('category', filters.category);
-    if (filters.search)   params = params.set('search', filters.search);
-    return this.http.get<PaginatedResponse<Report>>(this.base, { params });
+    return this.http.get<PaginatedResponse<Report>>(this.base, {
+      params: this.buildParams(filters),
+    });
   }
 
   getMine(filters: ReportFilters): Observable<PaginatedResponse<Report>> {
-    let params = new HttpParams()
-      .set('page', filters.page.toString())
-      .set('pageSize', filters.pageSize.toString());
-    if (filters.status)   params = params.set('status', filters.status);
-    if (filters.category) params = params.set('category', filters.category);
-    if (filters.search)   params = params.set('search', filters.search);
-    return this.http.get<PaginatedResponse<Report>>(`${this.base}/mine`, { params });
+    return this.http.get<PaginatedResponse<Report>>(`${this.base}/mine`, {
+      params: this.buildParams(filters),
+    });
   }
 
   getById(id: string): Observable<Report> {
@@ -51,5 +47,15 @@ export class ReportApiService {
 
   getDashboard(): Observable<DashboardMetrics> {
     return this.http.get<DashboardMetrics>(`${environment.apiUrl}/admin/dashboard`);
+  }
+
+  private buildParams(filters: ReportFilters): HttpParams {
+    let params = new HttpParams()
+      .set('page', filters.page.toString())
+      .set('pageSize', filters.pageSize.toString());
+    if (filters.status) params = params.set('status', filters.status);
+    if (filters.category) params = params.set('category', filters.category);
+    if (filters.search) params = params.set('search', filters.search);
+    return params;
   }
 }

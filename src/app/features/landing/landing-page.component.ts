@@ -1,11 +1,21 @@
-import { Component, HostListener } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  HostListener,
+  OnDestroy,
+  inject,
+} from '@angular/core';
 
 @Component({
   selector: 'app-landing-page',
   templateUrl: './landing-page.component.html',
   styleUrls: ['./landing-page.component.scss'],
 })
-export class LandingPageComponent {
+export class LandingPageComponent implements AfterViewInit, OnDestroy {
+  private readonly hostElement = inject(ElementRef<HTMLElement>);
+  private revealObserver?: IntersectionObserver;
+
   public menuOpen = false;
   public openFaqIndex: number | null = null;
   public activeSection = 'como-funciona';
@@ -87,6 +97,14 @@ export class LandingPageComponent {
     return item.question;
   }
 
+  public ngAfterViewInit(): void {
+    this.setupRevealAnimations();
+  }
+
+  public ngOnDestroy(): void {
+    this.revealObserver?.disconnect();
+  }
+
   @HostListener('window:resize')
   public onResize(): void {
     if (window.innerWidth > 960 && this.menuOpen) {
@@ -118,11 +136,55 @@ export class LandingPageComponent {
     return navbar?.offsetHeight ?? (window.innerWidth <= 640 ? 72 : 76);
   }
 
+  private setupRevealAnimations(): void {
+    const host = this.hostElement.nativeElement as HTMLElement;
+    const revealElements = Array.from(host.querySelectorAll('.reveal-on-scroll')) as HTMLElement[];
+
+    if (!revealElements.length) return;
+
+    if (!('IntersectionObserver' in window)) {
+      revealElements.forEach((el: HTMLElement) => el.classList.add('is-visible'));
+      return;
+    }
+
+    this.revealObserver = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          (entry.target as HTMLElement).classList.add('is-visible');
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        threshold: 0.16,
+        rootMargin: '0px 0px -8% 0px',
+      }
+    );
+
+    revealElements.forEach((el: HTMLElement) => this.revealObserver?.observe(el));
+  }
+
   public readonly stats = [
-    { icon: 'task_alt', value: '92%', label: 'Reportes con seguimiento' },
-    { icon: 'schedule', value: '48h', label: 'Tiempo promedio de respuesta' },
-    { icon: 'map', value: '35', label: 'Zonas del distrito cubiertas' },
-    { icon: 'people', value: '+1,200', label: 'Ciudadanos registrados' },
+    {
+      icon: 'task_alt',
+      value: '92%',
+      label: 'Reportes con seguimiento',
+    },
+    {
+      icon: 'schedule',
+      value: '48h',
+      label: 'Tiempo promedio de respuesta',
+    },
+    {
+      icon: 'map',
+      value: '35',
+      label: 'Zonas del distrito cubiertas',
+    },
+    {
+      icon: 'people',
+      value: '+1,200',
+      label: 'Ciudadanos registrados',
+    },
   ];
 
   public readonly steps = [
@@ -130,19 +192,19 @@ export class LandingPageComponent {
       number: '01',
       icon: 'app_registration',
       title: 'Crea tu cuenta',
-      desc: 'Regístrate con tu DNI. El proceso es rápido, seguro y completamente gratuito.',
+      desc: 'Regístrate con tu DNI en menos de 2 minutos. El proceso es gratuito y seguro.',
     },
     {
       number: '02',
       icon: 'add_photo_alternate',
       title: 'Registra el incidente',
-      desc: 'Describe el problema, adjunta fotos y ubica el punto exacto en el mapa del distrito.',
+      desc: 'Describe el problema, adjunta evidencias y marca la ubicación exacta en el mapa.',
     },
     {
       number: '03',
       icon: 'notifications_active',
       title: 'Haz seguimiento',
-      desc: 'Recibe notificaciones del estado de tu reporte hasta que sea resuelto.',
+      desc: 'Recibe actualizaciones del estado de tu reporte hasta su atención final.',
     },
   ];
 

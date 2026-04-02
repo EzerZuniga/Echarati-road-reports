@@ -6,6 +6,7 @@ import { takeUntil } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ReportApiService } from '../../../../core/services/report-api.service';
 import { ReportCategory } from '../../../../core/models';
+import { CATEGORY_FORM_OPTIONS } from '../../../../core/utils';
 
 @Component({
   selector: 'app-report-form-page',
@@ -19,14 +20,7 @@ export class ReportFormPageComponent implements OnInit, OnDestroy {
   reportId?: string;
   private destroy$ = new Subject<void>();
 
-  readonly categories: { value: ReportCategory; label: string }[] = [
-    { value: 'road_damage', label: 'Daño en vía pública' },
-    { value: 'lighting', label: 'Alumbrado público' },
-    { value: 'waste', label: 'Residuos / Basura' },
-    { value: 'water', label: 'Agua y Saneamiento' },
-    { value: 'security', label: 'Seguridad ciudadana' },
-    { value: 'other', label: 'Otro' },
-  ];
+  readonly categories = CATEGORY_FORM_OPTIONS;
 
   constructor(
     private fb: FormBuilder,

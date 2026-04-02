@@ -9,16 +9,18 @@
 .page-title {
   font-size: 1.8rem;
   font-weight: 700;
-  color: #1a237e;
+  color: var(--gov-primary);
   margin: 0;
+  font-family: 'Raleway', sans-serif;
 }
 .page-subtitle {
-  color: #666;
+  color: var(--gov-text-secondary);
   font-size: 0.9rem;
   margin: 4px 0 0;
 }
 .filter-card {
   margin-bottom: 20px;
+  border-radius: 8px !important;
 }
 .filter-row {
   display: flex;
@@ -35,7 +37,7 @@
   min-width: 150px;
 }
 .table-card {
-  border-radius: 12px !important;
+  border-radius: 8px !important;
   overflow: hidden;
 }
 .table-wrapper {
@@ -56,7 +58,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 0.8rem;
-  color: #666;
+  color: var(--gov-text-secondary);
 }
 .status-chip {
   font-size: 0.72rem;
@@ -65,20 +67,20 @@
   font-weight: 600;
   white-space: nowrap;
   &[data-status='pending'] {
-    background: #fff3e0;
-    color: #e65100;
+    background: var(--status-pending-bg);
+    color: var(--status-pending-text);
   }
   &[data-status='in_progress'] {
-    background: #e3f2fd;
-    color: #1565c0;
+    background: var(--status-progress-bg);
+    color: var(--status-progress-text);
   }
   &[data-status='resolved'] {
-    background: #e8f5e9;
-    color: #2e7d32;
+    background: var(--status-resolved-bg);
+    color: var(--status-resolved-text);
   }
   &[data-status='rejected'] {
-    background: #fce4ec;
-    color: #c62828;
+    background: var(--status-rejected-bg);
+    color: var(--status-rejected-text);
   }
 }
 .actions-cell {
@@ -96,5 +98,46 @@
 .no-data-cell {
   text-align: center;
   padding: 48px;
-  color: #888;
+  color: var(--gov-text-muted);
+}
+
+// --- Responsive ---
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 1.4rem;
+  }
+
+  .filter-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .search-field,
+  .filter-field {
+    min-width: 100%;
+    flex: none;
+  }
+
+  .title-cell {
+    max-width: 140px;
+  }
+
+  .location-cell {
+    max-width: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-container {
+    padding: 16px 12px;
+  }
+
+  .actions-cell {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .no-data-cell {
+    padding: 32px 16px;
+  }
 }

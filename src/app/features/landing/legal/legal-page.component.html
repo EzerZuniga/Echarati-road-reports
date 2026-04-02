@@ -1,0 +1,66 @@
+<ng-container *ngIf="pageContent$ | async as page">
+  <div class="gov-page">
+    <header class="gov-header">
+      <div class="gov-header-inner">
+        <a class="gov-brand" routerLink="/" aria-label="Ir al inicio">
+          <img
+            src="assets/logos/logoe.png"
+            alt="Municipalidad Distrital de Echarati"
+            class="gov-logo"
+          />
+          <span class="gov-brand-text">
+            <span class="gov-entity">Municipalidad Distrital de Echarati</span>
+            <span class="gov-service">Portal de Reportes Ciudadanos</span>
+          </span>
+        </a>
+
+        <nav class="gov-actions" aria-label="Acciones de navegación">
+          <a routerLink="/auth/login" class="btn-outline">Iniciar Sesión</a>
+          <a routerLink="/auth/register" class="btn-solid">Crear Cuenta</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="gov-main">
+      <div class="gov-container">
+        <nav class="breadcrumbs" aria-label="Miga de pan">
+          <a routerLink="/">Inicio</a>
+          <span>/</span>
+          <span aria-current="page">{{ page.title }}</span>
+        </nav>
+
+        <article class="legal-card" aria-labelledby="legalTitle">
+          <header class="legal-header">
+            <p class="legal-kicker">Información legal</p>
+            <h1 id="legalTitle">{{ page.title }}</h1>
+            <p class="legal-summary">{{ page.subtitle }}</p>
+            <p class="legal-updated">Última actualización: {{ page.lastUpdated }}</p>
+          </header>
+
+          <section
+            class="legal-section"
+            *ngFor="let section of page.sections; trackBy: trackBySectionTitle"
+          >
+            <h2>{{ section.title }}</h2>
+            <p *ngFor="let paragraph of section.paragraphs">{{ paragraph }}</p>
+
+            <ul *ngIf="section.bullets?.length">
+              <li *ngFor="let bullet of section.bullets; trackBy: trackByBullet">{{ bullet }}</li>
+            </ul>
+          </section>
+        </article>
+      </div>
+    </main>
+
+    <footer class="gov-footer">
+      <div class="gov-footer-inner">
+        <p>© {{ currentYear }} Municipalidad Distrital de Echarati</p>
+        <div class="gov-footer-links">
+          <a routerLink="/politica-de-privacidad">Política de privacidad</a>
+          <span>·</span>
+          <a routerLink="/terminos-de-uso">Términos de uso</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+</ng-container>

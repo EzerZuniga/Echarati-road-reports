@@ -4,7 +4,7 @@
 
 .admin-sidenav {
   width: 240px;
-  background: #1a237e;
+  background: var(--gov-primary-dark);
   color: #fff;
 
   .sidenav-header {
@@ -25,17 +25,17 @@
 
     a {
       color: rgba(255, 255, 255, 0.85);
-      border-radius: 0 24px 24px 0;
-      margin-right: 16px;
+      border-radius: 0 20px 20px 0;
+      margin-right: 12px;
 
       &.active-nav {
-        background: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.15);
         color: #fff;
         font-weight: 600;
       }
 
       &:hover {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.08);
       }
     }
   }
@@ -45,7 +45,7 @@
   position: sticky;
   top: 0;
   z-index: 10;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 
   .spacer {
     flex: 1;
@@ -58,6 +58,19 @@
 
 .page-content {
   padding: 24px;
-  background: #f5f5f5;
+  background: var(--gov-bg);
   min-height: calc(100vh - 64px);
+}
+
+// --- Responsive ---
+@media (max-width: 768px) {
+  .page-content {
+    padding: 16px 12px;
+  }
+
+  .admin-toolbar {
+    .user-name {
+      display: none;
+    }
+  }
 }

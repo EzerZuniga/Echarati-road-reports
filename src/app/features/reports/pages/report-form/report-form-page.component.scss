@@ -12,16 +12,17 @@
 .page-title {
   font-size: 1.6rem;
   font-weight: 700;
-  color: #1a237e;
+  color: var(--gov-primary);
   margin: 0;
+  font-family: 'Raleway', sans-serif;
 }
 .page-subtitle {
-  color: #666;
+  color: var(--gov-text-secondary);
   margin: 4px 0 0;
   font-size: 0.875rem;
 }
 .form-card {
-  border-radius: 12px !important;
+  border-radius: 8px !important;
   padding: 8px;
 }
 .full-width {
@@ -38,4 +39,23 @@
   display: inline-block;
   margin-right: 8px;
   vertical-align: middle;
+}
+
+// --- Responsive ---
+@media (max-width: 480px) {
+  .page-container {
+    padding: 16px 12px;
+  }
+
+  .page-title {
+    font-size: 1.3rem;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+
+    button {
+      width: 100%;
+    }
+  }
 }

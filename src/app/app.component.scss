@@ -8,7 +8,7 @@
   z-index: 9999;
 
   &.active {
-    background: linear-gradient(90deg, #3f51b5, #7986cb, #3f51b5);
+    background: linear-gradient(90deg, var(--gov-primary), #26a69a, var(--gov-primary));
     background-size: 200% 100%;
     animation: progress-slide 1.4s ease-in-out infinite;
   }

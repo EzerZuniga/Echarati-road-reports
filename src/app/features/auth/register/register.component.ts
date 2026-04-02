@@ -2,9 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, switchMap, takeUntil } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../../core/services/auth.service';
+import { DniService } from '../../../core/services/dni.service';
 
 function dniValidator(): ValidatorFn {
   return (ctrl: AbstractControl) => {
@@ -22,13 +23,17 @@ export class RegisterComponent implements OnInit, OnDestroy {
   form!: FormGroup;
   loading = false;
   hidePassword = true;
+  dniLoading = false;
+  dniVerified = false;
+  dniError = false;
   private destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
     private router: Router,
-    private snack: MatSnackBar
+    private snack: MatSnackBar,
+    private dniService: DniService
   ) {}
 
   ngOnInit(): void {
@@ -47,6 +52,34 @@ export class RegisterComponent implements OnInit, OnDestroy {
         ],
       ],
     });
+
+    // Auto-consulta RENIEC cuando el DNI tiene 8 dígitos
+    this.form
+      .get('dni')!
+      .valueChanges.pipe(
+        takeUntil(this.destroy$),
+        debounceTime(400),
+        distinctUntilChanged(),
+        filter((val: string) => /^\d{8}$/.test(val)),
+        switchMap((dni: string) => {
+          this.dniLoading = true;
+          this.dniVerified = false;
+          this.dniError = false;
+          return this.dniService.lookup(dni);
+        })
+      )
+      .subscribe((res) => {
+        this.dniLoading = false;
+        if (res) {
+          this.dniVerified = true;
+          this.form.patchValue({
+            firstName: res.nombres,
+            lastName: `${res.apellidoPaterno} ${res.apellidoMaterno}`,
+          });
+        } else {
+          this.dniError = true;
+        }
+      });
   }
 
   ngOnDestroy(): void {

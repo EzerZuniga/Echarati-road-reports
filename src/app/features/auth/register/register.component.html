@@ -8,23 +8,7 @@
     <mat-card class="auth-form-card">
       <mat-card-content>
         <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
-          <div class="form-row">
-            <mat-form-field appearance="outline" class="half-width">
-              <mat-label>Nombres</mat-label>
-              <input matInput formControlName="firstName" autocomplete="given-name" />
-              @if (f['firstName'].hasError('required') && f['firstName'].touched) {
-                <mat-error>Requerido</mat-error>
-              }
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="half-width">
-              <mat-label>Apellidos</mat-label>
-              <input matInput formControlName="lastName" autocomplete="family-name" />
-              @if (f['lastName'].hasError('required') && f['lastName'].touched) {
-                <mat-error>Requerido</mat-error>
-              }
-            </mat-form-field>
-          </div>
-
+          <!-- DNI primero para auto-rellenar nombres -->
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>DNI (8 dígitos)</mat-label>
             <input
@@ -35,7 +19,13 @@
               pattern="[0-9]*"
               autocomplete="off"
             />
-            <mat-icon matSuffix>badge</mat-icon>
+            @if (dniLoading) {
+              <mat-spinner matSuffix diameter="20"></mat-spinner>
+            } @else if (dniVerified) {
+              <mat-icon matSuffix class="dni-ok">check_circle</mat-icon>
+            } @else {
+              <mat-icon matSuffix>badge</mat-icon>
+            }
             @if (f['dni'].hasError('required') && f['dni'].touched) {
               <mat-error>El DNI es requerido</mat-error>
             }
@@ -43,6 +33,46 @@
               <mat-error>DNI debe tener exactamente 8 dígitos</mat-error>
             }
           </mat-form-field>
+
+          @if (dniVerified) {
+            <div class="dni-result">
+              <mat-icon>verified_user</mat-icon>
+              <span>Identidad verificada por RENIEC</span>
+            </div>
+          }
+          @if (dniError) {
+            <div class="dni-result dni-result--error">
+              <mat-icon>warning</mat-icon>
+              <span>No se pudo verificar. Complete los datos manualmente.</span>
+            </div>
+          }
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Nombres</mat-label>
+              <input
+                matInput
+                formControlName="firstName"
+                autocomplete="given-name"
+                [readonly]="dniVerified"
+              />
+              @if (f['firstName'].hasError('required') && f['firstName'].touched) {
+                <mat-error>Requerido</mat-error>
+              }
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Apellidos</mat-label>
+              <input
+                matInput
+                formControlName="lastName"
+                autocomplete="family-name"
+                [readonly]="dniVerified"
+              />
+              @if (f['lastName'].hasError('required') && f['lastName'].touched) {
+                <mat-error>Requerido</mat-error>
+              }
+            </mat-form-field>
+          </div>
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Correo electrónico</mat-label>
@@ -102,11 +132,11 @@
             }
           </button>
         </form>
-
-        <p class="auth-link text-center mt-3">
-          ¿Ya tienes cuenta? <a routerLink="/auth/login">Inicia sesión</a>
-        </p>
       </mat-card-content>
     </mat-card>
+
+    <div class="auth-alt-action">
+      <a routerLink="/auth/login" class="auth-alt-btn">Ya tengo cuenta</a>
+    </div>
   </div>
 </div>

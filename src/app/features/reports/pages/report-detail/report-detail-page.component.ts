@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ReportApiService } from '../../../../core/services/report-api.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { Report, ReportStatus } from '../../../../core/models';
+import { getStatusLabel, getCategoryLabel } from '../../../../core/utils';
 
 @Component({
   selector: 'app-report-detail-page',
@@ -50,24 +51,10 @@ export class ReportDetailPageComponent implements OnInit, OnDestroy {
   }
 
   getStatusLabel(status: ReportStatus): string {
-    const map: Record<ReportStatus, string> = {
-      pending: 'Pendiente',
-      in_progress: 'En progreso',
-      resolved: 'Resuelto',
-      rejected: 'Rechazado',
-    };
-    return map[status];
+    return getStatusLabel(status);
   }
 
   getCategoryLabel(cat: string): string {
-    const map: Record<string, string> = {
-      road_damage: 'Daño en vía',
-      lighting: 'Alumbrado',
-      waste: 'Residuos',
-      water: 'Agua / Saneamiento',
-      security: 'Seguridad',
-      other: 'Otro',
-    };
-    return map[cat] ?? cat;
+    return getCategoryLabel(cat);
   }
 }

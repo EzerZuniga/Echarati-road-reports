@@ -8,6 +8,12 @@ import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ReportApiService } from '../../../../core/services/report-api.service';
 import { Report, ReportStatus, ReportCategory, ReportFilters } from '../../../../core/models';
+import {
+  getStatusLabel,
+  getCategoryLabel,
+  STATUS_OPTIONS,
+  CATEGORY_OPTIONS,
+} from '../../../../core/utils';
 
 @Component({
   selector: 'app-reports-management-page',
@@ -39,23 +45,9 @@ export class ReportsManagementPageComponent implements OnInit, OnDestroy {
   private filters: ReportFilters = { page: 1, pageSize: 10 };
   private destroy$ = new Subject<void>();
 
-  readonly statusOptions: { value: ReportStatus | ''; label: string }[] = [
-    { value: '', label: 'Todos' },
-    { value: 'pending', label: 'Pendiente' },
-    { value: 'in_progress', label: 'En progreso' },
-    { value: 'resolved', label: 'Resuelto' },
-    { value: 'rejected', label: 'Rechazado' },
-  ];
+  readonly statusOptions = STATUS_OPTIONS;
 
-  readonly categoryOptions: { value: ReportCategory | ''; label: string }[] = [
-    { value: '', label: 'Todas' },
-    { value: 'road_damage', label: 'Daño en vía' },
-    { value: 'lighting', label: 'Alumbrado' },
-    { value: 'waste', label: 'Residuos' },
-    { value: 'water', label: 'Agua' },
-    { value: 'security', label: 'Seguridad' },
-    { value: 'other', label: 'Otro' },
-  ];
+  readonly categoryOptions = CATEGORY_OPTIONS;
 
   readonly statusTransitions: Record<ReportStatus, { value: ReportStatus; label: string }[]> = {
     pending: [
@@ -161,25 +153,11 @@ export class ReportsManagementPageComponent implements OnInit, OnDestroy {
   }
 
   getStatusLabel(status: ReportStatus): string {
-    const map: Record<ReportStatus, string> = {
-      pending: 'Pendiente',
-      in_progress: 'En progreso',
-      resolved: 'Resuelto',
-      rejected: 'Rechazado',
-    };
-    return map[status];
+    return getStatusLabel(status);
   }
 
   getCategoryLabel(cat: string): string {
-    const map: Record<string, string> = {
-      road_damage: 'Daño en vía',
-      lighting: 'Alumbrado',
-      waste: 'Residuos',
-      water: 'Agua',
-      security: 'Seguridad',
-      other: 'Otro',
-    };
-    return map[cat] ?? cat;
+    return getCategoryLabel(cat);
   }
 
   getTransitions(status: ReportStatus): { value: ReportStatus; label: string }[] {

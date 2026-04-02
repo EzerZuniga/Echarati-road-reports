@@ -1,9 +1,9 @@
 .connectivity-banner {
   width: 100%;
-  background: #1f2937;
-  color: #f9fafb;
+  background: var(--gov-primary-dark);
+  color: #f7fbff;
   padding: 0.75rem 0;
-  border-bottom: 3px solid #f97316;
+  border-bottom: 3px solid var(--gov-accent);
 }
 
 .banner-content {
@@ -34,7 +34,7 @@
   width: 0.85rem;
   height: 0.85rem;
   border-radius: 999px;
-  background-color: #f97316;
+  background-color: var(--gov-accent);
 }
 
 @media (max-width: 768px) {

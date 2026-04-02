@@ -23,8 +23,8 @@
                 autocomplete="username"
               />
               <div *ngIf="submitted && f['username'].errors" class="invalid-feedback d-block">
-                <div *ngIf="f['username'].errors?.['required']">Usuario es requerido</div>
-                <div *ngIf="f['username'].errors?.['minlength']">
+                <div *ngIf="f['username'].errors['required']">Usuario es requerido</div>
+                <div *ngIf="f['username'].errors['minlength']">
                   Usuario debe tener al menos 3 caracteres
                 </div>
               </div>
@@ -43,8 +43,8 @@
                 autocomplete="current-password"
               />
               <div *ngIf="submitted && f['password'].errors" class="invalid-feedback d-block">
-                <div *ngIf="f['password'].errors?.['required']">Contraseña es requerida</div>
-                <div *ngIf="f['password'].errors?.['minlength']">
+                <div *ngIf="f['password'].errors['required']">Contraseña es requerida</div>
+                <div *ngIf="f['password'].errors['minlength']">
                   Contraseña debe tener al menos 6 caracteres
                 </div>
               </div>

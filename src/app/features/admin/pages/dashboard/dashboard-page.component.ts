@@ -3,6 +3,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ReportApiService } from '../../../../core/services/report-api.service';
 import { DashboardMetrics } from '../../../../core/models';
+import { getStatusLabel } from '../../../../core/utils';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -15,10 +16,10 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   readonly statCards = [
-    { key: 'pending' as const, label: 'Pendientes', icon: 'pending_actions', color: '#e65100' },
-    { key: 'inProgress' as const, label: 'En Progreso', icon: 'autorenew', color: '#1565c0' },
-    { key: 'resolved' as const, label: 'Resueltos', icon: 'check_circle', color: '#2e7d32' },
-    { key: 'rejected' as const, label: 'Rechazados', icon: 'cancel', color: '#c62828' },
+    { key: 'pending' as const, label: 'Pendientes', icon: 'pending_actions', color: '#9a4f00' },
+    { key: 'inProgress' as const, label: 'En Progreso', icon: 'autorenew', color: '#0b4f8a' },
+    { key: 'resolved' as const, label: 'Resueltos', icon: 'check_circle', color: '#1f7a3a' },
+    { key: 'rejected' as const, label: 'Rechazados', icon: 'cancel', color: '#b42318' },
   ];
 
   displayedColumns = ['title', 'category', 'status', 'citizenName', 'createdAt'];
@@ -51,12 +52,6 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   }
 
   getStatusLabel(status: string): string {
-    const map: Record<string, string> = {
-      pending: 'Pendiente',
-      in_progress: 'En progreso',
-      resolved: 'Resuelto',
-      rejected: 'Rechazado',
-    };
-    return map[status] ?? status;
+    return getStatusLabel(status);
   }
 }

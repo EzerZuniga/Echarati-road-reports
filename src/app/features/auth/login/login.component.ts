@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../../core/services/auth.service';
+import { environment } from '@env/environment';
 
 declare const google: {
   accounts: {
@@ -24,6 +25,7 @@ declare const google: {
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit, OnDestroy {
+  @ViewChild('googleBtn', { static: false }) googleBtnRef?: ElementRef<HTMLElement>;
   form!: FormGroup;
   loading = false;
   hidePassword = true;
@@ -43,7 +45,8 @@ export class LoginComponent implements OnInit, OnDestroy {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
-    this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/reports';
+    const rawUrl = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/reports';
+    this.returnUrl = this.isSafeUrl(rawUrl) ? rawUrl : '/reports';
     this.initGoogleSignIn();
   }
 
@@ -80,7 +83,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   private initGoogleSignIn(): void {
     if (typeof google === 'undefined') return;
     google.accounts.id.initialize({
-      client_id: (window as { __GOOGLE_CLIENT_ID__?: string }).__GOOGLE_CLIENT_ID__ ?? '',
+      client_id: environment.googleClientId,
       callback: (response: { credential: string }) => {
         this.auth
           .loginWithGoogle({ idToken: response.credential })
@@ -96,9 +99,13 @@ export class LoginComponent implements OnInit, OnDestroy {
           });
       },
     });
-    const btn = document.getElementById('google-signin-btn');
+    const btn = this.googleBtnRef?.nativeElement ?? document.getElementById('google-signin-btn');
     if (btn) {
       google.accounts.id.renderButton(btn, { theme: 'outline', size: 'large', width: 320 });
     }
+  }
+
+  private isSafeUrl(url: string): boolean {
+    return !!url && url.startsWith('/') && !url.startsWith('//');
   }
 }

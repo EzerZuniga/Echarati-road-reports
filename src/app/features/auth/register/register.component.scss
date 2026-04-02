@@ -7,3 +7,38 @@
     flex: 1;
   }
 }
+
+.dni-ok {
+  color: #4caf50;
+}
+
+.dni-result {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  margin-bottom: 16px;
+  border-radius: 6px;
+  background: rgba(76, 175, 80, 0.1);
+  color: #2e7d32;
+  font-size: 0.82rem;
+  font-weight: 600;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  &--error {
+    background: rgba(255, 152, 0, 0.1);
+    color: #e65100;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+}

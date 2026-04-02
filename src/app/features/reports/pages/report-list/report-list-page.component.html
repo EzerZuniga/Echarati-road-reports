@@ -62,7 +62,7 @@
             <p class="report-desc">{{ report.description }}</p>
             <div class="report-meta">
               <mat-icon class="meta-icon">category</mat-icon>
-              <span>{{ report.category }}</span>
+              <span>{{ getCategoryLabel(report.category) }}</span>
               <mat-icon class="meta-icon ml-auto">schedule</mat-icon>
               <span>{{ report.createdAt | date: 'dd/MM/yyyy' }}</span>
             </div>

@@ -37,6 +37,10 @@ export class ReportApiService {
     return this.http.post<Report>(this.base, data);
   }
 
+  update(id: string, data: Partial<CreateReportRequest>): Observable<Report> {
+    return this.http.put<Report>(`${this.base}/${id}`, data);
+  }
+
   updateStatus(id: string, body: UpdateReportStatusRequest): Observable<Report> {
     return this.http.patch<Report>(`${this.base}/${id}/status`, body);
   }

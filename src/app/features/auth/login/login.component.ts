@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -24,7 +24,7 @@ declare const google: {
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('googleBtn', { static: false }) googleBtnRef?: ElementRef<HTMLElement>;
   form!: FormGroup;
   loading = false;
@@ -47,6 +47,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     });
     const rawUrl = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/reports';
     this.returnUrl = this.isSafeUrl(rawUrl) ? rawUrl : '/reports';
+  }
+
+  ngAfterViewInit(): void {
     this.initGoogleSignIn();
   }
 

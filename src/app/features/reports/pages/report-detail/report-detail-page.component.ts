@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog } from '@angular/material/dialog';
 import { ReportApiService } from '../../../../core/services/report-api.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { Report, ReportStatus } from '../../../../core/models';
@@ -24,8 +23,7 @@ export class ReportDetailPageComponent implements OnInit, OnDestroy {
     private router: Router,
     private api: ReportApiService,
     public auth: AuthService,
-    private snack: MatSnackBar,
-    private dialog: MatDialog
+    private snack: MatSnackBar
   ) {}
 
   ngOnInit(): void {

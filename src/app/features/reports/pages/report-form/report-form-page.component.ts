@@ -83,7 +83,7 @@ export class ReportFormPageComponent implements OnInit, OnDestroy {
 
     const action$ =
       this.isEdit && this.reportId
-        ? this.api.updateStatus(this.reportId, { status: 'pending' })
+        ? this.api.update(this.reportId, payload)
         : this.api.create(payload);
 
     action$.pipe(takeUntil(this.destroy$)).subscribe({

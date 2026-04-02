@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ReportApiService } from '../../../../core/services/report-api.service';
 import { DashboardMetrics } from '../../../../core/models';
-import { getStatusLabel } from '../../../../core/utils';
+import { getStatusLabel, getCategoryLabel } from '../../../../core/utils';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -53,5 +53,9 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
   getStatusLabel(status: string): string {
     return getStatusLabel(status);
+  }
+
+  getCategoryLabel(cat: string): string {
+    return getCategoryLabel(cat);
   }
 }

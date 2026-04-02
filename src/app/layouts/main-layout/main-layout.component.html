@@ -11,16 +11,18 @@
 
   <span class="spacer"></span>
 
-  <nav class="nav-links" *ngIf="auth.isAuthenticated">
-    <a mat-button routerLink="/reports" routerLinkActive="active-link">
-      <mat-icon>list_alt</mat-icon> Mis Reportes
-    </a>
-    <a mat-button routerLink="/reports/new" routerLinkActive="active-link">
-      <mat-icon>add_circle_outline</mat-icon> Nuevo Reporte
-    </a>
-  </nav>
+  @if (auth.isAuthenticated) {
+    <nav class="nav-links">
+      <a mat-button routerLink="/reports" routerLinkActive="active-link">
+        <mat-icon>list_alt</mat-icon> Mis Reportes
+      </a>
+      <a mat-button routerLink="/reports/new" routerLinkActive="active-link">
+        <mat-icon>add_circle_outline</mat-icon> Nuevo Reporte
+      </a>
+    </nav>
+  }
 
-  <ng-container *ngIf="auth.isAuthenticated; else loginBtn">
+  @if (auth.isAuthenticated) {
     <button mat-icon-button [matMenuTriggerFor]="userMenu" aria-label="Menú de usuario">
       <mat-icon>account_circle</mat-icon>
     </button>
@@ -32,11 +34,9 @@
       <mat-divider></mat-divider>
       <button mat-menu-item (click)="logout()"><mat-icon>logout</mat-icon> Cerrar sesión</button>
     </mat-menu>
-  </ng-container>
-
-  <ng-template #loginBtn>
+  } @else {
     <a mat-button routerLink="/auth/login"> <mat-icon>login</mat-icon> Iniciar sesión </a>
-  </ng-template>
+  }
 </mat-toolbar>
 
 <main class="main-content">

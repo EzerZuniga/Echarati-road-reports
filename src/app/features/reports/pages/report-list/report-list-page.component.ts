@@ -3,9 +3,10 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ReportApiService } from '../../../../core/services/report-api.service';
-import { Report, ReportFilters, ReportStatus } from '../../../../core/models';
+import { Report, ReportCategory, ReportFilters, ReportStatus } from '../../../../core/models';
 import {
   getStatusLabel,
+  getCategoryLabel,
   getStatusColor,
   STATUS_OPTIONS,
   CATEGORY_OPTIONS,
@@ -59,8 +60,12 @@ export class ReportListPageComponent implements OnInit, OnDestroy {
       });
   }
 
-  onFilterChange(key: keyof ReportFilters, value: string): void {
-    (this.filters as unknown as Record<string, unknown>)[key] = value || undefined;
+  onFilterChange(key: 'status' | 'category', value: string): void {
+    if (key === 'status') {
+      this.filters.status = value ? (value as ReportStatus) : undefined;
+    } else {
+      this.filters.category = value ? (value as ReportCategory) : undefined;
+    }
     this.filters.page = 1;
     this.loadReports();
   }
@@ -77,5 +82,9 @@ export class ReportListPageComponent implements OnInit, OnDestroy {
 
   getStatusLabel(status: ReportStatus): string {
     return getStatusLabel(status);
+  }
+
+  getCategoryLabel(cat: string): string {
+    return getCategoryLabel(cat);
   }
 }

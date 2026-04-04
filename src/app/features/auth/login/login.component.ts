@@ -73,7 +73,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (res) => {
-          const dest = res.user.role === 'admin' ? '/admin/dashboard' : this.returnUrl;
+          const dest = res.user.role === 'ADMIN' ? '/admin/dashboard' : this.returnUrl;
           this.router.navigateByUrl(dest);
         },
         error: (err: Error) => {
@@ -93,7 +93,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
           .pipe(takeUntil(this.destroy$))
           .subscribe({
             next: (res) => {
-              const dest = res.user.role === 'admin' ? '/admin/dashboard' : this.returnUrl;
+              const dest = res.user.role === 'ADMIN' ? '/admin/dashboard' : this.returnUrl;
               this.router.navigateByUrl(dest);
             },
             error: (err: Error) => {

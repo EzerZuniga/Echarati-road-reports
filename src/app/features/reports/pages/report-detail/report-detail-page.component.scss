@@ -271,22 +271,22 @@
     padding: 5px 14px;
   }
 
-  &[data-status='pending'] {
+  &[data-status='PENDING'] {
     background: var(--status-pending-bg);
     color: var(--status-pending-text);
   }
 
-  &[data-status='in_progress'] {
+  &[data-status='IN_PROGRESS'] {
     background: var(--status-progress-bg);
     color: var(--status-progress-text);
   }
 
-  &[data-status='resolved'] {
+  &[data-status='RESOLVED'] {
     background: var(--status-resolved-bg);
     color: var(--status-resolved-text);
   }
 
-  &[data-status='rejected'] {
+  &[data-status='REJECTED'] {
     background: var(--status-rejected-bg);
     color: var(--status-rejected-text);
   }

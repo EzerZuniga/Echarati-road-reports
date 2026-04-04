@@ -140,17 +140,17 @@
               @for (trans of getTransitions(r.status); track trans.value) {
                 <button
                   mat-flat-button
-                  [color]="trans.value === 'rejected' ? 'warn' : 'primary'"
+                  [color]="trans.value === 'REJECTED' ? 'warn' : 'primary'"
                   (click)="updateStatus(r, trans.value)"
                   class="action-btn"
                   [matTooltip]="'Cambiar estado a: ' + trans.label"
                 >
                   <mat-icon>{{
-                    trans.value === 'rejected'
+                    trans.value === 'REJECTED'
                       ? 'block'
-                      : trans.value === 'resolved'
+                      : trans.value === 'RESOLVED'
                         ? 'check_circle'
-                        : trans.value === 'pending'
+                        : trans.value === 'PENDING'
                           ? 'undo'
                           : 'play_arrow'
                   }}</mat-icon>

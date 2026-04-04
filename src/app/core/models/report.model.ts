@@ -1,6 +1,6 @@
-export type ReportStatus = 'pending' | 'in_progress' | 'resolved' | 'rejected';
+export type ReportStatus = 'PENDING' | 'IN_PROGRESS' | 'RESOLVED' | 'REJECTED';
 
-export type ReportCategory = 'road_damage' | 'lighting' | 'waste' | 'water' | 'security' | 'other';
+export type ReportCategory = 'POTHOLE' | 'LANDSLIDE' | 'FLOOD' | 'ACCIDENT' | 'ROADBLOCK' | 'OTHER';
 
 export interface ReportLocation {
   lat: number;
@@ -43,14 +43,19 @@ export interface ReportFilters {
   category?: ReportCategory;
   search?: string;
   page: number;
-  pageSize: number;
+  limit: number;
+}
+
+export interface PaginationMeta {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
 }
 
 export interface PaginatedResponse<T> {
   data: T[];
-  total: number;
-  page: number;
-  pageSize: number;
+  meta: PaginationMeta;
 }
 
 export interface DashboardMetrics {

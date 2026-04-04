@@ -22,7 +22,7 @@ export class ReportListPageComponent implements OnInit, OnDestroy {
   total = 0;
   loading = false;
 
-  filters: ReportFilters = { page: 1, pageSize: 10 };
+  filters: ReportFilters = { page: 1, limit: 10 };
 
   readonly statusOptions = STATUS_OPTIONS;
   readonly categoryOptions = CATEGORY_OPTIONS;
@@ -50,7 +50,7 @@ export class ReportListPageComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (res) => {
           this.reports = res.data;
-          this.total = res.total;
+          this.total = res.meta.total;
           this.loading = false;
         },
         error: () => {
@@ -72,7 +72,7 @@ export class ReportListPageComponent implements OnInit, OnDestroy {
 
   onPageChange(event: { pageIndex: number; pageSize: number }): void {
     this.filters.page = event.pageIndex + 1;
-    this.filters.pageSize = event.pageSize;
+    this.filters.limit = event.pageSize;
     this.loadReports();
   }
 

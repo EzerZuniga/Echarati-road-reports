@@ -1,3 +1,4 @@
+content = """\
 <div class="page-container">
 
   <!-- ===== WELCOME HERO ===== -->
@@ -5,7 +6,7 @@
     <div class="welcome-hero-left">
       <div class="welcome-avatar">{{ initials }}</div>
       <div>
-        <p class="greeting-text">{{ greeting }}, <strong>{{ userName }}</strong></p>
+        <p class="greeting-text">{{ greeting }}, <strong>{{ userName }}</strong> &#x1F44B;</p>
         <h1 class="page-title">Panel de Administracion</h1>
         <p class="page-date">
           <mat-icon class="date-icon" aria-hidden="true">today</mat-icon>
@@ -22,15 +23,11 @@
   <!-- ===== SKELETON ===== -->
   @if (loading) {
     <div class="skeleton-section" aria-label="Cargando..." aria-busy="true">
-      <div class="overview-card skeleton-card">
-        <div class="sk-rings-row">
-          @for (i of skeletonItems; track i) {
-            <div class="sk-ring skeleton"></div>
-          }
-        </div>
-        <div class="sk-chart skeleton"></div>
+      <div class="skeleton sk-banner"></div>
+      <div class="stats-grid">
+        @for (i of skeletonItems; track i) { <div class="skeleton sk-card"></div> }
       </div>
-      <div class="skeleton sk-table"></div>
+      <div class="skeleton sk-body"></div>
     </div>
   } @else if (error) {
     <div class="error-state" role="alert">
@@ -43,83 +40,53 @@
     </div>
   } @else if (metrics) {
 
-    <!-- ===== OVERVIEW CARD (rings + mini chart) ===== -->
-    <div class="overview-card">
+    <!-- ===== TOTAL BANNER ===== -->
+    <div class="total-banner">
+      <div class="banner-icon-wrap" aria-hidden="true">
+        <mat-icon>assessment</mat-icon>
+      </div>
+      <div class="banner-text">
+        <span class="banner-number">{{ metrics.totalReports }}</span>
+        <span class="banner-label">Reportes ciudadanos registrados en el sistema</span>
+      </div>
+      <a mat-stroked-button routerLink="/admin/reports" class="banner-cta">
+        Ver todos <mat-icon iconPositionEnd>arrow_forward</mat-icon>
+      </a>
+    </div>
 
-      <div class="overview-body">
-
-        <!-- Ring KPIs (left) -->
-        <div class="rings-area" role="list" aria-label="Metricas de reportes">
-          @for (card of statCards; track card.key) {
-            <div class="ring-wrap" role="listitem">
-              <div
-                class="ring"
-                [style.--fill]="getPercent(getMetricValue(card.key)) + '%'"
-                [style.--clr]="card.color"
-                role="img"
-                [attr.aria-label]="card.label + ': ' + getMetricValue(card.key)"
-              >
-                <div class="ring-inner">
-                  <span class="ring-num">{{ getMetricValue(card.key) }}</span>
-                </div>
-              </div>
-              <span class="ring-label">{{ card.label | uppercase }}</span>
+    <!-- ===== KPI CARDS ===== -->
+    <div class="stats-grid" role="list">
+      @for (card of statCards; track card.key) {
+        <div class="stat-card" [style.--c]="card.color" [style.--bg]="card.bg" role="listitem">
+          <div class="stat-card-head">
+            <div class="stat-icon" [style.background]="card.bg">
+              <mat-icon [style.color]="card.color" aria-hidden="true">{{ card.icon }}</mat-icon>
             </div>
-          }
-        </div>
-
-        <!-- Vertical divider -->
-        <div class="overview-vdivider" aria-hidden="true"></div>
-
-        <!-- Mini bar chart (right) — categories -->
-        <div class="mini-chart" aria-label="Reportes por categoria">
-          <div class="mini-chart-bars">
-            @for (entry of categoryEntries; track entry.key) {
-              <div class="mini-bar-col">
-                <span class="mini-bar-value">{{ entry.count }}</span>
-                <div class="mini-bar-track">
-                  <div
-                    class="mini-bar"
-                    [style.height.%]="(entry.count / maxCategoryCount) * 100"
-                    [style.background]="entry.color"
-                    [matTooltip]="entry.label + ': ' + entry.count"
-                    role="img"
-                    [attr.aria-label]="entry.label + ': ' + entry.count"
-                  ></div>
-                </div>
-                <span class="mini-bar-lbl">{{ entry.key | slice:0:3 }}</span>
-              </div>
-            }
+            <span class="stat-trend" [style.color]="card.color" [style.background]="card.bg">
+              {{ getPercent(getMetricValue(card.key)) }}%
+            </span>
           </div>
-          <div class="mini-chart-footer">CATEGORIAS / REPORTES</div>
+          <div class="stat-value">{{ getMetricValue(card.key) }}</div>
+          <div class="stat-label">{{ card.label }}</div>
+          <div class="stat-bar" role="progressbar"
+               [attr.aria-valuenow]="getPercent(getMetricValue(card.key))"
+               aria-valuemin="0" aria-valuemax="100">
+            <div class="stat-bar-fill" [style.width.%]="getPercent(getMetricValue(card.key))"
+                 [style.background]="card.color"></div>
+          </div>
         </div>
-
-      </div>
-
-      <!-- Footer with total -->
-      <mat-divider></mat-divider>
-      <div class="overview-footer">
-        <mat-icon aria-hidden="true">info_outline</mat-icon>
-        <span class="overview-total-text">
-          TOTAL &nbsp;&bull;&nbsp; <strong>{{ metrics.totalReports }}</strong> reportes ciudadanos registrados
-        </span>
-        <span class="footer-spacer"></span>
-        <a mat-stroked-button routerLink="/admin/reports" class="overview-cta">
-          Ver todos <mat-icon iconPositionEnd>arrow_forward</mat-icon>
-        </a>
-      </div>
-
+      }
     </div>
 
     <!-- ===== CONTENT GRID ===== -->
     <div class="content-grid">
 
-      <!-- Category breakdown panel -->
+      <!-- Categorias -->
       <mat-card class="panel-card">
         <mat-card-header>
           <mat-card-title class="panel-title">
             <mat-icon aria-hidden="true">donut_small</mat-icon>
-            Por Categoria
+            Reportes por Categoria
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
@@ -157,7 +124,7 @@
         </mat-card-content>
       </mat-card>
 
-      <!-- Recent reports table -->
+      <!-- Tabla recientes -->
       <mat-card class="panel-card">
         <mat-card-header>
           <mat-card-title class="panel-title">
@@ -231,3 +198,12 @@
   }
 
 </div>
+"""
+
+with open(
+    r"c:\Users\jose\Desktop\PROYECTOS GIT\Echarati-road-reports\src\app\features\admin\pages\dashboard\dashboard-page.component.html",
+    "w", encoding="utf-8"
+) as f:
+    f.write(content)
+
+print("OK")

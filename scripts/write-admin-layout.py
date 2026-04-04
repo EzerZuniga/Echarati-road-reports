@@ -1,3 +1,103 @@
+import os
+
+# ── admin-layout.component.html ────────────────────────────────────────────────
+layout_html = """\
+<mat-sidenav-container class="admin-container">
+
+  <!-- ===== SIDENAV ===== -->
+  <mat-sidenav #sidenav mode="side" opened class="admin-sidenav">
+
+    <!-- Profile block at top -->
+    <div class="sidenav-profile">
+      <div class="sidenav-profile-avatar">
+        {{ auth.currentUser?.firstName?.[0] }}{{ auth.currentUser?.lastName?.[0] }}
+      </div>
+      <div class="sidenav-profile-info">
+        <span class="sidenav-profile-name">{{ userName }}</span>
+        <span class="sidenav-profile-role">Administrador</span>
+      </div>
+    </div>
+
+    <!-- Grouped navigation -->
+    <nav class="sidenav-nav" aria-label="Navegacion principal">
+      @for (group of navGroups; track group.label) {
+        <div class="nav-group">
+          <span class="nav-group-label">{{ group.label }}</span>
+          @for (item of group.items; track item.route) {
+            <a
+              class="nav-item"
+              [routerLink]="item.route"
+              routerLinkActive="active"
+              (click)="isMobile && sidenav.close()"
+              [attr.aria-label]="item.label"
+            >
+              <mat-icon class="nav-item-icon" aria-hidden="true">{{ item.icon }}</mat-icon>
+              <span class="nav-item-label">{{ item.label }}</span>
+            </a>
+          }
+        </div>
+      }
+    </nav>
+
+    <!-- Logout at bottom -->
+    <div class="sidenav-footer">
+      <mat-divider></mat-divider>
+      <button mat-button class="sidenav-logout-btn" (click)="logout()" aria-label="Cerrar sesion">
+        <mat-icon aria-hidden="true">logout</mat-icon>
+        <span>Cerrar sesion</span>
+      </button>
+    </div>
+
+  </mat-sidenav>
+
+  <!-- ===== CONTENIDO ===== -->
+  <mat-sidenav-content class="admin-content">
+
+    <div class="admin-toolbar">
+      @if (isMobile) {
+        <button mat-icon-button (click)="sidenav.toggle()" aria-label="Abrir menu">
+          <mat-icon>menu</mat-icon>
+        </button>
+      }
+      <span class="toolbar-app-name">Echarati Road Reports</span>
+      <span class="toolbar-spacer"></span>
+
+      <button mat-button [matMenuTriggerFor]="adminMenu" class="toolbar-user-btn" aria-label="Menu de usuario">
+        <div class="toolbar-avatar">
+          {{ auth.currentUser?.firstName?.[0] }}{{ auth.currentUser?.lastName?.[0] }}
+        </div>
+        <span class="toolbar-user-name">{{ userName }}</span>
+        <mat-icon>arrow_drop_down</mat-icon>
+      </button>
+
+      <mat-menu #adminMenu="matMenu">
+        <div class="admin-menu-header" (click)="$event.stopPropagation()">
+          <span class="admin-menu-name">{{ userName }}</span>
+          <span class="admin-menu-role">Administrador</span>
+        </div>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          Cerrar sesion
+        </button>
+      </mat-menu>
+    </div>
+
+    <div class="page-content">
+      <router-outlet></router-outlet>
+    </div>
+
+  </mat-sidenav-content>
+</mat-sidenav-container>
+"""
+
+path_html = r"c:\Users\jose\Desktop\PROYECTOS GIT\Echarati-road-reports\src\app\layouts\admin-layout\admin-layout.component.html"
+with open(path_html, "w", encoding="utf-8") as f:
+    f.write(layout_html)
+print("admin-layout HTML OK")
+
+# ── admin-layout.component.scss ────────────────────────────────────────────────
+layout_scss = """\
 // ==========================================
 // ADMIN LAYOUT
 // ==========================================
@@ -302,3 +402,9 @@
     display: none;
   }
 }
+"""
+
+path_scss = r"c:\Users\jose\Desktop\PROYECTOS GIT\Echarati-road-reports\src\app\layouts\admin-layout\admin-layout.component.scss"
+with open(path_scss, "w", encoding="utf-8") as f:
+    f.write(layout_scss)
+print("admin-layout SCSS OK")

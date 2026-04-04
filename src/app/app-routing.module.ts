@@ -23,7 +23,7 @@ const routes: Routes = [
     path: 'admin',
     component: AdminLayoutComponent,
     canActivate: [authGuard, roleGuard],
-    data: { role: 'admin' },
+    data: { role: 'ADMIN' },
     loadChildren: () => import('./features/admin/admin.module').then((m) => m.AdminModule),
   },
   { path: '**', redirectTo: '/auth/login' },

@@ -7,6 +7,7 @@ export {
   RegisterRequest,
   GoogleAuthRequest,
   AuthResponse,
+  UpdateProfileRequest,
 } from './user.model';
 export {
   Report,

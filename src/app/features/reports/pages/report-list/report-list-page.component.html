@@ -129,7 +129,7 @@
 
     <mat-paginator
       [length]="total"
-      [pageSize]="filters.pageSize"
+      [pageSize]="filters.limit"
       [pageSizeOptions]="[5, 10, 20]"
       (page)="onPageChange($event)"
       aria-label="Paginación de reportes"

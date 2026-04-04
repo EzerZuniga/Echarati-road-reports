@@ -42,7 +42,7 @@ export class ReportsManagementPageComponent implements OnInit, OnDestroy {
   statusCtrl = new FormControl<ReportStatus | ''>('');
   categoryCtrl = new FormControl<ReportCategory | ''>('');
 
-  private filters: ReportFilters = { page: 1, pageSize: 10 };
+  private filters: ReportFilters = { page: 1, limit: 10 };
   private destroy$ = new Subject<void>();
 
   readonly statusOptions = STATUS_OPTIONS;
@@ -50,16 +50,16 @@ export class ReportsManagementPageComponent implements OnInit, OnDestroy {
   readonly categoryOptions = CATEGORY_OPTIONS;
 
   readonly statusTransitions: Record<ReportStatus, { value: ReportStatus; label: string }[]> = {
-    pending: [
-      { value: 'in_progress', label: 'Iniciar' },
-      { value: 'rejected', label: 'Rechazar' },
+    PENDING: [
+      { value: 'IN_PROGRESS', label: 'Iniciar' },
+      { value: 'REJECTED', label: 'Rechazar' },
     ],
-    in_progress: [
-      { value: 'resolved', label: 'Resolver' },
-      { value: 'rejected', label: 'Rechazar' },
+    IN_PROGRESS: [
+      { value: 'RESOLVED', label: 'Resolver' },
+      { value: 'REJECTED', label: 'Rechazar' },
     ],
-    resolved: [],
-    rejected: [{ value: 'pending', label: 'Reabrir' }],
+    RESOLVED: [],
+    REJECTED: [{ value: 'PENDING', label: 'Reabrir' }],
   };
 
   constructor(
@@ -104,7 +104,7 @@ export class ReportsManagementPageComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (res) => {
           this.dataSource.data = res.data;
-          this.total = res.total;
+          this.total = res.meta.total;
           this.loading = false;
         },
         error: () => {
@@ -115,7 +115,7 @@ export class ReportsManagementPageComponent implements OnInit, OnDestroy {
 
   onPageChange(event: { pageIndex: number; pageSize: number }): void {
     this.filters.page = event.pageIndex + 1;
-    this.filters.pageSize = event.pageSize;
+    this.filters.limit = event.pageSize;
     this.loadReports();
   }
 

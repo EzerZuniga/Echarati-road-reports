@@ -56,7 +56,7 @@ export class ReportApiService {
   private buildParams(filters: ReportFilters): HttpParams {
     let params = new HttpParams()
       .set('page', filters.page.toString())
-      .set('pageSize', filters.pageSize.toString());
+      .set('limit', filters.limit.toString());
     if (filters.status) params = params.set('status', filters.status);
     if (filters.category) params = params.set('category', filters.category);
     if (filters.search) params = params.set('search', filters.search);

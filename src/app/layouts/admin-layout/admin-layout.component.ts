@@ -21,6 +21,17 @@ export class AdminLayoutComponent implements OnDestroy {
     { label: 'Reportes', icon: 'assignment', route: '/admin/reports' },
   ];
 
+  readonly navGroups = [
+    {
+      label: 'Principal',
+      items: [{ label: 'Dashboard', icon: 'dashboard', route: '/admin/dashboard' }],
+    },
+    {
+      label: 'Gestión',
+      items: [{ label: 'Reportes', icon: 'assignment', route: '/admin/reports' }],
+    },
+  ];
+
   constructor(
     public auth: AuthService,
     private bp: BreakpointObserver

@@ -1,3 +1,7 @@
+import os
+
+# ── dashboard-page.component.html ─────────────────────────────────────────────
+dashboard_html = """\
 <div class="page-container">
 
   <!-- ===== WELCOME HERO ===== -->
@@ -231,3 +235,9 @@
   }
 
 </div>
+"""
+
+path_html = r"c:\Users\jose\Desktop\PROYECTOS GIT\Echarati-road-reports\src\app\features\admin\pages\dashboard\dashboard-page.component.html"
+with open(path_html, "w", encoding="utf-8") as f:
+    f.write(dashboard_html)
+print("dashboard HTML OK")

@@ -1,26 +1,26 @@
 import { ReportStatus, ReportCategory } from '../models';
 
 const STATUS_LABELS: Record<ReportStatus, string> = {
-  pending: 'Pendiente',
-  in_progress: 'En progreso',
-  resolved: 'Resuelto',
-  rejected: 'Rechazado',
+  PENDING: 'Pendiente',
+  IN_PROGRESS: 'En progreso',
+  RESOLVED: 'Resuelto',
+  REJECTED: 'Rechazado',
 };
 
 const CATEGORY_LABELS: Record<ReportCategory, string> = {
-  road_damage: 'Daño en vía',
-  lighting: 'Alumbrado',
-  waste: 'Residuos',
-  water: 'Agua / Saneamiento',
-  security: 'Seguridad',
-  other: 'Otro',
+  POTHOLE: 'Bache / Hueco',
+  LANDSLIDE: 'Derrumbe',
+  FLOOD: 'Inundación',
+  ACCIDENT: 'Accidente vial',
+  ROADBLOCK: 'Bloqueo de vía',
+  OTHER: 'Otro',
 };
 
 const STATUS_COLORS: Record<ReportStatus, string> = {
-  pending: 'warn',
-  in_progress: 'primary',
-  resolved: 'accent',
-  rejected: '',
+  PENDING: 'warn',
+  IN_PROGRESS: 'primary',
+  RESOLVED: 'accent',
+  REJECTED: '',
 };
 
 export function getStatusLabel(status: ReportStatus | string): string {
@@ -37,27 +37,27 @@ export function getStatusColor(status: ReportStatus): string {
 
 export const STATUS_OPTIONS: { value: ReportStatus | ''; label: string }[] = [
   { value: '', label: 'Todos los estados' },
-  { value: 'pending', label: 'Pendiente' },
-  { value: 'in_progress', label: 'En progreso' },
-  { value: 'resolved', label: 'Resuelto' },
-  { value: 'rejected', label: 'Rechazado' },
+  { value: 'PENDING', label: 'Pendiente' },
+  { value: 'IN_PROGRESS', label: 'En progreso' },
+  { value: 'RESOLVED', label: 'Resuelto' },
+  { value: 'REJECTED', label: 'Rechazado' },
 ];
 
 export const CATEGORY_OPTIONS: { value: ReportCategory | ''; label: string }[] = [
   { value: '', label: 'Todas las categorías' },
-  { value: 'road_damage', label: 'Daño en vía' },
-  { value: 'lighting', label: 'Alumbrado' },
-  { value: 'waste', label: 'Residuos' },
-  { value: 'water', label: 'Agua / Saneamiento' },
-  { value: 'security', label: 'Seguridad' },
-  { value: 'other', label: 'Otro' },
+  { value: 'POTHOLE', label: 'Bache / Hueco' },
+  { value: 'LANDSLIDE', label: 'Derrumbe' },
+  { value: 'FLOOD', label: 'Inundación' },
+  { value: 'ACCIDENT', label: 'Accidente vial' },
+  { value: 'ROADBLOCK', label: 'Bloqueo de vía' },
+  { value: 'OTHER', label: 'Otro' },
 ];
 
 export const CATEGORY_FORM_OPTIONS: { value: ReportCategory; label: string }[] = [
-  { value: 'road_damage', label: 'Daño en vía pública' },
-  { value: 'lighting', label: 'Alumbrado público' },
-  { value: 'waste', label: 'Residuos / Basura' },
-  { value: 'water', label: 'Agua y Saneamiento' },
-  { value: 'security', label: 'Seguridad ciudadana' },
-  { value: 'other', label: 'Otro' },
+  { value: 'POTHOLE', label: 'Bache / Hueco en la vía' },
+  { value: 'LANDSLIDE', label: 'Derrumbe o deslizamiento' },
+  { value: 'FLOOD', label: 'Inundación' },
+  { value: 'ACCIDENT', label: 'Accidente vial' },
+  { value: 'ROADBLOCK', label: 'Bloqueo de vía' },
+  { value: 'OTHER', label: 'Otro' },
 ];

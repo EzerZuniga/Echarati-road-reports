@@ -161,15 +161,15 @@
               <div
                 class="timeline-item"
                 [class.timeline-item--done]="
-                  report.status === 'in_progress' || report.status === 'resolved'
+                  report.status === 'IN_PROGRESS' || report.status === 'RESOLVED'
                 "
-                [class.timeline-item--current]="report.status === 'pending'"
+                [class.timeline-item--current]="report.status === 'PENDING'"
                 role="listitem"
               >
                 <div
                   class="timeline-dot"
                   [class.timeline-dot--done]="
-                    report.status === 'in_progress' || report.status === 'resolved'
+                    report.status === 'IN_PROGRESS' || report.status === 'RESOLVED'
                   "
                 >
                   <mat-icon>autorenew</mat-icon>
@@ -182,23 +182,23 @@
 
               <div
                 class="timeline-item"
-                [class.timeline-item--done]="report.status === 'resolved'"
-                [class.timeline-item--rejected]="report.status === 'rejected'"
+                [class.timeline-item--done]="report.status === 'RESOLVED'"
+                [class.timeline-item--rejected]="report.status === 'REJECTED'"
                 role="listitem"
               >
                 <div
                   class="timeline-dot"
-                  [class.timeline-dot--done]="report.status === 'resolved'"
-                  [class.timeline-dot--rejected]="report.status === 'rejected'"
+                  [class.timeline-dot--done]="report.status === 'RESOLVED'"
+                  [class.timeline-dot--rejected]="report.status === 'REJECTED'"
                 >
-                  <mat-icon>{{ report.status === 'rejected' ? 'close' : 'check_circle' }}</mat-icon>
+                  <mat-icon>{{ report.status === 'REJECTED' ? 'close' : 'check_circle' }}</mat-icon>
                 </div>
                 <div class="timeline-info">
                   <span class="timeline-label">{{
-                    report.status === 'rejected' ? 'Rechazado' : 'Resuelto'
+                    report.status === 'REJECTED' ? 'Rechazado' : 'Resuelto'
                   }}</span>
                   <span class="timeline-desc">
-                    {{ report.status === 'rejected' ? 'No procesado' : 'Incidencia atendida' }}
+                    {{ report.status === 'REJECTED' ? 'No procesado' : 'Incidencia atendida' }}
                   </span>
                 </div>
               </div>

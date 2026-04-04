@@ -1,6 +1,6 @@
-export type UserRole = 'citizen' | 'admin';
+export type UserRole = 'CITIZEN' | 'ADMIN';
 
-export type AuthProvider = 'local' | 'google';
+export type AuthProvider = 'LOCAL' | 'GOOGLE';
 
 export interface User {
   id: string;
@@ -42,4 +42,11 @@ export interface GoogleAuthRequest {
 export interface AuthResponse {
   user: User;
   tokens: AuthTokens;
+}
+
+export interface UpdateProfileRequest {
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  avatarUrl?: string;
 }

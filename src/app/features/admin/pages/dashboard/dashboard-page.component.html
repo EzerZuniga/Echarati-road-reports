@@ -1,11 +1,12 @@
 <div class="page-container">
-
   <!-- ===== WELCOME HERO ===== -->
   <header class="welcome-hero">
     <div class="welcome-hero-left">
       <div class="welcome-avatar">{{ initials }}</div>
       <div>
-        <p class="greeting-text">{{ greeting }}, <strong>{{ userName }}</strong></p>
+        <p class="greeting-text">
+          {{ greeting }}, <strong>{{ userName }}</strong>
+        </p>
         <h1 class="page-title">Panel de Administracion</h1>
         <p class="page-date">
           <mat-icon class="date-icon" aria-hidden="true">today</mat-icon>
@@ -42,12 +43,9 @@
       </button>
     </div>
   } @else if (metrics) {
-
     <!-- ===== OVERVIEW CARD (rings + mini chart) ===== -->
     <div class="overview-card">
-
       <div class="overview-body">
-
         <!-- Ring KPIs (left) -->
         <div class="rings-area" role="list" aria-label="Metricas de reportes">
           @for (card of statCards; track card.key) {
@@ -87,13 +85,12 @@
                     [attr.aria-label]="entry.label + ': ' + entry.count"
                   ></div>
                 </div>
-                <span class="mini-bar-lbl">{{ entry.key | slice:0:3 }}</span>
+                <span class="mini-bar-lbl">{{ entry.key | slice: 0 : 3 }}</span>
               </div>
             }
           </div>
           <div class="mini-chart-footer">CATEGORIAS / REPORTES</div>
         </div>
-
       </div>
 
       <!-- Footer with total -->
@@ -101,19 +98,18 @@
       <div class="overview-footer">
         <mat-icon aria-hidden="true">info_outline</mat-icon>
         <span class="overview-total-text">
-          TOTAL &nbsp;&bull;&nbsp; <strong>{{ metrics.totalReports }}</strong> reportes ciudadanos registrados
+          TOTAL &nbsp;&bull;&nbsp; <strong>{{ metrics.totalReports }}</strong> reportes ciudadanos
+          registrados
         </span>
         <span class="footer-spacer"></span>
         <a mat-stroked-button routerLink="/admin/reports" class="overview-cta">
           Ver todos <mat-icon iconPositionEnd>arrow_forward</mat-icon>
         </a>
       </div>
-
     </div>
 
     <!-- ===== CONTENT GRID ===== -->
     <div class="content-grid">
-
       <!-- Category breakdown panel -->
       <mat-card class="panel-card">
         <mat-card-header>
@@ -133,7 +129,9 @@
               @for (entry of categoryEntries; track entry.key) {
                 <li class="cat-row">
                   <div class="cat-icon-wrap" [style.background]="entry.color + '26'">
-                    <mat-icon [style.color]="entry.color" aria-hidden="true">{{ entry.icon }}</mat-icon>
+                    <mat-icon [style.color]="entry.color" aria-hidden="true">{{
+                      entry.icon
+                    }}</mat-icon>
                   </div>
                   <div class="cat-info">
                     <div class="cat-meta">
@@ -143,11 +141,18 @@
                         <span class="cat-pct">{{ entry.percent }}%</span>
                       </span>
                     </div>
-                    <div class="cat-bar-track" role="progressbar"
-                         [attr.aria-valuenow]="entry.percent" aria-valuemin="0" aria-valuemax="100">
-                      <div class="cat-bar-fill"
-                           [style.width.%]="entry.percent"
-                           [style.background]="entry.color"></div>
+                    <div
+                      class="cat-bar-track"
+                      role="progressbar"
+                      [attr.aria-valuenow]="entry.percent"
+                      aria-valuemin="0"
+                      aria-valuemax="100"
+                    >
+                      <div
+                        class="cat-bar-fill"
+                        [style.width.%]="entry.percent"
+                        [style.background]="entry.color"
+                      ></div>
                     </div>
                   </div>
                 </li>
@@ -177,7 +182,6 @@
           } @else {
             <div class="table-scroll">
               <table mat-table [dataSource]="metrics.recentReports" class="reports-table">
-
                 <ng-container matColumnDef="title">
                   <th mat-header-cell *matHeaderCellDef>Reporte</th>
                   <td mat-cell *matCellDef="let r">
@@ -215,19 +219,20 @@
                 </ng-container>
 
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns"
-                    [routerLink]="['/admin/reports']"
-                    class="clickable-row"
-                    tabindex="0" role="link"
-                    [attr.aria-label]="'Ver ' + row.title">
-                </tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: displayedColumns"
+                  [routerLink]="['/admin/reports']"
+                  class="clickable-row"
+                  tabindex="0"
+                  role="link"
+                  [attr.aria-label]="'Ver ' + row.title"
+                ></tr>
               </table>
             </div>
           }
         </mat-card-content>
       </mat-card>
-
     </div>
   }
-
 </div>

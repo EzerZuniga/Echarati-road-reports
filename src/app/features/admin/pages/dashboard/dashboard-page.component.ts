@@ -91,10 +91,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     this.error = false;
     this.api
       .getDashboard()
-      .pipe(
-        timeout(30000),
-        takeUntil(this.destroy$)
-      )
+      .pipe(timeout(30000), takeUntil(this.destroy$))
       .subscribe({
         next: (m) => {
           this.metrics = m;

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, timeout } from 'rxjs/operators';
 import { ReportApiService } from '../../../../core/services/report-api.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { DashboardMetrics, ReportCategory } from '../../../../core/models';
@@ -91,7 +91,10 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     this.error = false;
     this.api
       .getDashboard()
-      .pipe(takeUntil(this.destroy$))
+      .pipe(
+        timeout(30000),
+        takeUntil(this.destroy$)
+      )
       .subscribe({
         next: (m) => {
           this.metrics = m;

@@ -1,0 +1,8 @@
+[build]
+  command   = "npm run build -- --configuration production"
+  publish   = "dist/citizen-reports-angular"
+
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 200
